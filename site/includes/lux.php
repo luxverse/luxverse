@@ -386,7 +386,24 @@ if (!function_exists('lux_notice_lines')) {
         // Ogni a capo diventa un'interruzione, e nessun carattere di a capo
         // resta nel testo: il contenitore tiene i ritorni a capo come li ha
         // scritti l'autore, senza raddoppiarli.
-        return str_replace("\n", '<br>', htmlspecialchars($t));
+        $t = htmlspecialchars($t);
+
+        // Gli indirizzi internet, in un avviso, sono link veri e cliccabili.
+        // Si lavora DOPO htmlspecialchars, quindi quello che esce e' sempre
+        // testo gia' reso innocuo: l'unica cosa che si aggiunge sono i due tag
+        // del collegamento. La punteggiatura in fondo a una frase resta fuori
+        // dal link (altrimenti l'indirizzo si porterebbe dietro il punto).
+        $t = preg_replace_callback(
+            '~https?://[^\s<>]+~u',
+            static function (array $m): string {
+                $url  = rtrim($m[0], '.,;:!?)]');
+                $tail = substr($m[0], strlen($url));
+                return '<a href="' . $url . '" target="_blank" rel="noopener">' . $url . '</a>' . $tail;
+            },
+            $t
+        ) ?? $t;
+
+        return str_replace("\n", '<br>', $t);
     }
 }
 
@@ -980,6 +997,7 @@ $assetV          = LUX_ASSET_V;
                 <a href="/bacheca.php" class="<?= $currentFile === 'bacheca.php' ? 'active' : '' ?>" <?= $currentFile === 'bacheca.php' ? 'aria-current="page"' : '' ?>><?= t('Bacheca') ?></a>
                 <a href="/linea-del-tempo.php" class="<?= $currentFile === 'linea-del-tempo.php' ? 'active' : '' ?>" <?= $currentFile === 'linea-del-tempo.php' ? 'aria-current="page"' : '' ?>><?= t('Linea del Tempo') ?></a>
                 <a href="/app.php" class="<?= $currentFile === 'app.php' ? 'active' : '' ?>" <?= $currentFile === 'app.php' ? 'aria-current="page"' : '' ?>><?= t('App') ?></a>
+                <a href="/codice-aperto.php" class="<?= $currentFile === 'codice-aperto.php' ? 'active' : '' ?>" <?= $currentFile === 'codice-aperto.php' ? 'aria-current="page"' : '' ?>><?= t('Open source') ?></a>
                 <a href="/chi-siamo.php" class="<?= $currentFile === 'chi-siamo.php' ? 'active' : '' ?>"><?= t('Chi Siamo') ?></a>
                 <a href="/faq.php" class="<?= $currentFile === 'faq.php' ? 'active' : '' ?>"><?= t('FAQ') ?></a>
                 <a href="/assistenza.php" class="<?= $currentFile === 'assistenza.php' ? 'active' : '' ?>"><?= t('Assistenza') ?></a>
@@ -1281,6 +1299,11 @@ $assetV          = LUX_ASSET_V;
             <?= t('App') ?>
         </a>
 
+        <a href="/codice-aperto.php" class="m-link <?= $currentFile === 'codice-aperto.php' ? 'active' : '' ?>">
+            <?= icon('code', 17, 'm-icon') ?>
+            <?= t('Open source') ?>
+        </a>
+
         <div class="m-head"><?= t('Info') ?></div>
         <a href="/chi-siamo.php" class="m-link <?= $currentFile === 'chi-siamo.php' ? 'active' : '' ?>">
             <?= icon('info', 17, 'm-icon') ?>
@@ -1340,6 +1363,7 @@ function lux_footer(): void
                     <h4><?= t('Legali') ?></h4>
                     <a href="/privacy.php"><?= t('Privacy Policy') ?></a>
                     <a href="/terms.php"><?= t('Termini di Servizio') ?></a>
+                    <a href="/codice-aperto.php"><?= t('Open source') ?></a>
                     <a href="/app.php"><?= t('App') ?></a>
                 </div>
             </div>

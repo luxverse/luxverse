@@ -1,0 +1,46 @@
+name: Controlla il codice (sintassi)
+
+# A ogni modifica si controlla che OGNI file PHP del sito sia scritto bene e
+# che i file di dati in JSON si leggano ancora. Non compila e non pubblica
+# niente: serve a non far arrivare al sito un file rotto, e a non scoprirlo
+# aprendo la pagina davanti a chi la sta leggendo.
+#
+# Perche' accade qui e non sul computer di chi scrive: qui c'e' sempre un PHP
+# vero, qualunque sistema operativo usi chi scrive.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  sintassi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scarica il codice
+        uses: actions/checkout@v4
+
+      - name: Che PHP c'e'
+        run: php -v
+
+      - name: Sintassi di ogni file PHP del sito
+        run: |
+          set -e
+          count=0
+          while IFS= read -r f; do
+            if ! out=$(php -l "$f" 2>&1); then
+              echo "::error file=$f::Errore di sintassi"
+              echo "$out"
+              exit 1
+            fi
+            count=$((count + 1))
+          done < <(find site -name "*.php" -type f | sort)
+          echo "$count file PHP controllati: nessun errore di sintassi."
+
+      - name: I file di dati in JSON si leggono
+        run: |
+          set -e
+          for f in site/data/*.json; do
+            php -r '$d = json_decode(file_get_contents($argv[1]), true, 512, JSON_THROW_ON_ERROR); echo basename($argv[1]), ": leggibile\n";' "$f"
+          done
