@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">L.U.X. Verse</string>
+    <string name="home_subtitle">30 strumenti potenziati dall\'IA</string>
+
+    <!-- Generici -->
+    <string name="generate">Genera</string>
+    <string name="copy">Copia</string>
+    <string name="share">Condividi</string>
+    <string name="loading">L\'IA sta pensando…</string>
+    <string name="error">Errore: %1$s</string>
+    <string name="input_hint">Scrivi qui…</string>
+    <string name="summarize">Riassumi</string>
+    <string name="translate_en">Traduci (EN)</string>
+    <string name="char_count">%1$d caratteri</string>
+    <string name="result">Risultato</string>
+    <string name="clear">Nuova richiesta</string>
+    <string name="save">Salva</string>
+    <string name="delete">Elimina</string>
+    <string name="cancel">Annulla</string>
+    <string name="ok">OK</string>
+    <string name="close">Chiudi</string>
+    <string name="today">Oggi</string>
+    <string name="copied">Copiato negli appunti</string>
+    <string name="no_internet">Non riesco ad avviare L.U.X. Verse</string>
+    <string name="offline_note">La bacheca mostra anche le versioni salvate</string>
+
+    <!-- Home -->
+    <string name="all">Tutti</string>
+    <string name="category_giochi">Giochi</string>
+    <string name="category_creativita">Creatività</string>
+    <string name="category_educativi">Educativi</string>
+    <string name="category_produttivita">Produttività</string>
+    <string name="category_utility">Utility</string>
+    <string name="category_altro">Altro</string>
+    <string name="bacheca_title">Bacheca L.U.X. Verse</string>
+    <string name="no_notices">Nessun avviso attivo</string>
+    <string name="notice_info">Informazione</string>
+    <string name="notice_warning">Avviso</string>
+    <string name="notice_success">Notifica</string>
+    <string name="notice_danger">Urgente</string>
+    <string name="notice_event">Evento</string>
+    <string name="notice_update">Aggiornamento</string>
+    <string name="notice_new">Nuovo</string>
+    <string name="notice_maintenance">Manutenzione</string>
+    <string name="notice_tip">Suggerimento</string>
+    <string name="notice_spotlight">In evidenza</string>
+    <string name="notice_celebrate">Traguardo</string>
+
+    <!-- Admin -->
+    <string name="admin">Admin</string>
+    <string name="admin_title">Portale Admin</string>
+    <string name="admin_login_title">Accesso Admin</string>
+    <string name="admin_login_subtitle">Accedi alla dashboard di L.U.X. Verse</string>
+    <string name="password">Password</string>
+    <string name="login">Accedi</string>
+    <string name="logout">Esci</string>
+    <string name="wrong_password">Password errata</string>
+    <string name="overview">Panoramica</string>
+    <string name="projects">Progetti</string>
+    <string name="notices">Bacheca</string>
+    <string name="messages">Messaggi</string>
+    <string name="assistance">Assistenza</string>
+    <string name="visits">Visite</string>
+    <string name="signatures">Firme digitali</string>
+    <string name="logs">Log di sistema</string>
+    <string name="sync">Sincronizza</string>
+    <string name="synced">Sincronizzato</string>
+    <string name="sync_now">Aggiorna ora</string>
+    <string name="last_sync">Ultimo sync: %1$s</string>
+    <string name="total_projects">Progetti totali</string>
+    <string name="active_projects">Progetti attivi</string>
+    <string name="total_notices">Avvisi totali</string>
+    <string name="total_messages">Messaggi</string>
+    <string name="total_assistance">Richieste supporto</string>
+    <string name="total_signatures">Firme digitali</string>
+    <string name="total_visits">Visite totali</string>
+    <string name="visits_today">Oggi</string>
+    <string name="visits_week">Ultimi 7 giorni</string>
+    <string name="visits_month">Ultimi 30 giorni</string>
+    <string name="visits_unique">Utenti unici</string>
+    <string name="latest_activity">Attività recente</string>
+    <string name="latest_messages">Ultimi messaggi</string>
+    <string name="quick_actions">Azioni rapide</string>
+    <string name="add_project">Aggiungi progetto</string>
+    <string name="create_notice">Crea avviso</string>
+    <string name="view_site">Vedi sito</string>
+    <string name="status">Stato</string>
+    <string name="status_attivo">Attivo</string>
+    <string name="status_manutenzione">Manutenzione</string>
+    <string name="status_pausa">In pausa</string>
+    <string name="status_costruzione">In costruzione</string>
+    <string name="status_verifica">In verifica</string>
+    <string name="status_bloccato">Bloccato</string>
+    <string name="status_archiviato">Archiviato</string>
+    <string name="apply_all">Applica a tutti</string>
+    <string name="save_status">Salva stato</string>
+    <string name="project_status_updated">Stato aggiornato</string>
+    <string name="no_projects">Nessun progetto</string>
+    <string name="no_messages">Nessun messaggio ricevuto</string>
+    <string name="no_assistance">Nessuna richiesta</string>
+    <string name="no_logs">Nessun log</string>
+    <string name="no_signatures">Nessuna firma</string>
+    <string name="no_visits">Nessuna visita registrata</string>
+    <string name="title_label">Titolo</string>
+    <string name="message_label">Messaggio</string>
+    <string name="type_label">Tipo</string>
+    <string name="signature_label">Firma</string>
+    <string name="pin">Fissa</string>
+    <string name="unpin">Sposta</string>
+    <string name="publish_notice">Pubblica avviso</string>
+    <string name="entry_name">Nome</string>
+    <string name="entry_email">Email</string>
+    <string name="entry_category">Categoria</string>
+    <string name="entry_subject">Oggetto</string>
+    <string name="entry_action">Azione</string>
+    <string name="entry_date">Data</string>
+    <string name="entry_details">Dettagli</string>
+    <string name="entry_ip">IP</string>
+    <string name="project">Progetto</string>
+    <string name="category">Categoria</string>
+    <string name="description">Descrizione</string>
+    <string name="status_pending">In attesa</string>
+    <string name="status_progress">In lavorazione</string>
+    <string name="status_resolved">Risolto</string>
+    <string name="status_archived_msg">Archiviato</string>
+    <string name="update">Aggiorna</string>
+    <string name="language">Lingua</string>
+
+    <!-- Progetti (form) -->
+    <string name="name_project">Nome progetto *</string>
+    <string name="url_project">URL *</string>
+    <string name="desc_en">Descrizione EN</string>
+    <string name="desc_it">Descrizione IT</string>
+    <string name="icon_project">Icona (chiave SVG)</string>
+    <string name="color_project">Colore</string>
+    <string name="cat_project">Categoria *</string>
+
+    <!-- AiTool -->
+    <string name="ai_tool_label">Cosa vuoi fare?</string>
+    <string name="ai_tool_extra">Dettagli aggiuntivi (facoltativo)</string>
+
+    <!-- Chat -->
+    <string name="send">Invia</string>
+    <string name="persona_hint">Persona attiva: conversa liberamente con l\'IA.</string>
+    <string name="persona_hint_en">Active persona: chat freely with the AI.</string>
+    <string name="type_message">Scrivi il tuo messaggio…</string>
+    <string name="type_message_en">Type your message…</string>
+
+    <!-- Quiz -->
+    <string name="quiz_topic">Argomento del quiz</string>
+    <string name="quiz_topic_hint">Es. storia, geografia, scienza…</string>
+    <string name="quiz_generate">Genera quiz</string>
+    <string name="quiz_q">Domanda %1$d di %2$d</string>
+    <string name="quiz_new">Nuovo quiz</string>
+    <string name="quiz_right">Corretto!</string>
+    <string name="quiz_wrong">Sbagliato! La risposta giusta era: %1$s</string>
+    <string name="quiz_end">Fine quiz! Punteggio: %1$d/%2$d</string>
+
+    <!-- Debate -->
+    <string name="debate_topic">Argomento del dibattito</string>
+    <string name="debate_topic_hint">Es. l\'intelligenza artificiale</string>
+    <string name="debate_side">La tua posizione</string>
+    <string name="debate_side_hint">Es. sono a favore</string>
+    <string name="debate_diff">Difficoltà</string>
+    <string name="debate_easy">Facile</string>
+    <string name="debate_medium">Medio</string>
+    <string name="debate_hard">Difficile</string>
+    <string name="debate_start">Inizia il dibattito</string>
+    <string name="debate_reply_hint">La tua risposta…</string>
+    <string name="debate_reply">Rispondi</string>
+
+    <!-- Voice -->
+    <string name="voice_status">Tocca il microfono e parla</string>
+    <string name="voice_listening">In ascolto…</string>
+    <string name="voice_processing">Elaborazione…</string>
+    <string name="voice_permission">Serve il permesso microfono</string>
+    <string name="voice_error">Riconoscimento non disponibile</string>
+
+    <!-- Focus -->
+    <string name="focus_work">Lavoro</string>
+    <string name="focus_break">Pausa</string>
+    <string name="focus_start">▶ Avvia</string>
+    <string name="focus_pause">⏸ Pausa</string>
+    <string name="focus_resume">▶ Riprendi</string>
+    <string name="focus_reset">↺ Reset</string>
+    <string name="focus_length">Durata:</string>
+    <string name="focus_report">Report AI della sessione</string>
+    <string name="focus_done">Sessione conclusa! %1$d pomodori completati</string>
+
+    <!-- Mood -->
+    <string name="mood_title">Analisi umore AI</string>
+    <string name="mood_happy">Umore</string>
+    <string name="mood_energy">Energia</string>
+    <string name="mood_stress">Stress (inverso)</string>
+    <string name="mood_sleep">Qualità sonno</string>
+    <string name="mood_notes">Cosa vuoi raccontare? (facoltativo)</string>
+    <string name="mood_analyse">Analizza il mio umore</string>
+
+    <!-- Translate -->
+    <string name="translate_source">Testo da tradurre</string>
+    <string name="translate_target">Lingua di destinazione</string>
+    <string name="translate_btn">Traduci</string>
+    <string name="translate_speak">Ascolta</string>
+
+    <!-- Horoscope -->
+    <string name="horoscope_sign">Il tuo segno zodiacale</string>
+    <string name="horoscope_generate">Scopri cosa dicono le stelle</string>
+
+    <!-- Resume -->
+    <string name="resume_name">Nome e cognome</string>
+    <string name="resume_role">Ruolo professionale</string>
+    <string name="resume_exp">Esperienze principali</string>
+    <string name="resume_skills">Competenze</string>
+    <string name="resume_generate">Genera CV professionale</string>
+
+    <!-- Palette -->
+    <string name="palette_kw">Idea / parola chiave</string>
+    <string name="palette_btn">Genera palette</string>
+
+    <!-- Press -->
+    <string name="press_title">WorkMe.Tap — l\'arte della non-funzione</string>
+
+    <!-- Games -->
+    <string name="games_title">WorkMe.Games — minigiochi</string>
+    <string name="guess_title">Indovina il numero (1-100)</string>
+    <string name="guess_hint">Inserisci un numero…</string>
+    <string name="guess_btn">Prova</string>
+    <string name="guess_try">Tentativo n° %1$d</string>
+    <string name="rps_title">Sasso carta forbice</string>
+    <string name="rps_choice">Scegli:</string>
+    <string name="rps_rock">Sasso</string>
+    <string name="rps_paper">Carta</string>
+    <string name="rps_scissors">Forbice</string>
+
+    <!-- Journal -->
+    <string name="journal_title">Diario intelligente</string>
+    <string name="journal_hint">Scrivi il tuo pensiero…</string>
+    <string name="journal_save">Salva</string>
+    <string name="journal_ai_summary">Riassunto AI del mese</string>
+
+    <!-- Calc -->
+    <string name="calc_ai">AI</string>
+    <string name="calc_explain">Spiegami il risultato</string>
+
+    <!-- Manage -->
+    <string name="manage_title">Project manager</string>
+    <string name="manage_hint">Nome nuovo progetto…</string>
+    <string name="manage_add">Aggiungi</string>
+    <string name="manage_empty">Nessun progetto. Aggiungine uno!</string>
+
+    <!-- Statuses block -->
+    <string name="under_maintenance">In manutenzione</string>
+    <string name="blocked">Bloccato</string>
+    <string name="on_pause">In pausa</string>
+    <string name="under_construction">In costruzione</string>
+    <string name="under_review">In verifica</string>
+    <string name="archived">Archiviato</string>
+    <string name="project_unavailable">Progetto non disponibile</string>
+    <string name="project_message">Questo progetto è al momento %1$s. Riprova più tardi.</string>
+    <string name="back_home">← Torna alla Home</string>
+
+    <!-- Home aggiuntive -->
+    <string name="app_name_pro">L.U.X. Verse</string>
+    <string name="app_slogan">30 strumenti potenziati dall\'IA</string>
+    <string name="bacheca_full">Bacheca L.U.X. Verse</string>
+    <string name="refresh">Aggiorna</string>
+    <string name="cat_all">Tutti</string>
+    <string name="cat_giochi">Giochi</string>
+    <string name="cat_creativita">Creatività</string>
+    <string name="cat_educativi">Educativi</string>
+    <string name="cat_produttivita">Produttività</string>
+    <string name="cat_utility">Utility</string>
+    <string name="cat_altro">Altro</string>
+
+    <!-- Input / AI -->
+    <string name="fill_input">Inserisci del testo prima di continuare</string>
+    <string name="ai_empty">L\'IA non ha prodotto una risposta. Riprova affinando la richiesta.</string>
+    <string name="ai_error">Errore di connessione con l\'IA</string>
+    <string name="input_hint_en">Write here…</string>
+    <string name="input2_label">Dettagli aggiuntivi</string>
+    <string name="input2_label_en">Extra details</string>
+    <string name="input2_hint">Es. stile, tono, dettagli…</string>
+    <string name="input2_hint_en">E.g. style, tone, details…</string>
+
+    <!-- Etichette per tool -->
+    <string name="label_info">Cosa vuoi cercare / studiare?</string>
+    <string name="label_info_en">What do you want to search / study?</string>
+    <string name="label_plan">Per quale materia serve il piano di studio?</string>
+    <string name="label_plan_en">Which subject should the study plan cover?</string>
+    <string name="label_mail">Descrivi l\'email che vuoi ricevere</string>
+    <string name="label_mail_en">Describe the email you need</string>
+    <string name="label_mind">Argomento della mappa mentale</string>
+    <string name="label_mind_en">Mind map topic</string>
+    <string name="label_versus">Cosa vuoi confrontare?</string>
+    <string name="label_versus_en">What do you want to compare?</string>
+    <string name="label_code">Descrivi il sito web / codice da generare</string>
+    <string name="label_code_en">Describe the website/code to generate</string>
+    <string name="label_name">Per che tipo di progetto servono i nomi?</string>
+    <string name="label_name_en">What kind of project needs names?</string>
+    <string name="label_rewrite">Quale testo vuoi riscrivere?</string>
+    <string name="label_rewrite_en">Which text do you want rewritten?</string>
+    <string name="label_explain">Quale concetto vuoi capire meglio?</string>
+    <string name="label_explain_en">Which concept do you want to understand?</string>
+    <string name="label_short">Incolla il testo da riassumere</string>
+    <string name="label_short_en">Paste the text to summarize</string>
+    <string name="label_recipe">Quali ingredienti hai a disposizione?</string>
+    <string name="label_recipe_en">Which ingredients do you have?</string>
+    <string name="label_schedule">Che tipo di giornata devi organizzare?</string>
+    <string name="label_schedule_en">What kind of day do you need to organize?</string>
+    <string name="label_music">Tema e genere della canzone</string>
+    <string name="label_music_en">Song topic and genre</string>
+
+    <!-- Navigazione -->
+    <string name="nav_home">Home</string>
+    <string name="nav_tools">Strumenti</string>
+    <string name="nav_bacheca">Bacheca</string>
+    <string name="nav_info">Info</string>
+    <string name="nav_admin">Admin</string>
+    <string name="info_title">Info e pagine</string>
+    <string name="info_subtitle">Tutte le pagine del sito in un tocco</string>
+    <string name="page_chi_siamo">Chi Siamo</string>
+    <string name="page_faq">FAQ</string>
+    <string name="page_assistenza">Assistenza</string>
+    <string name="page_contatti">Contatti</string>
+    <string name="page_privacy">Privacy Policy</string>
+    <string name="page_termini">Termini di utilizzo</string>
+    <string name="open_site">Apri il sito</string>
+    <string name="tools_count">%1$d strumenti</string>
+    <string name="notice_all">Tutti gli avvisi</string>
+    <string name="no_internet_section">Solo versioni salvate</string>
+
+    <!-- Contatti / Assistenza -->
+    <string name="contact_name">Nome completo *</string>
+    <string name="contact_email">Email *</string>
+    <string name="contact_project">Progetto *</string>
+    <string name="contact_message">Messaggio…</string>
+    <string name="contact_send">Invia messaggio</string>
+    <string name="contact_sent">Messaggio inviato!</string>
+    <string name="contact_code">Il tuo codice di tracciamento: %1$s</string>
+    <string name="contact_request">Richiedi assistenza</string>
+    <string name="contact_us">Contattaci</string>
+    <string name="type_support">Assistenza Tecnica</string>
+    <string name="type_bug">Segnalazione Bug</string>
+    <string name="type_info">Richiesta Informazioni</string>
+    <string name="type_complaint">Reclamo</string>
+    <string name="type_suggestion">Suggerimento</string>
+    <string name="type_account">Problemi Account</string>
+    <string name="type_privacy">Privacy</string>
+    <string name="type_other">Altro</string>
+    <string name="type_assistance">Assistenza</string>
+    <string name="type_advice">Consulenza</string>
+
+    <!-- Auto-update -->
+    <string name="update_title">Nuova versione disponibile</string>
+    <string name="update_message">È disponibile la versione %1$s dell\'app.</string>
+    <string name="update_now">Aggiorna ora</string>
+    <string name="update_later">Più tardi</string>
+
+    <!-- Onboarding privacy -->
+    <string name="privacy_title">Benvenuto in L.U.X. Verse</string>
+    <string name="privacy_subtitle">Il tuo accesso a un ecosistema di intelligenza artificiale, anonimo e senza registrazione.</string>
+    <string name="privacy_local_lock">Privacy attiva — nessun dato venduto</string>
+    <string name="privacy_point_1">Nessun dato viene inviato a server esterni per scopi commerciali.</string>
+    <string name="privacy_point_2">Le richieste AI viaggiano anonime su connessione crittografata.</string>
+    <string name="privacy_point_3">La cronologia resta sul telefono e può essere cancellata in un clic.</string>
+    <string name="privacy_runtime_title">Modalità di esecuzione</string>
+    <string name="privacy_runtime_cloud">Cloud anonima</string>
+    <string name="privacy_runtime_cloud_desc">Elaborazione remota crittografata, nessun account necessario.</string>
+    <string name="privacy_runtime_local">Modello locale</string>
+    <string name="privacy_runtime_local_desc">Elaborazione sul dispositivo: in arrivo, nessun download richiesto oggi.</string>
+    <string name="privacy_runtime_local_badge">IN ARRIVO</string>
+    <string name="privacy_cta">Accedi senza registrazione</string>
+    <string name="privacy_agree_link">Accetti i Termini di utilizzo e la Privacy Policy (link in fondo alla sezione Info).</string>
+    <string name="settings_title">Impostazioni Avanzate</string>
+    <string name="settings_language">Lingua</string>
+    <string name="settings_cache">Svuota cache locale</string>
+    <string name="settings_cache_desc">Elimina cronologia, log e dati salvati sul dispositivo.</string>
+    <string name="settings_privacy">Privacy e Policy</string>
+    <string name="settings_about">Informazioni sull\'app</string>
+    <string name="settings_cleared">Cache locale svuotata</string>
+    <string name="settings_footer">L.U.X. Verse — Ecosistema IA decentralizzato. Nessuna registrazione, nessuna vendita di dati.</string>
+
+    <!-- Home hero (dal sito) -->
+    <string name="hero_all_systems_online">Tutti i sistemi online</string>
+    <string name="hero_text">L.U.X. Verse è un ecosistema di strumenti AI per la tua creatività, produttività e innovazione. Tutto gratis, senza registrazione.</string>
+    <string name="explore_projects">Esplora i Progetti</string>
+    <string name="learn_more">Scopri di più</string>
+    <string name="trust_no_profit">100% No Profit</string>
+    <string name="trust_no_reg">Nessuna Registrazione</string>
+    <string name="trust_no_cookies">Nessun Cookie</string>
+    <string name="trust_no_fee">100% Gratis</string>
+    <string name="stat_ai_tools">Strumenti AI</string>
+    <string name="stat_projects_online">Progetti Online</string>
+    <string name="stat_free_no_profit">Gratis e No Profit</string>
+    <string name="bacheca_section_title">Notizie e Bacheca</string>
+    <string name="bacheca_section_sub">Tutte le ultime novità sull\'ecosistema L.U.X. Verse.</string>
+    <string name="projects_title">I Nostri Progetti</string>
+    <string name="projects_sub">Esplora tutti i progetti dell\'ecosistema L.U.X. Verse</string>
+    <string name="search_hint">Cerca un progetto…</string>
+    <string name="projects_found">progetti trovati</string>
+    <string name="no_projects_found">Nessun progetto trovato</string>
+    <string name="category_strip">Sfoglia per categoria</string>
+    <string name="retry">Riprova</string>
+    <string name="web_error_body">Chiudi e riapri l\'app. Gli strumenti sono salvati sul telefono e non richiedono internet. Se il problema persiste, reinstalla l\'ultima versione.</string>
+</resources>

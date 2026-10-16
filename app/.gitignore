@@ -1,0 +1,20 @@
+# ==== Build ====
+build/
+app/build/
+.gradle/
+.kotlin/
+captures/
+
+# ==== IDE ====
+.idea/
+*.iml
+local.properties
+
+# ==== SEGRETI di firma (chiave privata, MAI versionare) ====
+keystore.properties
+*.jks
+*.keystore
+
+# ==== OS ====
+.DS_Store
+Thumbs.db

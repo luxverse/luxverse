@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>L.U.X. Verse — Sei offline</title>
+<meta name="theme-color" content="#0A0B0D">
+<link rel="icon" type="image/png" href="assets/images/icon-192.png">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px;
+        font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+        background:
+            radial-gradient(90% 45% at 50% -8%, #14171B 0%, #0A0B0D 64%);
+        color: #EDE9E0;
+    }
+    .badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 78px; height: 78px;
+        border-radius: 10px;
+        border: 1px solid rgba(237,233,224,0.16);
+        background: #15181B;
+        color: #D8A93C;
+        margin-bottom: 26px;
+    }
+    .badge svg { width: 34px; height: 34px; }
+    h1 { font-size: 1.6em; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 10px; }
+    h1 span { color: #D8A93C; }
+    p { color: #A5A197; max-width: 460px; line-height: 1.7; margin-bottom: 26px; }
+    a.btn {
+        display: inline-flex; align-items: center; gap: 9px;
+        padding: 14px 26px;
+        border-radius: 8px;
+        text-decoration: none;
+        background: #D8A93C;
+        color: #14100A; font-weight: 600;
+        transition: background .18s;
+    }
+    a.btn:hover { background: #F0CE86; }
+    a.btn svg { width: 17px; height: 17px; }
+</style>
+</head>
+<body>
+    <div class="badge" role="img" aria-label="L.U.X. Verse">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6l11 8 11-8"/><path d="M1 18l7.5-7"/><path d="M23 18l-7.5-7"/><path d="M2 6h20v12H2z"/></svg>
+    </div>
+    <h1>Sei <span>offline</span></h1>
+    <p>L.U.X. Verse non è disponibile senza connessione. Controlla la rete e riprova.</p>
+    <a class="btn" href="./index.php">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 4 22 10 16 10"></polyline><path d="M20.5 15a9 9 0 1 1-2.6-9.3L22 10"></path></svg>
+        Riprova
+    </a>
+</body>
+</html>

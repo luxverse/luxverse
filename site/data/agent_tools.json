@@ -1,0 +1,3407 @@
+{
+    "version": "39.0.2",
+    "generated": "2026-10-15 08:00:05",
+    "note": "Strumenti con ingresso e uscita dichiarati: sono gli unici che il motore puo eseguire. Rigenerare con tools/build_agent_registry.php.",
+    "count": 70,
+    "tools": {
+        "workmead": {
+            "key": "workmead",
+            "name": "LUX.Ads",
+            "category": "creativita",
+            "icon": "target",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmead.php",
+            "desc_it": "Scrive annunci pubblicitari efficaci: titoli, varianti e testi per diverse piattaforme.",
+            "desc_en": "Writes effective ad copy: headlines, variants and body text for several platforms.",
+            "inputs": [
+                {
+                    "name": "product",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Prodotto o servizio",
+                    "label_en": "Product or service",
+                    "max": 240
+                },
+                {
+                    "name": "audience",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Pubblico",
+                    "label_en": "Audience",
+                    "max": 200
+                },
+                {
+                    "name": "benefit",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Vantaggio principale",
+                    "label_en": "Main benefit",
+                    "max": 200,
+                    "default": ""
+                },
+                {
+                    "name": "channel",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Canale",
+                    "label_en": "Channel",
+                    "max": 0,
+                    "default": "social",
+                    "options": [
+                        "social",
+                        "search",
+                        "volantino",
+                        "radio",
+                        "sito"
+                    ]
+                }
+            ]
+        },
+        "workmeargomento": {
+            "key": "workmeargomento",
+            "name": "LUX.Essay",
+            "category": "educativi",
+            "icon": "pen",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmeargomento.php",
+            "desc_it": "Costruisce la scaletta di un tema: tesi, argomenti, antitesi e conclusione, con esempi da usare.",
+            "desc_en": "Builds an essay outline: thesis, arguments, counterargument and conclusion, with usable examples.",
+            "inputs": [
+                {
+                    "name": "tema",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Titolo o traccia del tema",
+                    "label_en": "Essay title or prompt",
+                    "max": 300
+                },
+                {
+                    "name": "posizione",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Posizione da sostenere",
+                    "label_en": "Position to defend",
+                    "max": 0,
+                    "default": "ragionata",
+                    "options": [
+                        "favore",
+                        "contro",
+                        "ragionata"
+                    ]
+                },
+                {
+                    "name": "punti",
+                    "type": "textarea",
+                    "required": false,
+                    "label_it": "Idee o appunti che hai gia",
+                    "label_en": "Ideas or notes you already have",
+                    "max": 2500
+                },
+                {
+                    "name": "lunghezza",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Lunghezza richiesta",
+                    "label_en": "Required length",
+                    "max": 0,
+                    "default": "breve",
+                    "options": [
+                        "breve",
+                        "media",
+                        "lunga"
+                    ]
+                }
+            ]
+        },
+        "workmeascii": {
+            "key": "workmeascii",
+            "name": "LUX.Codes",
+            "category": "utility",
+            "icon": "code",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmeascii.php",
+            "desc_it": "Vede il codice di ogni carattere (ASCII/Unicode) e fa il percorso inverso, da codice a carattere.",
+            "desc_en": "Shows the code of every character (ASCII/Unicode) and converts codes back to characters.",
+            "inputs": [
+                {
+                    "name": "text",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Testo o codici",
+                    "label_en": "Text or codes",
+                    "max": 20000
+                },
+                {
+                    "name": "mode",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Operazione",
+                    "label_en": "Operation",
+                    "max": 0,
+                    "default": "encode",
+                    "options": [
+                        "encode",
+                        "decode",
+                        "binary",
+                        "frombinary"
+                    ]
+                }
+            ]
+        },
+        "workmebarcode": {
+            "key": "workmebarcode",
+            "name": "LUX.Barcode",
+            "category": "utility",
+            "icon": "grid",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmebarcode.php",
+            "desc_it": "Controlla e completa codici a barre EAN-13, EAN-8, UPC-A e ISBN: calcola la cifra di controllo.",
+            "desc_en": "Validates and completes EAN-13, EAN-8, UPC-A and ISBN barcodes: computes the check digit.",
+            "inputs": [
+                {
+                    "name": "code",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Codice (anche senza cifra di controllo)",
+                    "label_en": "Code (check digit optional)",
+                    "max": 20
+                }
+            ]
+        },
+        "workmebase64": {
+            "key": "workmebase64",
+            "name": "LUX.Base64",
+            "category": "utility",
+            "icon": "code",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmebase64.php",
+            "desc_it": "Codifica o decodifica testo in Base64, con controllo di validità.",
+            "desc_en": "Encode or decode text to Base64, with validity check.",
+            "inputs": [
+                {
+                    "name": "text",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Testo",
+                    "label_en": "Text",
+                    "max": 200000
+                },
+                {
+                    "name": "mode",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Operazione",
+                    "label_en": "Operation",
+                    "max": 0,
+                    "default": "encode",
+                    "options": [
+                        "encode",
+                        "decode"
+                    ]
+                }
+            ]
+        },
+        "workmebinary": {
+            "key": "workmebinary",
+            "name": "LUX.Base",
+            "category": "utility",
+            "icon": "cpu",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmebinary.php",
+            "desc_it": "Converte un valore fra binario, ottale, decimale, esadecimale e testo, con tutti i valori insieme.",
+            "desc_en": "Converts a value between binary, octal, decimal, hexadecimal and text, showing all at once.",
+            "inputs": [
+                {
+                    "name": "value",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Valore",
+                    "label_en": "Value",
+                    "max": 400
+                },
+                {
+                    "name": "base",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Base di partenza",
+                    "label_en": "Starting base",
+                    "max": 0,
+                    "default": "10",
+                    "options": [
+                        "2",
+                        "8",
+                        "10",
+                        "16",
+                        "text"
+                    ]
+                }
+            ]
+        },
+        "workmebio": {
+            "key": "workmebio",
+            "name": "LUX.Bio",
+            "category": "produttivita",
+            "icon": "user",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmebio.php",
+            "desc_it": "Scrive bio professionali e presentazioni per profili, siti e social, in diverse lunghezze.",
+            "desc_en": "Writes professional bios and intros for profiles, sites and social, in several lengths.",
+            "inputs": [
+                {
+                    "name": "who",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Chi sei e cosa fai",
+                    "label_en": "Who you are and what you do",
+                    "max": 300
+                },
+                {
+                    "name": "highlights",
+                    "type": "textarea",
+                    "required": false,
+                    "label_it": "Punti forti, premi, esperienze",
+                    "label_en": "Highlights, awards, experience",
+                    "max": 2500
+                },
+                {
+                    "name": "platform",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Dove la usi",
+                    "label_en": "Where you use it",
+                    "max": 0,
+                    "default": "social",
+                    "options": [
+                        "social",
+                        "sito",
+                        "lavoro",
+                        "speaker"
+                    ]
+                },
+                {
+                    "name": "person",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Persona",
+                    "label_en": "Person",
+                    "max": 0,
+                    "default": "prima",
+                    "options": [
+                        "prima",
+                        "terza"
+                    ]
+                }
+            ]
+        },
+        "workmebmi": {
+            "key": "workmebmi",
+            "name": "LUX.Bmi",
+            "category": "utility",
+            "icon": "pulse",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmebmi.php",
+            "desc_it": "Calcola l'indice di massa corporea, la categoria e l'intervallo di peso ideale per la tua altezza.",
+            "desc_en": "Work out body mass index, its category and the ideal weight range for your height.",
+            "inputs": [
+                {
+                    "name": "weight",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Peso (kg)",
+                    "label_en": "Weight (kg)",
+                    "max": 0,
+                    "default": "70"
+                },
+                {
+                    "name": "height",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Altezza (cm)",
+                    "label_en": "Height (cm)",
+                    "max": 0,
+                    "default": "172"
+                }
+            ]
+        },
+        "workmebmr": {
+            "key": "workmebmr",
+            "name": "LUX.Cal",
+            "category": "utility",
+            "icon": "bolt",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmebmr.php",
+            "desc_it": "Stima metabolismo basale, calorie giornaliere e ripartizione dei macronutrienti.",
+            "desc_en": "Estimate basal metabolism, daily calories and macronutrient split.",
+            "inputs": [
+                {
+                    "name": "sex",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Sesso biologico",
+                    "label_en": "Biological sex",
+                    "max": 0,
+                    "default": "f",
+                    "options": [
+                        "f",
+                        "m"
+                    ]
+                },
+                {
+                    "name": "age",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Età",
+                    "label_en": "Age",
+                    "max": 0,
+                    "default": "30",
+                    "min_value": 14,
+                    "max_value": 100
+                },
+                {
+                    "name": "weight",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Peso (kg)",
+                    "label_en": "Weight (kg)",
+                    "max": 0,
+                    "default": "70"
+                },
+                {
+                    "name": "height",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Altezza (cm)",
+                    "label_en": "Height (cm)",
+                    "max": 0,
+                    "default": "172"
+                },
+                {
+                    "name": "activity",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Attività",
+                    "label_en": "Activity",
+                    "max": 0,
+                    "default": "1.375",
+                    "options": [
+                        "1.2",
+                        "1.375",
+                        "1.55",
+                        "1.725",
+                        "1.9"
+                    ]
+                },
+                {
+                    "name": "goal",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Obiettivo",
+                    "label_en": "Goal",
+                    "max": 0,
+                    "default": "maintain",
+                    "options": [
+                        "lose",
+                        "maintain",
+                        "gain"
+                    ]
+                }
+            ]
+        },
+        "workmebook": {
+            "key": "workmebook",
+            "name": "LUX.Plot",
+            "category": "creativita",
+            "icon": "book",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmebook.php",
+            "desc_it": "Costruisce trama, personaggi e capitoli di un romanzo o di un racconto lungo.",
+            "desc_en": "Builds plot, characters and chapters for a novel or a long story.",
+            "inputs": [
+                {
+                    "name": "genre",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Genere",
+                    "label_en": "Genre",
+                    "max": 0,
+                    "default": "thriller",
+                    "options": [
+                        "thriller",
+                        "fantasy",
+                        "romantico",
+                        "fantascienza",
+                        "giallo",
+                        "storico",
+                        "horror",
+                        "avventura"
+                    ]
+                },
+                {
+                    "name": "idea",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "La tua idea di partenza",
+                    "label_en": "Your starting idea",
+                    "max": 2000
+                },
+                {
+                    "name": "length",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Lunghezza",
+                    "label_en": "Length",
+                    "max": 0,
+                    "default": "romanzo",
+                    "options": [
+                        "racconto",
+                        "romanzo",
+                        "serie"
+                    ]
+                },
+                {
+                    "name": "tone",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Atmosfera / tono",
+                    "label_en": "Mood / tone",
+                    "max": 140,
+                    "default": ""
+                }
+            ]
+        },
+        "workmebrainstorm": {
+            "key": "workmebrainstorm",
+            "name": "LUX.Storm",
+            "category": "creativita",
+            "icon": "burst",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmebrainstorm.php",
+            "desc_it": "Genera molte idee su qualsiasi tema, le raggruppa e sceglie le tre più forti.",
+            "desc_en": "Generates many ideas on any topic, groups them and picks the three strongest.",
+            "inputs": [
+                {
+                    "name": "topic",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Tema su cui fare brainstorming",
+                    "label_en": "Topic to brainstorm",
+                    "max": 240
+                },
+                {
+                    "name": "count",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Quante idee",
+                    "label_en": "How many ideas",
+                    "max": 0,
+                    "default": "20",
+                    "options": [
+                        "10",
+                        "20",
+                        "30"
+                    ]
+                },
+                {
+                    "name": "constraints",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Vincoli da rispettare",
+                    "label_en": "Constraints to respect",
+                    "max": 240,
+                    "default": ""
+                },
+                {
+                    "name": "wild",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Quanto osare",
+                    "label_en": "How bold",
+                    "max": 0,
+                    "default": "equilibrato",
+                    "options": [
+                        "pratico",
+                        "equilibrato",
+                        "folle"
+                    ]
+                }
+            ]
+        },
+        "workmebudget": {
+            "key": "workmebudget",
+            "name": "LUX.Budget",
+            "category": "produttivita",
+            "icon": "chart",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmebudget.php",
+            "desc_it": "Analizza entrate e spese e propone un piano di risparmio realistico, mese per mese.",
+            "desc_en": "Analyses income and expenses and proposes a realistic month-by-month savings plan.",
+            "inputs": [
+                {
+                    "name": "income",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Entrate mensili nette (euro)",
+                    "label_en": "Monthly net income (euro)",
+                    "max": 0,
+                    "default": "1600",
+                    "min_value": 0,
+                    "max_value": 1000000
+                },
+                {
+                    "name": "expenses",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Spese mensili (una per riga: voce, importo)",
+                    "label_en": "Monthly expenses (one per line: item, amount)",
+                    "max": 3000
+                },
+                {
+                    "name": "goal",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Obiettivo di risparmio",
+                    "label_en": "Savings goal",
+                    "max": 240,
+                    "default": ""
+                },
+                {
+                    "name": "person",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Situazione",
+                    "label_en": "Situation",
+                    "max": 0,
+                    "default": "singolo",
+                    "options": [
+                        "studente",
+                        "singolo",
+                        "coppia",
+                        "famiglia"
+                    ]
+                }
+            ]
+        },
+        "workmebusiness": {
+            "key": "workmebusiness",
+            "name": "LUX.Biz",
+            "category": "produttivita",
+            "icon": "brief",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmebusiness.php",
+            "desc_it": "Scrive un piano d'impresa in una pagina: modello, costi, ricavi e rischi.",
+            "desc_en": "Writes a one-page business plan: model, costs, revenue and risks.",
+            "inputs": [
+                {
+                    "name": "business",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "La tua idea",
+                    "label_en": "Your idea",
+                    "max": 300
+                },
+                {
+                    "name": "target",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "A chi vendi",
+                    "label_en": "Who you sell to",
+                    "max": 200,
+                    "default": ""
+                },
+                {
+                    "name": "startup",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Soldi che puoi investire (euro)",
+                    "label_en": "Money you can invest (euro)",
+                    "max": 0,
+                    "default": "2000",
+                    "min_value": 0,
+                    "max_value": 10000000
+                },
+                {
+                    "name": "time",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Tempo che puoi dedicarci",
+                    "label_en": "Time you can dedicate",
+                    "max": 0,
+                    "default": "part",
+                    "options": [
+                        "poco",
+                        "part",
+                        "full"
+                    ]
+                }
+            ]
+        },
+        "workmecase": {
+            "key": "workmecase",
+            "name": "LUX.Case",
+            "category": "utility",
+            "icon": "translate",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmecase.php",
+            "desc_it": "Cambia il formato del testo: MAIUSCOLO, minuscolo, Titolo, Inizio frase, camelCase, snake_case, kebab-case.",
+            "desc_en": "Change text case: UPPER, lower, Title, Sentence, camelCase, snake_case, kebab-case.",
+            "inputs": [
+                {
+                    "name": "text",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Testo",
+                    "label_en": "Text",
+                    "max": 20000
+                },
+                {
+                    "name": "mode",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Formato",
+                    "label_en": "Format",
+                    "max": 0,
+                    "default": "title",
+                    "options": [
+                        "upper",
+                        "lower",
+                        "title",
+                        "sentence",
+                        "camel",
+                        "snake",
+                        "kebab"
+                    ]
+                }
+            ]
+        },
+        "workmecodice": {
+            "key": "workmecodice",
+            "name": "LUX.Explain",
+            "category": "educativi",
+            "icon": "book-open",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmecodice.php",
+            "desc_it": "Spiega un pezzo di codice riga per riga, come una lezione, senza dare per scontato nulla.",
+            "desc_en": "Explains a piece of code line by line, like a lesson, assuming no knowledge.",
+            "inputs": [
+                {
+                    "name": "codice",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Codice da spiegare",
+                    "label_en": "Code to explain",
+                    "max": 12000
+                },
+                {
+                    "name": "livello",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Il tuo livello",
+                    "label_en": "Your level",
+                    "max": 0,
+                    "default": "principiante",
+                    "options": [
+                        "principiante",
+                        "intermedio",
+                        "avanzato"
+                    ]
+                }
+            ]
+        },
+        "workmecolor": {
+            "key": "workmecolor",
+            "name": "LUX.Color",
+            "category": "utility",
+            "icon": "palette",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmecolor.php",
+            "desc_it": "Converte un colore fra HEX, RGB e HSL e ne misura il contrasto di leggibilità (WCAG).",
+            "desc_en": "Converts a color between HEX, RGB and HSL and measures its readability contrast (WCAG).",
+            "inputs": [
+                {
+                    "name": "color",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Colore (HEX o rgb)",
+                    "label_en": "Color (HEX or rgb)",
+                    "max": 32
+                },
+                {
+                    "name": "bg",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Colore di sfondo confrontato (facoltativo)",
+                    "label_en": "Background color to compare (optional)",
+                    "max": 32,
+                    "default": ""
+                }
+            ]
+        },
+        "workmeconvert": {
+            "key": "workmeconvert",
+            "name": "LUX.Convert",
+            "category": "utility",
+            "icon": "shuffle",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmeconvert.php",
+            "desc_it": "Converte lunghezze, pesi, volumi, temperature, velocità, dati e tempo: risultato immediato e preciso.",
+            "desc_en": "Convert length, weight, volume, temperature, speed, data and time: instant, precise results.",
+            "inputs": [
+                {
+                    "name": "value",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Valore",
+                    "label_en": "Value",
+                    "max": 0,
+                    "default": "1"
+                },
+                {
+                    "name": "from",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Da",
+                    "label_en": "From",
+                    "max": 0,
+                    "default": "km",
+                    "options": [
+                        "mm",
+                        "cm",
+                        "m",
+                        "km",
+                        "in",
+                        "ft",
+                        "mi",
+                        "mg",
+                        "g",
+                        "kg",
+                        "t",
+                        "lb",
+                        "oz",
+                        "ml",
+                        "l",
+                        "gal",
+                        "c",
+                        "f",
+                        "k",
+                        "kmh",
+                        "mph",
+                        "ms",
+                        "knot",
+                        "b",
+                        "kb",
+                        "mb",
+                        "gb",
+                        "tb",
+                        "s",
+                        "min",
+                        "h",
+                        "day"
+                    ]
+                },
+                {
+                    "name": "to",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "A",
+                    "label_en": "To",
+                    "max": 0,
+                    "default": "mi",
+                    "options": [
+                        "mm",
+                        "cm",
+                        "m",
+                        "km",
+                        "in",
+                        "ft",
+                        "mi",
+                        "mg",
+                        "g",
+                        "kg",
+                        "t",
+                        "lb",
+                        "oz",
+                        "ml",
+                        "l",
+                        "gal",
+                        "c",
+                        "f",
+                        "k",
+                        "kmh",
+                        "mph",
+                        "ms",
+                        "knot",
+                        "b",
+                        "kb",
+                        "mb",
+                        "gb",
+                        "tb",
+                        "s",
+                        "min",
+                        "h",
+                        "day"
+                    ]
+                }
+            ]
+        },
+        "workmecorrect": {
+            "key": "workmecorrect",
+            "name": "LUX.Correct",
+            "category": "educativi",
+            "icon": "check-circle",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmecorrect.php",
+            "desc_it": "Corregge errori di ortografia, grammatica e stile, spiegando ogni modifica.",
+            "desc_en": "Fixes spelling, grammar and style mistakes, explaining each change.",
+            "inputs": [
+                {
+                    "name": "text",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Testo da correggere",
+                    "label_en": "Text to correct",
+                    "max": 8000
+                },
+                {
+                    "name": "lang",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Lingua del testo",
+                    "label_en": "Text language",
+                    "max": 0,
+                    "default": "it",
+                    "options": [
+                        "it",
+                        "en",
+                        "auto"
+                    ]
+                },
+                {
+                    "name": "level",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Tipo di revisione",
+                    "label_en": "Review level",
+                    "max": 0,
+                    "default": "completa",
+                    "options": [
+                        "errori",
+                        "completa",
+                        "stile"
+                    ]
+                }
+            ]
+        },
+        "workmecount": {
+            "key": "workmecount",
+            "name": "LUX.Count",
+            "category": "utility",
+            "icon": "chart",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmecount.php",
+            "desc_it": "Conta caratteri, parole, frasi e righe, con tempo di lettura e parole più usate.",
+            "desc_en": "Count characters, words, sentences and lines, with reading time and top words.",
+            "inputs": [
+                {
+                    "name": "text",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Testo",
+                    "label_en": "Text",
+                    "max": 40000
+                }
+            ]
+        },
+        "workmecover": {
+            "key": "workmecover",
+            "name": "LUX.Cover",
+            "category": "produttivita",
+            "icon": "file",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmecover.php",
+            "desc_it": "Scrive lettere di presentazione e motivazionali su misura per un annuncio o un ruolo.",
+            "desc_en": "Writes tailored cover and motivation letters for a job post or role.",
+            "inputs": [
+                {
+                    "name": "role",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Ruolo e azienda",
+                    "label_en": "Role and company",
+                    "max": 240
+                },
+                {
+                    "name": "skills",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Le tue competenze ed esperienze",
+                    "label_en": "Your skills and experience",
+                    "max": 4000
+                },
+                {
+                    "name": "announcement",
+                    "type": "textarea",
+                    "required": false,
+                    "label_it": "Testo dell'annuncio (facoltativo)",
+                    "label_en": "Job post text (optional)",
+                    "max": 4000
+                },
+                {
+                    "name": "tone",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Tono",
+                    "label_en": "Tone",
+                    "max": 0,
+                    "default": "professionale",
+                    "options": [
+                        "professionale",
+                        "entusiasta",
+                        "sobrio",
+                        "diretto"
+                    ]
+                }
+            ]
+        },
+        "workmecron": {
+            "key": "workmecron",
+            "name": "LUX.Cron",
+            "category": "utility",
+            "icon": "timer",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmecron.php",
+            "desc_it": "Traduce un'espressione cron in italiano chiaro e segnala se non è valida.",
+            "desc_en": "Turn a cron expression into plain language and flag invalid ones.",
+            "inputs": [
+                {
+                    "name": "expr",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Espressione cron (5 campi)",
+                    "label_en": "Cron expression (5 fields)",
+                    "max": 120,
+                    "default": "*/15 9-18 * * 1-5"
+                }
+            ]
+        },
+        "workmecsv": {
+            "key": "workmecsv",
+            "name": "LUX.Csv",
+            "category": "utility",
+            "icon": "clipboard",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmecsv.php",
+            "desc_it": "Converte dati CSV in JSON e viceversa, con scelta del separatore e intestazioni automatiche.",
+            "desc_en": "Convert CSV data to JSON and back, with separator choice and automatic headers.",
+            "inputs": [
+                {
+                    "name": "data",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Dati",
+                    "label_en": "Data",
+                    "max": 200000
+                },
+                {
+                    "name": "mode",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Direzione",
+                    "label_en": "Direction",
+                    "max": 0,
+                    "default": "tojson",
+                    "options": [
+                        "tojson",
+                        "tocsv"
+                    ]
+                },
+                {
+                    "name": "sep",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Separatore CSV",
+                    "label_en": "CSV separator",
+                    "max": 0,
+                    "default": ",",
+                    "options": [
+                        ",",
+                        ";",
+                        "\t",
+                        "|"
+                    ]
+                }
+            ]
+        },
+        "workmedates": {
+            "key": "workmedates",
+            "name": "LUX.Dates",
+            "category": "utility",
+            "icon": "calendar",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmedates.php",
+            "desc_it": "Differenza tra due date in giorni, settimane, mesi e anni, con i giorni lavorativi esclusi i fine settimana.",
+            "desc_en": "Difference between two dates in days, weeks, months and years, with business days excluding weekends.",
+            "inputs": [
+                {
+                    "name": "start",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Data iniziale (AAAA-MM-GG)",
+                    "label_en": "Start date (YYYY-MM-DD)",
+                    "max": 10,
+                    "default": ""
+                },
+                {
+                    "name": "end",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Data finale (AAAA-MM-GG)",
+                    "label_en": "End date (YYYY-MM-DD)",
+                    "max": 10,
+                    "default": ""
+                },
+                {
+                    "name": "extra",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Oppure: aggiungi/togli giorni alla data iniziale",
+                    "label_en": "Or: add/remove days to the start date",
+                    "max": 0,
+                    "default": "0",
+                    "min_value": -3650,
+                    "max_value": 3650
+                }
+            ]
+        },
+        "workmedebug": {
+            "key": "workmedebug",
+            "name": "LUX.Debug",
+            "category": "produttivita",
+            "icon": "laptop",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmedebug.php",
+            "desc_it": "Trova l errore nel tuo codice, spiega perché succede e ti dà la versione corretta.",
+            "desc_en": "Finds the bug in your code, explains why it happens and gives you the fixed version.",
+            "inputs": [
+                {
+                    "name": "codice",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Codice con il problema",
+                    "label_en": "Code with the problem",
+                    "max": 12000
+                },
+                {
+                    "name": "errore",
+                    "type": "textarea",
+                    "required": false,
+                    "label_it": "Messaggio di errore o cosa non funziona",
+                    "label_en": "Error message or what goes wrong",
+                    "max": 2000
+                },
+                {
+                    "name": "linguaggio",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Linguaggio",
+                    "label_en": "Language",
+                    "max": 0,
+                    "default": "javascript",
+                    "options": [
+                        "javascript",
+                        "php",
+                        "python",
+                        "html",
+                        "java",
+                        "altro"
+                    ]
+                }
+            ]
+        },
+        "workmediff": {
+            "key": "workmediff",
+            "name": "LUX.Diff",
+            "category": "utility",
+            "icon": "code",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmediff.php",
+            "desc_it": "Confronta due versioni di un testo e mostra riga per riga cosa è cambiato.",
+            "desc_en": "Compare two versions of a text and show line by line what changed.",
+            "inputs": [
+                {
+                    "name": "a",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Testo originale",
+                    "label_en": "Original text",
+                    "max": 30000
+                },
+                {
+                    "name": "b",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Testo modificato",
+                    "label_en": "Changed text",
+                    "max": 30000
+                }
+            ]
+        },
+        "workmefeedback": {
+            "key": "workmefeedback",
+            "name": "LUX.Review",
+            "category": "educativi",
+            "icon": "star",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmefeedback.php",
+            "desc_it": "Dà un giudizio onesto su un tuo testo: punti forti, cose da correggere e come migliorarle.",
+            "desc_en": "Gives an honest review of your text: strengths, fixes and how to improve them.",
+            "inputs": [
+                {
+                    "name": "testo",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Il testo da commentare",
+                    "label_en": "Text to review",
+                    "max": 12000
+                },
+                {
+                    "name": "tipo",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Che tipo di testo è",
+                    "label_en": "What kind of text it is",
+                    "max": 0,
+                    "default": "tema",
+                    "options": [
+                        "tema",
+                        "curriculum",
+                        "post",
+                        "lettera"
+                    ]
+                },
+                {
+                    "name": "obiettivo",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Cosa vuoi ottenere",
+                    "label_en": "What you want to achieve",
+                    "max": 200,
+                    "default": ""
+                }
+            ]
+        },
+        "workmegift": {
+            "key": "workmegift",
+            "name": "LUX.Gift",
+            "category": "utility",
+            "icon": "gift",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmegift.php",
+            "desc_it": "Trova idee regalo adatte a persona, budget e occasione, divise per fascia di spesa.",
+            "desc_en": "Finds gift ideas matching person, budget and occasion, split by price range.",
+            "inputs": [
+                {
+                    "name": "who",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Per chi è il regalo",
+                    "label_en": "Who the gift is for",
+                    "max": 200
+                },
+                {
+                    "name": "occasion",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Occasione",
+                    "label_en": "Occasion",
+                    "max": 0,
+                    "default": "compleanno",
+                    "options": [
+                        "compleanno",
+                        "natale",
+                        "anniversario",
+                        "laurea",
+                        "matrimonio",
+                        "grazie"
+                    ]
+                },
+                {
+                    "name": "budget",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Budget (euro)",
+                    "label_en": "Budget (euro)",
+                    "max": 0,
+                    "default": "50",
+                    "min_value": 1,
+                    "max_value": 100000
+                },
+                {
+                    "name": "avoid",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Cose da evitare",
+                    "label_en": "Things to avoid",
+                    "max": 200,
+                    "default": ""
+                }
+            ]
+        },
+        "workmehash": {
+            "key": "workmehash",
+            "name": "LUX.Hash",
+            "category": "utility",
+            "icon": "shield",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmehash.php",
+            "desc_it": "Calcola impronte SHA-256, SHA-1, MD5 e CRC32 di un testo: utile per verifiche e firme.",
+            "desc_en": "Compute SHA-256, SHA-1, MD5 and CRC32 hashes of a text: handy for checks and signatures.",
+            "inputs": [
+                {
+                    "name": "text",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Testo",
+                    "label_en": "Text",
+                    "max": 100000
+                },
+                {
+                    "name": "algo",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Algoritmo",
+                    "label_en": "Algorithm",
+                    "max": 0,
+                    "default": "sha256",
+                    "options": [
+                        "sha256",
+                        "sha1",
+                        "md5",
+                        "crc32"
+                    ]
+                }
+            ]
+        },
+        "workmehex": {
+            "key": "workmehex",
+            "name": "LUX.Hex",
+            "category": "creativita",
+            "icon": "palette",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmehex.php",
+            "desc_it": "Converte un colore tra HEX, RGB e HSL e verifica il contrasto WCAG su bianco e nero.",
+            "desc_en": "Convert a colour between HEX, RGB and HSL and check WCAG contrast on white and black.",
+            "inputs": [
+                {
+                    "name": "color",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Colore (HEX o RGB)",
+                    "label_en": "Colour (HEX or RGB)",
+                    "max": 40,
+                    "default": "#D8A93C"
+                }
+            ]
+        },
+        "workmeiban": {
+            "key": "workmeiban",
+            "name": "LUX.IBAN",
+            "category": "utility",
+            "icon": "shield",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmeiban.php",
+            "desc_it": "Controlla un IBAN come fa una banca: validità reale, paese, banca e numero di conto.",
+            "desc_en": "Checks an IBAN the way a bank does: real validity, country, bank code and account.",
+            "inputs": [
+                {
+                    "name": "iban",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "IBAN (anche con spazi)",
+                    "label_en": "IBAN (spaces are fine)",
+                    "max": 42
+                }
+            ]
+        },
+        "workmeidea": {
+            "key": "workmeidea",
+            "name": "LUX.Spark",
+            "category": "utility",
+            "icon": "bulb",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmeidea.php",
+            "desc_it": "Genera idee di business o di progetto e le valuta: pubblico, difficoltà, primi passi.",
+            "desc_en": "Generates business or project ideas and rates them: audience, difficulty, first steps.",
+            "inputs": [
+                {
+                    "name": "field",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Settore o tema",
+                    "label_en": "Field or theme",
+                    "max": 160
+                },
+                {
+                    "name": "budget",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Budget di partenza",
+                    "label_en": "Starting budget",
+                    "max": 0,
+                    "default": "basso",
+                    "options": [
+                        "zero",
+                        "basso",
+                        "medio",
+                        "alto"
+                    ]
+                },
+                {
+                    "name": "skills",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Competenze che hai",
+                    "label_en": "Skills you have",
+                    "max": 200,
+                    "default": ""
+                }
+            ]
+        },
+        "workmeinglese": {
+            "key": "workmeinglese",
+            "name": "LUX.English",
+            "category": "educativi",
+            "icon": "book",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmeinglese.php",
+            "desc_it": "Crea dialoghi ed esercizi di inglese su misura, con soluzioni e frasi pronte da usare.",
+            "desc_en": "Creates tailored English dialogues and exercises, with answers and ready-made phrases.",
+            "inputs": [
+                {
+                    "name": "livello",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Livello",
+                    "label_en": "Level",
+                    "max": 0,
+                    "default": "A2",
+                    "options": [
+                        "A1",
+                        "A2",
+                        "B1",
+                        "B2"
+                    ]
+                },
+                {
+                    "name": "argomento",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Argomento o situazione",
+                    "label_en": "Topic or situation",
+                    "max": 200
+                },
+                {
+                    "name": "obiettivo",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Cosa vuoi allenare",
+                    "label_en": "What to practise",
+                    "max": 0,
+                    "default": "conversazione",
+                    "options": [
+                        "conversazione",
+                        "grammatica",
+                        "vocabolario",
+                        "scrittura"
+                    ]
+                }
+            ]
+        },
+        "workmeinteresse": {
+            "key": "workmeinteresse",
+            "name": "LUX.Grow",
+            "category": "produttivita",
+            "icon": "seedling",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmeinteresse.php",
+            "desc_it": "Calcola quanto cresce un risparmio con interesse composto e versamenti mensili, anno per anno.",
+            "desc_en": "Computes how a saving grows with compound interest and monthly deposits, year by year.",
+            "inputs": [
+                {
+                    "name": "initial",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Capitale iniziale (euro)",
+                    "label_en": "Starting capital (euro)",
+                    "max": 12,
+                    "default": "1000",
+                    "min_value": 0,
+                    "max_value": 100000000
+                },
+                {
+                    "name": "monthly",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Versamento mensile (euro)",
+                    "label_en": "Monthly deposit (euro)",
+                    "max": 10,
+                    "default": "100",
+                    "min_value": 0,
+                    "max_value": 1000000
+                },
+                {
+                    "name": "rate",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Interesse annuo (%)",
+                    "label_en": "Annual interest (%)",
+                    "max": 6,
+                    "default": "5",
+                    "min_value": 0,
+                    "max_value": 100
+                },
+                {
+                    "name": "years",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Anni",
+                    "label_en": "Years",
+                    "max": 2,
+                    "default": "10",
+                    "min_value": 1,
+                    "max_value": 60
+                },
+                {
+                    "name": "freq",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Frequenza di capitalizzazione",
+                    "label_en": "Compounding frequency",
+                    "max": 0,
+                    "default": "mensile",
+                    "options": [
+                        "mensile",
+                        "trimestrale",
+                        "annuale"
+                    ]
+                }
+            ]
+        },
+        "workmeinterview": {
+            "key": "workmeinterview",
+            "name": "LUX.Interview",
+            "category": "produttivita",
+            "icon": "users",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmeinterview.php",
+            "desc_it": "Simula un colloquio di lavoro: domande probabili, risposte modello e cosa chiedere tu.",
+            "desc_en": "Simulates a job interview: likely questions, model answers and what you should ask.",
+            "inputs": [
+                {
+                    "name": "role",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Ruolo per cui ti candidi",
+                    "label_en": "Role you apply for",
+                    "max": 200
+                },
+                {
+                    "name": "company",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Azienda o settore",
+                    "label_en": "Company or industry",
+                    "max": 200,
+                    "default": ""
+                },
+                {
+                    "name": "experience",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Esperienza",
+                    "label_en": "Experience",
+                    "max": 0,
+                    "default": "junior",
+                    "options": [
+                        "primo",
+                        "junior",
+                        "senior"
+                    ]
+                },
+                {
+                    "name": "weak",
+                    "type": "textarea",
+                    "required": false,
+                    "label_it": "Punti deboli che temi",
+                    "label_en": "Weak points you fear",
+                    "max": 1200,
+                    "default": ""
+                }
+            ]
+        },
+        "workmeip": {
+            "key": "workmeip",
+            "name": "LUX.Net",
+            "category": "utility",
+            "icon": "wifi",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmeip.php",
+            "desc_it": "Calcola rete, maschera, broadcast e host utilizzabili da un indirizzo IP o da una notazione CIDR.",
+            "desc_en": "Computes network, mask, broadcast and usable hosts from an IP address or CIDR notation.",
+            "inputs": [
+                {
+                    "name": "cidr",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Indirizzo IP o CIDR",
+                    "label_en": "IP address or CIDR",
+                    "max": 40
+                }
+            ]
+        },
+        "workmejson": {
+            "key": "workmejson",
+            "name": "LUX.Json",
+            "category": "utility",
+            "icon": "code",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmejson.php",
+            "desc_it": "Formatta, minifica o valida un JSON e ti dice esattamente dov'è l'errore.",
+            "desc_en": "Pretty-print, minify or validate JSON and tell you exactly where the error is.",
+            "inputs": [
+                {
+                    "name": "json",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "JSON",
+                    "label_en": "JSON",
+                    "max": 200000
+                },
+                {
+                    "name": "mode",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Azione",
+                    "label_en": "Action",
+                    "max": 0,
+                    "default": "pretty",
+                    "options": [
+                        "pretty",
+                        "minify",
+                        "validate"
+                    ]
+                }
+            ]
+        },
+        "workmelesson": {
+            "key": "workmelesson",
+            "name": "LUX.Lesson",
+            "category": "educativi",
+            "icon": "gradcap",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmelesson.php",
+            "desc_it": "Prepara lezioni complete per insegnanti: obiettivi, attività, esercizi e verifica.",
+            "desc_en": "Prepares complete lessons for teachers: objectives, activities, exercises and assessment.",
+            "inputs": [
+                {
+                    "name": "topic",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Argomento della lezione",
+                    "label_en": "Lesson topic",
+                    "max": 200
+                },
+                {
+                    "name": "class",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Classe o età",
+                    "label_en": "Class or age",
+                    "max": 120
+                },
+                {
+                    "name": "duration",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Durata",
+                    "label_en": "Duration",
+                    "max": 0,
+                    "default": "60",
+                    "options": [
+                        "45",
+                        "60",
+                        "90",
+                        "due"
+                    ]
+                },
+                {
+                    "name": "support",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Strumenti disponibili",
+                    "label_en": "Available tools",
+                    "max": 0,
+                    "default": "lavagna",
+                    "options": [
+                        "lavagna",
+                        "lim",
+                        "laboratorio",
+                        "nessuno"
+                    ]
+                }
+            ]
+        },
+        "workmeloan": {
+            "key": "workmeloan",
+            "name": "LUX.Loan",
+            "category": "utility",
+            "icon": "chart",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmeloan.php",
+            "desc_it": "Calcola la rata di un mutuo o prestito, con interessi totali e costo reale del finanziamento.",
+            "desc_en": "Work out the instalment of a mortgage or loan, with total interest and real cost.",
+            "inputs": [
+                {
+                    "name": "amount",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Importo finanziato (euro)",
+                    "label_en": "Loan amount (euro)",
+                    "max": 0,
+                    "default": "120000"
+                },
+                {
+                    "name": "rate",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Tasso annuo (TAN %)",
+                    "label_en": "Annual rate (%)",
+                    "max": 0,
+                    "default": "3.5"
+                },
+                {
+                    "name": "years",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Durata (anni)",
+                    "label_en": "Term (years)",
+                    "max": 0,
+                    "default": "25",
+                    "min_value": 1,
+                    "max_value": 40
+                }
+            ]
+        },
+        "workmelorem": {
+            "key": "workmelorem",
+            "name": "LUX.Lorem",
+            "category": "creativita",
+            "icon": "note",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmelorem.php",
+            "desc_it": "Genera testo segnaposto per i tuoi layout: paragrafi, titoli e liste.",
+            "desc_en": "Generate placeholder text for your layouts: paragraphs, headings and lists.",
+            "inputs": [
+                {
+                    "name": "paragraphs",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Paragrafi",
+                    "label_en": "Paragraphs",
+                    "max": 2,
+                    "default": "3",
+                    "min_value": 1,
+                    "max_value": 20
+                },
+                {
+                    "name": "sentences",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Frasi per paragrafo",
+                    "label_en": "Sentences per paragraph",
+                    "max": 2,
+                    "default": "4",
+                    "min_value": 1,
+                    "max_value": 10
+                },
+                {
+                    "name": "headings",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Titoli",
+                    "label_en": "Headings",
+                    "max": 0,
+                    "default": "no",
+                    "options": [
+                        "no",
+                        "yes"
+                    ]
+                },
+                {
+                    "name": "lang",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Lingua del testo",
+                    "label_en": "Text language",
+                    "max": 0,
+                    "default": "la",
+                    "options": [
+                        "la",
+                        "it"
+                    ]
+                }
+            ]
+        },
+        "workmemail": {
+            "key": "workmemail",
+            "name": "LUX.Inbox",
+            "category": "produttivita",
+            "icon": "mail",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmemail.php",
+            "desc_it": "Scrive email e messaggi professionali: oggetto, tono giusto e corpo pronto da inviare.",
+            "desc_en": "Writes professional emails and messages: subject, right tone and body ready to send.",
+            "inputs": [
+                {
+                    "name": "goal",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "A chi scrivi e perché",
+                    "label_en": "Who you write to and why",
+                    "max": 320
+                },
+                {
+                    "name": "tone",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Tono",
+                    "label_en": "Tone",
+                    "max": 0,
+                    "default": "professionale",
+                    "options": [
+                        "professionale",
+                        "cordiale",
+                        "formale",
+                        "diretto",
+                        "persuasivo",
+                        "scuse"
+                    ]
+                },
+                {
+                    "name": "details",
+                    "type": "textarea",
+                    "required": false,
+                    "label_it": "Dettagli da includere (facoltativo)",
+                    "label_en": "Details to include (optional)",
+                    "max": 3000
+                }
+            ]
+        },
+        "workmematematica": {
+            "key": "workmematematica",
+            "name": "LUX.Math",
+            "category": "educativi",
+            "icon": "ruler",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmematematica.php",
+            "desc_it": "Risolve un problema di matematica spiegando ogni passaggio, con la verifica finale.",
+            "desc_en": "Solves a maths problem explaining every step, with a final check.",
+            "inputs": [
+                {
+                    "name": "problema",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Il problema",
+                    "label_en": "The problem",
+                    "max": 3000
+                },
+                {
+                    "name": "livello",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Livello di studio",
+                    "label_en": "Study level",
+                    "max": 0,
+                    "default": "biennio",
+                    "options": [
+                        "medie",
+                        "biennio",
+                        "triennio"
+                    ]
+                },
+                {
+                    "name": "dettaglio",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Quanto dettaglio",
+                    "label_en": "How much detail",
+                    "max": 0,
+                    "default": "tutti",
+                    "options": [
+                        "tutti",
+                        "brevi",
+                        "risultato"
+                    ]
+                }
+            ]
+        },
+        "workmemeal": {
+            "key": "workmemeal",
+            "name": "LUX.Meal",
+            "category": "utility",
+            "icon": "dish",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmemeal.php",
+            "desc_it": "Pianifica i pasti della settimana e genera la lista della spesa, in base a gusti e budget.",
+            "desc_en": "Plans the week's meals and generates the shopping list, based on tastes and budget.",
+            "inputs": [
+                {
+                    "name": "people",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Quante persone",
+                    "label_en": "How many people",
+                    "max": 0,
+                    "default": "2",
+                    "min_value": 1,
+                    "max_value": 20
+                },
+                {
+                    "name": "likes",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Cosa piace",
+                    "label_en": "What they like",
+                    "max": 240,
+                    "default": ""
+                },
+                {
+                    "name": "avoid",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Allergie, intolleranze, cibi da evitare",
+                    "label_en": "Allergies, intolerances, foods to avoid",
+                    "max": 240,
+                    "default": ""
+                },
+                {
+                    "name": "time",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Tempo in cucina",
+                    "label_en": "Cooking time",
+                    "max": 0,
+                    "default": "30",
+                    "options": [
+                        "15",
+                        "30",
+                        "60",
+                        "zero"
+                    ]
+                },
+                {
+                    "name": "budget",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Budget settimanale (euro)",
+                    "label_en": "Weekly budget (euro)",
+                    "max": 0,
+                    "default": "70",
+                    "min_value": 10,
+                    "max_value": 5000
+                }
+            ]
+        },
+        "workmeorale": {
+            "key": "workmeorale",
+            "name": "LUX.Speak",
+            "category": "educativi",
+            "icon": "mic",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmeorale.php",
+            "desc_it": "Prepara un esposizione orale: scaletta, frasi di collegamento e le domande che ti faranno.",
+            "desc_en": "Prepares an oral presentation: outline, linking phrases and the questions you will be asked.",
+            "inputs": [
+                {
+                    "name": "argomento",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Argomento da esporre",
+                    "label_en": "Topic to present",
+                    "max": 300
+                },
+                {
+                    "name": "materia",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Materia",
+                    "label_en": "Subject",
+                    "max": 120,
+                    "default": ""
+                },
+                {
+                    "name": "durata",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Quanto devi parlare",
+                    "label_en": "How long you must speak",
+                    "max": 0,
+                    "default": "5",
+                    "options": [
+                        "3",
+                        "5",
+                        "10",
+                        "15"
+                    ]
+                },
+                {
+                    "name": "difficolta",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Parti che ti preoccupano",
+                    "label_en": "Parts you are worried about",
+                    "max": 300,
+                    "default": ""
+                }
+            ]
+        },
+        "workmeorario": {
+            "key": "workmeorario",
+            "name": "LUX.Hours",
+            "category": "produttivita",
+            "icon": "time",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmeorario.php",
+            "desc_it": "Calcola le ore lavorate fra due orari, toglie le pause e stima il guadagno con la paga oraria.",
+            "desc_en": "Computes hours worked between two times, subtracts breaks and estimates pay from an hourly rate.",
+            "inputs": [
+                {
+                    "name": "start",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Inizio (HH:MM)",
+                    "label_en": "Start (HH:MM)",
+                    "max": 5,
+                    "default": "09:00"
+                },
+                {
+                    "name": "end",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Fine (HH:MM)",
+                    "label_en": "End (HH:MM)",
+                    "max": 5,
+                    "default": "18:00"
+                },
+                {
+                    "name": "pause",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Pausa in minuti",
+                    "label_en": "Break in minutes",
+                    "max": 3,
+                    "default": "60",
+                    "min_value": 0,
+                    "max_value": 600
+                },
+                {
+                    "name": "rate",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Paga oraria in euro (facoltativo)",
+                    "label_en": "Hourly pay in euro (optional)",
+                    "max": 6,
+                    "default": "",
+                    "min_value": 0,
+                    "max_value": 1000
+                }
+            ]
+        },
+        "workmepass": {
+            "key": "workmepass",
+            "name": "LUX.Pass",
+            "category": "utility",
+            "icon": "key",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmepass.php",
+            "desc_it": "Genera password forti e casuali, senza salvarle da nessuna parte: nessun log, nessuna cronologia.",
+            "desc_en": "Generate strong random passwords, never stored anywhere.",
+            "inputs": [
+                {
+                    "name": "length",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Lunghezza",
+                    "label_en": "Length",
+                    "max": 0,
+                    "default": "20",
+                    "min_value": 8,
+                    "max_value": 64
+                },
+                {
+                    "name": "count",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Quante password",
+                    "label_en": "How many",
+                    "max": 3,
+                    "default": "5",
+                    "min_value": 1,
+                    "max_value": 20
+                },
+                {
+                    "name": "mode",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Tipo",
+                    "label_en": "Type",
+                    "max": 0,
+                    "default": "strong",
+                    "options": [
+                        "strong",
+                        "alnum",
+                        "easy"
+                    ]
+                }
+            ]
+        },
+        "workmepercent": {
+            "key": "workmepercent",
+            "name": "LUX.Percent",
+            "category": "utility",
+            "icon": "calc",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmepercent.php",
+            "desc_it": "Percentuali, sconti, aumenti e variazioni: tutti i calcoli che servono al volo.",
+            "desc_en": "Percentages, discounts, increases and changes: the quick math you need.",
+            "inputs": [
+                {
+                    "name": "mode",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Cosa vuoi calcolare",
+                    "label_en": "What to calculate",
+                    "max": 0,
+                    "default": "of",
+                    "options": [
+                        "of",
+                        "share",
+                        "change",
+                        "discount",
+                        "increase"
+                    ]
+                },
+                {
+                    "name": "a",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Valore A",
+                    "label_en": "Value A",
+                    "max": 0,
+                    "default": "100"
+                },
+                {
+                    "name": "b",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Valore B (%)",
+                    "label_en": "Value B (%)",
+                    "max": 0,
+                    "default": "22"
+                }
+            ]
+        },
+        "workmepick": {
+            "key": "workmepick",
+            "name": "LUX.Pick",
+            "category": "giochi",
+            "icon": "target",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmepick.php",
+            "desc_it": "Sorteggia a caso da un elenco: perfetto per turni, nomi, premi o decisioni difficili.",
+            "desc_en": "Randomly draw from a list: perfect for turns, names, prizes or hard decisions.",
+            "inputs": [
+                {
+                    "name": "list",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Elenco (una voce per riga)",
+                    "label_en": "List (one item per line)",
+                    "max": 20000
+                },
+                {
+                    "name": "count",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Quanti estratti",
+                    "label_en": "How many picks",
+                    "max": 0,
+                    "default": "1",
+                    "min_value": 1,
+                    "max_value": 50
+                },
+                {
+                    "name": "unique",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Senza ripetizioni",
+                    "label_en": "Without repetition",
+                    "max": 0,
+                    "default": "1",
+                    "options": [
+                        "1",
+                        "0"
+                    ]
+                }
+            ]
+        },
+        "workmepitch": {
+            "key": "workmepitch",
+            "name": "LUX.Pitch",
+            "category": "produttivita",
+            "icon": "rocket",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmepitch.php",
+            "desc_it": "Prepara presentazioni efficaci: pitch da 30 secondi, struttura della presentazione e domande difficili.",
+            "desc_en": "Prepares effective presentations: 30-second pitch, deck structure and tough questions.",
+            "inputs": [
+                {
+                    "name": "what",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Cosa presenti",
+                    "label_en": "What you present",
+                    "max": 2500
+                },
+                {
+                    "name": "audience",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "A chi parli",
+                    "label_en": "Who you talk to",
+                    "max": 0,
+                    "default": "investitori",
+                    "options": [
+                        "investitori",
+                        "clienti",
+                        "capo",
+                        "giuria",
+                        "pubblico"
+                    ]
+                },
+                {
+                    "name": "duration",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Durata",
+                    "label_en": "Duration",
+                    "max": 0,
+                    "default": "5",
+                    "options": [
+                        "30sec",
+                        "2",
+                        "5",
+                        "15"
+                    ]
+                },
+                {
+                    "name": "goal",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Cosa vuoi ottenere",
+                    "label_en": "What you want to achieve",
+                    "max": 200,
+                    "default": ""
+                }
+            ]
+        },
+        "workmepresentazione": {
+            "key": "workmepresentazione",
+            "name": "LUX.Slides",
+            "category": "produttivita",
+            "icon": "tile",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmepresentazione.php",
+            "desc_it": "Prepara la scaletta di una presentazione: cosa scrivere su ogni slide e cosa dire a voce.",
+            "desc_en": "Prepares a presentation outline: what to put on each slide and what to say aloud.",
+            "inputs": [
+                {
+                    "name": "argomento",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Argomento della presentazione",
+                    "label_en": "Presentation topic",
+                    "max": 300
+                },
+                {
+                    "name": "durata",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Durata",
+                    "label_en": "Duration",
+                    "max": 0,
+                    "default": "10",
+                    "options": [
+                        "5",
+                        "10",
+                        "15",
+                        "20"
+                    ]
+                },
+                {
+                    "name": "pubblico",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Pubblico",
+                    "label_en": "Audience",
+                    "max": 0,
+                    "default": "classe",
+                    "options": [
+                        "classe",
+                        "professori",
+                        "lavoro",
+                        "pubblico"
+                    ]
+                }
+            ]
+        },
+        "workmeprime": {
+            "key": "workmeprime",
+            "name": "LUX.Prime",
+            "category": "educativi",
+            "icon": "calc",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmeprime.php",
+            "desc_it": "Dice se un numero è primo, lo scompone in fattori primi e calcola MCD e mcm con un secondo numero.",
+            "desc_en": "Tells whether a number is prime, factorizes it and computes GCD and LCM with a second number.",
+            "inputs": [
+                {
+                    "name": "n",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Numero",
+                    "label_en": "Number",
+                    "max": 13,
+                    "default": "360",
+                    "min_value": 0,
+                    "max_value": 1000000000000
+                },
+                {
+                    "name": "n2",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Secondo numero per MCD e mcm (facoltativo)",
+                    "label_en": "Second number for GCD and LCM (optional)",
+                    "max": 13,
+                    "default": "",
+                    "min_value": 0,
+                    "max_value": 1000000000000
+                }
+            ]
+        },
+        "workmeprogetto": {
+            "key": "workmeprogetto",
+            "name": "LUX.Plan",
+            "category": "produttivita",
+            "icon": "target",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmeprogetto.php",
+            "desc_it": "Trasforma un obiettivo in un piano con fasi, tempi, rischi e le prime tre azioni da fare.",
+            "desc_en": "Turns a goal into a plan with phases, timing, risks and the first three actions.",
+            "inputs": [
+                {
+                    "name": "obiettivo",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Obiettivo da raggiungere",
+                    "label_en": "Goal to reach",
+                    "max": 1500
+                },
+                {
+                    "name": "durata",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Tempo a disposizione",
+                    "label_en": "Time available",
+                    "max": 0,
+                    "default": "mese",
+                    "options": [
+                        "settimana",
+                        "mese",
+                        "trimestre",
+                        "anno"
+                    ]
+                },
+                {
+                    "name": "risorse",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Tempo e mezzi a disposizione",
+                    "label_en": "Time and resources available",
+                    "max": 300,
+                    "default": ""
+                }
+            ]
+        },
+        "workmereview": {
+            "key": "workmereview",
+            "name": "LUX.Review",
+            "category": "utility",
+            "icon": "star",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmereview.php",
+            "desc_it": "Scrive recensioni oneste e utili su prodotti, film, libri, ristoranti o servizi.",
+            "desc_en": "Writes honest and useful reviews of products, films, books, restaurants or services.",
+            "inputs": [
+                {
+                    "name": "subject",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Cosa recensisci",
+                    "label_en": "What you review",
+                    "max": 240
+                },
+                {
+                    "name": "opinion",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "La tua esperienza",
+                    "label_en": "Your experience",
+                    "max": 3000
+                },
+                {
+                    "name": "rating",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Voto",
+                    "label_en": "Rating",
+                    "max": 0,
+                    "default": "4",
+                    "options": [
+                        "5",
+                        "4",
+                        "3",
+                        "2",
+                        "1"
+                    ]
+                },
+                {
+                    "name": "platform",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Dove la pubblichi",
+                    "label_en": "Where you publish it",
+                    "max": 0,
+                    "default": "store",
+                    "options": [
+                        "store",
+                        "social",
+                        "sito",
+                        "breve"
+                    ]
+                }
+            ]
+        },
+        "workmeseo": {
+            "key": "workmeseo",
+            "name": "LUX.Seo",
+            "category": "produttivita",
+            "icon": "search",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmeseo.php",
+            "desc_it": "Prepara titolo, meta descrizione, parole chiave e scaletta per una pagina web.",
+            "desc_en": "Prepares title, meta description, keywords and outline for a web page.",
+            "inputs": [
+                {
+                    "name": "topic",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Argomento della pagina",
+                    "label_en": "Page topic",
+                    "max": 240
+                },
+                {
+                    "name": "keywords",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Parole chiave già in mente",
+                    "label_en": "Keywords you already have",
+                    "max": 240,
+                    "default": ""
+                },
+                {
+                    "name": "market",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Mercato",
+                    "label_en": "Market",
+                    "max": 0,
+                    "default": "it",
+                    "options": [
+                        "it",
+                        "en"
+                    ]
+                }
+            ]
+        },
+        "workmeshades": {
+            "key": "workmeshades",
+            "name": "LUX.Shades",
+            "category": "creativita",
+            "icon": "palette",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmeshades.php",
+            "desc_it": "Crea una scala di 11 tonalità da un colore base, con contrasto WCAG per ognuna.",
+            "desc_en": "Build an 11-step shade scale from a base colour, with WCAG contrast for each step.",
+            "inputs": [
+                {
+                    "name": "color",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Colore base (HEX)",
+                    "label_en": "Base colour (HEX)",
+                    "max": 12,
+                    "default": "#D8A93C"
+                }
+            ]
+        },
+        "workmeslogan": {
+            "key": "workmeslogan",
+            "name": "LUX.Slogan",
+            "category": "creativita",
+            "icon": "hash",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmeslogan.php",
+            "desc_it": "Trova slogan, payoff e nomi per un brand, con spiegazione della scelta.",
+            "desc_en": "Finds slogans, taglines and brand names, with the reasoning behind each one.",
+            "inputs": [
+                {
+                    "name": "brand",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Brand, prodotto o progetto",
+                    "label_en": "Brand, product or project",
+                    "max": 200
+                },
+                {
+                    "name": "values",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Valori da comunicare",
+                    "label_en": "Values to communicate",
+                    "max": 200,
+                    "default": ""
+                },
+                {
+                    "name": "audience",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Pubblico",
+                    "label_en": "Audience",
+                    "max": 160,
+                    "default": ""
+                },
+                {
+                    "name": "lang",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Lingua",
+                    "label_en": "Language",
+                    "max": 0,
+                    "default": "it",
+                    "options": [
+                        "it",
+                        "en",
+                        "both"
+                    ]
+                }
+            ]
+        },
+        "workmeslug": {
+            "key": "workmeslug",
+            "name": "LUX.Slug",
+            "category": "utility",
+            "icon": "link",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmeslug.php",
+            "desc_it": "Trasforma un titolo in uno slug URL pulito, con opzioni per separatori e lunghezza.",
+            "desc_en": "Turn any title into a clean URL slug with separator and length options.",
+            "inputs": [
+                {
+                    "name": "text",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Titolo o testo",
+                    "label_en": "Title or text",
+                    "max": 400
+                },
+                {
+                    "name": "sep",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Separatore",
+                    "label_en": "Separator",
+                    "max": 0,
+                    "default": "-",
+                    "options": [
+                        "-",
+                        "_",
+                        "."
+                    ]
+                },
+                {
+                    "name": "maxlen",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Lunghezza massima (0 = libera)",
+                    "label_en": "Max length (0 = free)",
+                    "max": 0,
+                    "default": "60",
+                    "min_value": 0,
+                    "max_value": 200
+                }
+            ]
+        },
+        "workmesocial": {
+            "key": "workmesocial",
+            "name": "LUX.Social",
+            "category": "creativita",
+            "icon": "megaphone",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmesocial.php",
+            "desc_it": "Prepara post per i social: testo, hashtag e varianti per ogni piattaforma.",
+            "desc_en": "Prepares social media posts: caption, hashtags and variants for each platform.",
+            "inputs": [
+                {
+                    "name": "topic",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Di cosa parli",
+                    "label_en": "What it is about",
+                    "max": 240
+                },
+                {
+                    "name": "platform",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Piattaforma",
+                    "label_en": "Platform",
+                    "max": 0,
+                    "default": "instagram",
+                    "options": [
+                        "instagram",
+                        "facebook",
+                        "tiktok",
+                        "linkedin",
+                        "x",
+                        "tutte"
+                    ]
+                },
+                {
+                    "name": "tone",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Tono",
+                    "label_en": "Tone",
+                    "max": 0,
+                    "default": "informale",
+                    "options": [
+                        "informale",
+                        "professionale",
+                        "divertente",
+                        "ispirazionale",
+                        "diretto"
+                    ]
+                },
+                {
+                    "name": "cta",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Azione richiesta (facoltativo)",
+                    "label_en": "Call to action (optional)",
+                    "max": 160,
+                    "default": ""
+                }
+            ]
+        },
+        "workmesong": {
+            "key": "workmesong",
+            "name": "LUX.Lyrics",
+            "category": "creativita",
+            "icon": "guitar-note",
+            "engine": "ai",
+            "output": "mono",
+            "endpoint": "/workmesong.php",
+            "desc_it": "Scrive testi di canzoni con strofe, ritornello e rime, nel genere e nell'umore che scegli.",
+            "desc_en": "Writes song lyrics with verses, chorus and rhymes, in the genre and mood you choose.",
+            "inputs": [
+                {
+                    "name": "topic",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Di cosa parla",
+                    "label_en": "What it is about",
+                    "max": 200
+                },
+                {
+                    "name": "genre",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Genere musicale",
+                    "label_en": "Music genre",
+                    "max": 0,
+                    "default": "pop",
+                    "options": [
+                        "pop",
+                        "rock",
+                        "rap",
+                        "indie",
+                        "folk",
+                        "edm",
+                        "metal"
+                    ]
+                },
+                {
+                    "name": "mood",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Umore",
+                    "label_en": "Mood",
+                    "max": 0,
+                    "default": "malinconico",
+                    "options": [
+                        "malinconico",
+                        "energico",
+                        "romantico",
+                        "arrabbiato",
+                        "sognante",
+                        "ironico"
+                    ]
+                },
+                {
+                    "name": "lang",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Lingua del testo",
+                    "label_en": "Lyrics language",
+                    "max": 0,
+                    "default": "it",
+                    "options": [
+                        "it",
+                        "en"
+                    ]
+                },
+                {
+                    "name": "words",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Parole da usare (facoltativo)",
+                    "label_en": "Words to use (optional)",
+                    "max": 200,
+                    "default": ""
+                }
+            ]
+        },
+        "workmesort": {
+            "key": "workmesort",
+            "name": "LUX.Sort",
+            "category": "utility",
+            "icon": "filter",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmesort.php",
+            "desc_it": "Ordina elenchi, rimuove duplicati e righe vuote, conta le occorrenze.",
+            "desc_en": "Sort lists, remove duplicates and empty lines, count occurrences.",
+            "inputs": [
+                {
+                    "name": "list",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Elenco (una voce per riga o separata da virgole)",
+                    "label_en": "List (one item per line or comma separated)",
+                    "max": 30000
+                },
+                {
+                    "name": "mode",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Operazione",
+                    "label_en": "Operation",
+                    "max": 0,
+                    "default": "az",
+                    "options": [
+                        "az",
+                        "za",
+                        "len",
+                        "num",
+                        "unique",
+                        "shuffle",
+                        "count"
+                    ]
+                },
+                {
+                    "name": "caseins",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Maiuscole/minuscole",
+                    "label_en": "Case",
+                    "max": 0,
+                    "default": "1",
+                    "options": [
+                        "1",
+                        "0"
+                    ]
+                }
+            ]
+        },
+        "workmespeech": {
+            "key": "workmespeech",
+            "name": "LUX.Speech",
+            "category": "creativita",
+            "icon": "mic",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmespeech.php",
+            "desc_it": "Prepara discorsi, brindisi e ringraziamenti: apertura, corpo e chiusura che resta.",
+            "desc_en": "Prepares speeches, toasts and thank-yous: opening, body and an ending that sticks.",
+            "inputs": [
+                {
+                    "name": "occasion",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Occasione",
+                    "label_en": "Occasion",
+                    "max": 240
+                },
+                {
+                    "name": "keypeople",
+                    "type": "textarea",
+                    "required": false,
+                    "label_it": "Persone ed elementi da citare",
+                    "label_en": "People and details to mention",
+                    "max": 2500
+                },
+                {
+                    "name": "duration",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Durata",
+                    "label_en": "Length",
+                    "max": 0,
+                    "default": "3",
+                    "options": [
+                        "2",
+                        "3",
+                        "5",
+                        "10"
+                    ]
+                },
+                {
+                    "name": "tone",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Tono",
+                    "label_en": "Tone",
+                    "max": 0,
+                    "default": "emozionante",
+                    "options": [
+                        "emozionante",
+                        "ironico",
+                        "istituzionale",
+                        "motivazionale"
+                    ]
+                }
+            ]
+        },
+        "workmestat": {
+            "key": "workmestat",
+            "name": "LUX.Stats",
+            "category": "educativi",
+            "icon": "chart",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmestat.php",
+            "desc_it": "Calcola media, mediana, moda, deviazione standard e quartili da un elenco di numeri.",
+            "desc_en": "Computes mean, median, mode, standard deviation and quartiles from a list of numbers.",
+            "inputs": [
+                {
+                    "name": "data",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Numeri (uno per riga, virgola o spazio)",
+                    "label_en": "Numbers (per line, comma or space)",
+                    "max": 20000
+                }
+            ]
+        },
+        "workmestory": {
+            "key": "workmestory",
+            "name": "LUX.Tale",
+            "category": "creativita",
+            "icon": "book-open",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmestory.php",
+            "desc_it": "Scrive racconti brevi e fiabe per bambini: testo completo, con morale e titolo.",
+            "desc_en": "Writes short stories and children's tales: complete text, with a moral and a title.",
+            "inputs": [
+                {
+                    "name": "subject",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Protagonista e situazione",
+                    "label_en": "Main character and situation",
+                    "max": 240
+                },
+                {
+                    "name": "age",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Per chi è",
+                    "label_en": "Audience",
+                    "max": 0,
+                    "default": "bambini",
+                    "options": [
+                        "bambini",
+                        "ragazzi",
+                        "adulti"
+                    ]
+                },
+                {
+                    "name": "length",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Lunghezza",
+                    "label_en": "Length",
+                    "max": 0,
+                    "default": "media",
+                    "options": [
+                        "breve",
+                        "media",
+                        "lunga"
+                    ]
+                },
+                {
+                    "name": "moral",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Morale o messaggio (facoltativo)",
+                    "label_en": "Moral or message (optional)",
+                    "max": 180,
+                    "default": ""
+                }
+            ]
+        },
+        "workmestudy": {
+            "key": "workmestudy",
+            "name": "LUX.Study",
+            "category": "educativi",
+            "icon": "books",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmestudy.php",
+            "desc_it": "Costruisce un piano di studio su misura per un esame, con ripasso e tecniche attive.",
+            "desc_en": "Builds a tailored study plan for an exam, with revision and active techniques.",
+            "inputs": [
+                {
+                    "name": "subject",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Materia o esame",
+                    "label_en": "Subject or exam",
+                    "max": 200
+                },
+                {
+                    "name": "topics",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Argomenti da coprire",
+                    "label_en": "Topics to cover",
+                    "max": 3000
+                },
+                {
+                    "name": "days",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Giorni disponibili",
+                    "label_en": "Days available",
+                    "max": 0,
+                    "default": "14",
+                    "min_value": 1,
+                    "max_value": 365
+                },
+                {
+                    "name": "hours",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Ore al giorno",
+                    "label_en": "Hours per day",
+                    "max": 0,
+                    "default": "3",
+                    "min_value": 1,
+                    "max_value": 12
+                },
+                {
+                    "name": "level",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Livello di partenza",
+                    "label_en": "Starting level",
+                    "max": 0,
+                    "default": "base",
+                    "options": [
+                        "zero",
+                        "base",
+                        "buono"
+                    ]
+                }
+            ]
+        },
+        "workmetest": {
+            "key": "workmetest",
+            "name": "LUX.Quiz",
+            "category": "educativi",
+            "icon": "quiz",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmetest.php",
+            "desc_it": "Crea una verifica o un quiz con soluzioni e spiegazioni, perfetta per ripassare o interrogare.",
+            "desc_en": "Creates a test or quiz with answers and explanations, perfect for revising or quizzing.",
+            "inputs": [
+                {
+                    "name": "argomento",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Argomento della verifica",
+                    "label_en": "Test topic",
+                    "max": 300
+                },
+                {
+                    "name": "domande",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Numero di domande",
+                    "label_en": "Number of questions",
+                    "max": 2,
+                    "default": "10",
+                    "min_value": 3,
+                    "max_value": 30
+                },
+                {
+                    "name": "tipo",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Tipo di domande",
+                    "label_en": "Question type",
+                    "max": 0,
+                    "default": "misto",
+                    "options": [
+                        "scelta",
+                        "aperte",
+                        "misto",
+                        "vero"
+                    ]
+                },
+                {
+                    "name": "livello",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Difficolta",
+                    "label_en": "Difficulty",
+                    "max": 0,
+                    "default": "media",
+                    "options": [
+                        "facile",
+                        "media",
+                        "difficile"
+                    ]
+                }
+            ]
+        },
+        "workmetip": {
+            "key": "workmetip",
+            "name": "LUX.Tip",
+            "category": "utility",
+            "icon": "users",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmetip.php",
+            "desc_it": "Calcola la mancia e dividi il conto tra più persone, con arrotondamenti chiari.",
+            "desc_en": "Calculate the tip and split the bill between people, with clear rounding.",
+            "inputs": [
+                {
+                    "name": "bill",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Totale conto",
+                    "label_en": "Bill total",
+                    "max": 0,
+                    "default": "80"
+                },
+                {
+                    "name": "tip",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Mancia %",
+                    "label_en": "Tip %",
+                    "max": 0,
+                    "default": "10",
+                    "min_value": 0,
+                    "max_value": 50
+                },
+                {
+                    "name": "people",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Numero di persone",
+                    "label_en": "Number of people",
+                    "max": 0,
+                    "default": "4",
+                    "min_value": 1,
+                    "max_value": 50
+                }
+            ]
+        },
+        "workmetrip": {
+            "key": "workmetrip",
+            "name": "LUX.Trip",
+            "category": "utility",
+            "icon": "pin",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmetrip.php",
+            "desc_it": "Costruisce un itinerario di viaggio giorno per giorno, con tempi, costi e alternative.",
+            "desc_en": "Builds a day-by-day travel itinerary, with timings, costs and alternatives.",
+            "inputs": [
+                {
+                    "name": "place",
+                    "type": "text",
+                    "required": true,
+                    "label_it": "Dove",
+                    "label_en": "Where",
+                    "max": 200
+                },
+                {
+                    "name": "days",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Quanti giorni",
+                    "label_en": "How many days",
+                    "max": 0,
+                    "default": "3",
+                    "min_value": 1,
+                    "max_value": 60
+                },
+                {
+                    "name": "budget",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Budget (euro, senza voli)",
+                    "label_en": "Budget (euro, excluding flights)",
+                    "max": 0,
+                    "default": "300",
+                    "min_value": 0,
+                    "max_value": 100000
+                },
+                {
+                    "name": "style",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Stile di viaggio",
+                    "label_en": "Travel style",
+                    "max": 0,
+                    "default": "equilibrato",
+                    "options": [
+                        "economico",
+                        "equilibrato",
+                        "comfort",
+                        "avventura",
+                        "arte",
+                        "cibo"
+                    ]
+                },
+                {
+                    "name": "withwho",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Con chi viaggi",
+                    "label_en": "Travelling with",
+                    "max": 0,
+                    "default": "coppia",
+                    "options": [
+                        "solo",
+                        "coppia",
+                        "famiglia",
+                        "amici"
+                    ]
+                }
+            ]
+        },
+        "workmeurl": {
+            "key": "workmeurl",
+            "name": "LUX.Url",
+            "category": "utility",
+            "icon": "globe",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmeurl.php",
+            "desc_it": "Codifica o decodifica URL e parametri di ricerca (percent-encoding).",
+            "desc_en": "Encode or decode URLs and query parameters (percent-encoding).",
+            "inputs": [
+                {
+                    "name": "text",
+                    "type": "textarea",
+                    "required": true,
+                    "label_it": "Testo o URL",
+                    "label_en": "Text or URL",
+                    "max": 20000
+                },
+                {
+                    "name": "mode",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Operazione",
+                    "label_en": "Operation",
+                    "max": 0,
+                    "default": "encode",
+                    "options": [
+                        "encode",
+                        "encode_param",
+                        "decode"
+                    ]
+                }
+            ]
+        },
+        "workmeuuid": {
+            "key": "workmeuuid",
+            "name": "LUX.Uuid",
+            "category": "utility",
+            "icon": "cpu",
+            "engine": "local",
+            "output": "mono",
+            "endpoint": "/workmeuuid.php",
+            "desc_it": "Genera identificatori univoci: UUID v4, esadecimale, compatto o con prefisso.",
+            "desc_en": "Generate unique identifiers: UUID v4, hex, short or with a prefix.",
+            "inputs": [
+                {
+                    "name": "count",
+                    "type": "number",
+                    "required": false,
+                    "label_it": "Quanti",
+                    "label_en": "How many",
+                    "max": 2,
+                    "default": "5",
+                    "min_value": 1,
+                    "max_value": 50
+                },
+                {
+                    "name": "format",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Formato",
+                    "label_en": "Format",
+                    "max": 0,
+                    "default": "uuid4",
+                    "options": [
+                        "uuid4",
+                        "hex",
+                        "short"
+                    ]
+                },
+                {
+                    "name": "prefix",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Prefisso (facoltativo)",
+                    "label_en": "Prefix (optional)",
+                    "max": 24
+                }
+            ]
+        },
+        "workmevat": {
+            "key": "workmevat",
+            "name": "LUX.Vat",
+            "category": "utility",
+            "icon": "tag",
+            "engine": "local",
+            "output": "rich",
+            "endpoint": "/workmevat.php",
+            "desc_it": "Aggiungi l'IVA a un importo o scorporala, con aliquote italiane pronte (22, 10, 5, 4%).",
+            "desc_en": "Add VAT to an amount or extract it, with ready Italian rates (22, 10, 5, 4%).",
+            "inputs": [
+                {
+                    "name": "amount",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Importo (euro)",
+                    "label_en": "Amount (euro)",
+                    "max": 0,
+                    "default": "1000"
+                },
+                {
+                    "name": "rate",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Aliquota",
+                    "label_en": "Rate",
+                    "max": 0,
+                    "default": "22",
+                    "options": [
+                        "22",
+                        "10",
+                        "5",
+                        "4"
+                    ]
+                },
+                {
+                    "name": "mode",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Operazione",
+                    "label_en": "Operation",
+                    "max": 0,
+                    "default": "add",
+                    "options": [
+                        "add",
+                        "extract"
+                    ]
+                }
+            ]
+        },
+        "workmeworkout": {
+            "key": "workmeworkout",
+            "name": "LUX.Fit",
+            "category": "utility",
+            "icon": "strength",
+            "engine": "ai",
+            "output": "rich",
+            "endpoint": "/workmeworkout.php",
+            "desc_it": "Crea un allenamento settimanale in base a obiettivo, livello e attrezzatura disponibile.",
+            "desc_en": "Builds a weekly workout based on goal, level and available equipment.",
+            "inputs": [
+                {
+                    "name": "goal",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Obiettivo",
+                    "label_en": "Goal",
+                    "max": 0,
+                    "default": "forza",
+                    "options": [
+                        "forza",
+                        "massa",
+                        "dimagrire",
+                        "resistenza",
+                        "salute",
+                        "mobilita"
+                    ]
+                },
+                {
+                    "name": "level",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Livello",
+                    "label_en": "Level",
+                    "max": 0,
+                    "default": "principiante",
+                    "options": [
+                        "principiante",
+                        "intermedio",
+                        "avanzato"
+                    ]
+                },
+                {
+                    "name": "days",
+                    "type": "number",
+                    "required": true,
+                    "label_it": "Giorni a settimana",
+                    "label_en": "Days per week",
+                    "max": 0,
+                    "default": "3",
+                    "min_value": 1,
+                    "max_value": 7
+                },
+                {
+                    "name": "where",
+                    "type": "select",
+                    "required": false,
+                    "label_it": "Dove ti alleni",
+                    "label_en": "Where you train",
+                    "max": 0,
+                    "default": "casa",
+                    "options": [
+                        "casa",
+                        "manubri",
+                        "palestra",
+                        "outdoor"
+                    ]
+                },
+                {
+                    "name": "limits",
+                    "type": "text",
+                    "required": false,
+                    "label_it": "Infortuni o limiti",
+                    "label_en": "Injuries or limits",
+                    "max": 240,
+                    "default": ""
+                }
+            ]
+        }
+    }
+}

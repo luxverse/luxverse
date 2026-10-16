@@ -1,0 +1,399 @@
+/* ============================================================
+   L.U.X. VERSE — INDEX.CSS v7 "ONYX"
+   Home: hero editoriale + bacheca + archivio strumenti.
+   Dipende da site.css (token e componenti base).
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   HERO
+   ------------------------------------------------------------ */
+.hero {
+    position: relative;
+    padding: 158px 0 44px;
+    overflow: hidden;
+    isolation: isolate;
+}
+.hero::after { content: none; }
+
+.hero-inner { max-width: 940px; }
+
+.hero .hero-badge { margin-bottom: 26px; }
+
+.hero-title {
+    font-family: var(--font-title);
+    font-size: clamp(38px, 7.6vw, 86px);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.05em;
+    margin: 0 0 26px;
+    color: var(--bone);
+    display: block;
+}
+.hero-glow { color: var(--bone); background: none; -webkit-text-fill-color: currentColor; filter: none; }
+.hero-sub  { color: var(--gold); background: none; -webkit-text-fill-color: currentColor; filter: none; font-weight: 600; }
+.hero-title .hero-line { display: block; }
+.hero-title .hero-dim  { color: var(--text-muted); }
+
+.hero-lead {
+    color: var(--text-light);
+    font-size: clamp(15.5px, 1.6vw, 18px);
+    max-width: 60ch;
+    line-height: 1.7;
+}
+.hero-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 34px; }
+.hero-buttons .btn-neon, .hero-buttons .btn-secondary { padding: 14px 26px; }
+
+/* Striscia dati (contatori) — separatori hairline, niente icone */
+.trust-badges {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    margin-top: 60px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+.trust-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 20px 22px;
+    background: transparent;
+    border: none;
+    border-right: 1px solid var(--line);
+    border-radius: 0;
+    transition: background .2s;
+    backdrop-filter: none;
+}
+.trust-badge:last-child { border-right: none; }
+.trust-badge:hover { border-color: var(--line); transform: none; box-shadow: none; background: var(--glass); }
+.trust-icon { display: none; }
+.trust-text { font-family: var(--font-body); font-size: 13.5px; color: var(--text-light); font-weight: 400; }
+.trust-text strong { display: block; font-family: var(--font-title); font-size: 22px; font-weight: 600; color: var(--bone); letter-spacing: -0.02em; margin-bottom: 2px; }
+
+/* ------------------------------------------------------------
+   STRUMENTI (archivio)
+   ------------------------------------------------------------ */
+.projects-section { padding: 76px 0 20px; }
+.section-header { text-align: left; margin-bottom: 30px; max-width: 100%; }
+.section-header h2 {
+    font-family: var(--font-title);
+    font-size: clamp(24px, 3.4vw, 38px);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    margin-bottom: 8px;
+    color: var(--bone);
+    background: none;
+    -webkit-text-fill-color: currentColor;
+}
+.section-header p { color: var(--text-light); font-size: 15px; max-width: 62ch; }
+
+.toolbar { display: flex; flex-direction: column; gap: 14px; margin-bottom: 26px; }
+.search-wrapper { position: relative; max-width: 520px; width: 100%; }
+.search-wrapper svg {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px; height: 16px;
+    stroke: var(--text-muted);
+    pointer-events: none;
+}
+.search-input {
+    width: 100%;
+    padding: 14px 16px 14px 42px;
+    background: var(--ink-2);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-sm);
+    color: var(--bone);
+    font-size: 15px;
+    outline: none;
+    transition: border-color .18s, background .18s;
+    font-family: var(--font-body);
+    -webkit-appearance: none;
+    appearance: none;
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:focus { border-color: var(--gold); background: var(--ink-3); box-shadow: none; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.filter-btn {
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-xs);
+    color: var(--text-light);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color .18s, border-color .18s, background .18s;
+}
+.filter-btn:hover { color: var(--bone); border-color: var(--line-3); }
+.filter-btn.active {
+    background: var(--gold);
+    color: #14100A;
+    border-color: var(--gold);
+    box-shadow: none;
+}
+
+.projects-count {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+    text-align: left;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+}
+.projects-count strong { color: var(--gold); font-weight: 500; }
+
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(292px, 1fr)); gap: 14px; }
+
+/* ------------------------------------------------------------
+   SCHEDA STRUMENTO — pannello tecnico
+   ------------------------------------------------------------ */
+.project-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 26px 24px 20px;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--radius);
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    box-shadow: none;
+    position: relative;
+    overflow: hidden;
+    transition: background .22s, border-color .22s;
+    min-height: 208px;
+}
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--pc, var(--gold));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .32s var(--ease);
+    opacity: 1;
+}
+.project-card::after { content: none; }
+.project-card:hover { background: var(--ink-3); transform: none; border-color: var(--line-2); box-shadow: none; }
+.project-card:hover::before { transform: scaleX(1); }
+.project-card:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+
+.p-icon {
+    width: 42px; height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    font-size: inherit;
+    background: rgba(237,233,224,0.04);
+    border: 1px solid var(--line-2);
+    color: var(--pc, var(--gold));
+    position: relative;
+    z-index: 1;
+    transition: border-color .2s, background .2s;
+    flex-shrink: 0;
+}
+.p-icon .p-ico { width: 20px; height: 20px; display: block; }
+.project-card:hover .p-icon { border-color: var(--line-3); background: rgba(237,233,224,0.06); }
+.project-card h4 {
+    font-family: var(--font-title);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--bone);
+    letter-spacing: -0.02em;
+    position: relative;
+    z-index: 1;
+}
+.project-card p {
+    color: var(--text-light);
+    font-size: 13.5px;
+    line-height: 1.62;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.p-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    position: relative;
+    z-index: 1;
+}
+.p-status {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    padding: 3px 8px;
+    border-radius: var(--radius-xs);
+    background: rgba(87,185,138,.10);
+    color: var(--ok);
+    border: 1px solid rgba(87,185,138,.3);
+}
+.p-status.manutenzione { background: rgba(216,169,60,.10); color: var(--warn); border-color: rgba(216,169,60,.32); }
+.p-status.pausa       { background: rgba(110,155,196,.10); color: var(--info); border-color: rgba(110,155,196,.32); }
+.p-status.costruzione { background: rgba(216,169,60,.10); color: var(--gold); border-color: rgba(216,169,60,.32); }
+.p-status.verifica    { background: rgba(224,192,90,.10); color: var(--yellow); border-color: rgba(224,192,90,.32); }
+.p-status.bloccato    { background: rgba(217,108,91,.10); color: var(--danger); border-color: rgba(217,108,91,.34); }
+.p-status.archiviato  { background: rgba(112,109,102,.12); color: var(--text-muted); border-color: rgba(112,109,102,.3); }
+.p-link {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color .2s, gap .2s;
+}
+.p-link svg { width: 13px; height: 13px; }
+.project-card:hover .p-link { color: var(--gold); gap: 9px; }
+
+.empty-projects {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 72px 20px;
+    color: var(--text-muted);
+    font-size: 15px;
+    background: var(--ink-2);
+    border: 1px dashed var(--line-2);
+    border-radius: var(--radius-lg);
+}
+
+/* ------------------------------------------------------------
+   RESPONSIVE HOME
+   ------------------------------------------------------------ */
+@media (max-width: 900px) {
+    .trust-badges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .trust-badge:nth-child(2n) { border-right: none; }
+    .trust-badge:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+@media (max-width: 768px) {
+    .hero { padding: 130px 0 34px; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .hero-buttons { margin-top: 28px; }
+}
+@media (max-width: 520px) {
+    .hero-title { letter-spacing: -0.04em; }
+    .trust-badge { padding: 16px 14px; }
+    .trust-text strong { font-size: 19px; }
+    .project-card { padding: 22px 20px 18px; min-height: 0; }
+    .hero-buttons .btn-neon, .hero-buttons .btn-secondary { width: 100%; }
+}
+/* ------------------------------------------------------------
+   COMPONENTI ARRIVATI DOPO IL 12 OTTOBRE
+   (ricerca per esigenza, catalogo a pagine, numero nei filtri)
+   Ripresi dal tema precedente e riportati sulla tavolozza del 12
+   ottobre: stessi colori, stessi token, nessun colore estraneo.
+   ------------------------------------------------------------ */
+
+/* ------------------------------------------------------------
+   CATALOGO A PAGINE (100.000 strumenti)
+   ------------------------------------------------------------ */
+/* Il numero dentro ogni filtro: dice quanti strumenti ci sono davvero
+   in quella categoria, cosi' il filtro non e' mai un salto nel vuoto. */
+.filter-btn .filter-n {
+    margin-left: 8px;
+    padding: 1px 5px;
+    border-radius: var(--radius-xs);
+    background: rgba(237,233,224,.06);
+    color: var(--text-muted);
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+}
+
+.filter-btn.active .filter-n { background: rgba(20,16,10,.22); color: #15181B; }
+
+.catalog-note { color: var(--text-light); text-transform: none; letter-spacing: 0; }
+
+.catalog-more {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.catalog-more[hidden] { display: none; }
+
+.catalog-progress {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+#load-more.loading { opacity: .55; pointer-events: none; }
+
+/* ------------------------------------------------------------
+   RICERCA PER ESIGENZA (al posto della barra normale)
+   ------------------------------------------------------------ */
+/* Barra rettangolare (bordi quasi vivi, non a pillola) + icona di ricerca
+   fissa a 18px: prima l'SVG senza attributi di larghezza si allargava a
+   tutta la barra e sembrava "in tilt". */
+.intent-box { display:flex; align-items:center; gap:10px; flex:1 1 auto; min-width:260px;
+    border:1px solid var(--line-2); border-radius:6px; padding:7px 7px 7px 14px;
+    background: linear-gradient(150deg, rgba(212,170,87,.14), rgba(255,233,168,.06)); }
+
+.intent-box > svg, .intent-box > svg.ico { width:18px; height:18px; min-width:18px; min-height:18px;
+    max-width:18px; max-height:18px; color:var(--gold); flex-shrink:0; display:block; }
+
+.intent-box .search-input { flex:1 1 auto; width:auto; background:transparent; border:0; outline:none; color:var(--bone);
+    font-size:15px; padding:11px 4px; min-width:0; }
+
+.intent-box .search-input::placeholder { color:var(--text-light); }
+
+.intent-go { display:inline-flex; align-items:center; gap:7px; border:0; cursor:pointer; flex-shrink:0;
+    background:var(--gradient-primary); border-color:transparent; color:#15181B;
+    font-weight:600; font-size:13px; padding:11px 16px; border-radius:6px;
+    transition:transform .2s var(--ease), filter .2s var(--ease); }
+
+.intent-go:hover { transform: translateY(-2px); filter: brightness(1.12); }
+
+.intent-go.loading { opacity:.6; pointer-events:none; }
+
+.intent-hint { margin:9px 2px 0; font-size:12px; color:var(--text-light); }
+
+/* Su telefono la barra va a capo solo per il pulsante: l'icona di ricerca
+   e il campo restano sulla stessa riga ("width:auto" annulla il 100% di
+   .search-input, che altrimenti spingeva il campo a capo da solo). */
+@media (max-width: 640px) {
+    .intent-box { flex-wrap:wrap; padding:9px; }
+    .intent-box .search-input { flex:1 1 70px; width:auto; min-width:70px; }
+    .intent-go { width:100%; justify-content:center; }
+}
+
+/* --- PROGRESSO CATALOGO --- */
+.catalog-progress > i, .catalog-progress > span > i {
+    background: var(--gradient-brand);
+    background-size: 200% 100%;
+    animation: heroSlide 5s linear infinite;
+    box-shadow: 0 0 16px rgba(212,170,87,.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero::before, .hero-glow, .hero-sub, .catalog-progress > i, .sk-line { animation: none !important; }
+}

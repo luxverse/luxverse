@@ -1,0 +1,24 @@
+# ============================================
+# L.U.X. VERSE - cartella api/
+# ============================================
+# Tutte le API vivono in UN unico file (api.php): i 20 file separati sono
+# stati eliminati. Le URL pubbliche NON cambiano (/api/get_projects.php,
+# /api/notices.php, ...): questo rewrite le manda ad api.php con il nome
+# dell'endpoint. Vale anche per l'app Android, che usa gli stessi indirizzi.
+# ============================================
+
+# Impedisce la lista dei file della cartella
+Options -Indexes
+
+# Blocca la lettura del file .htaccess stesso
+<Files ".htaccess">
+    Require all denied
+</Files>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # /api/<endpoint>.php -> api.php?__ep=<endpoint>
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^([a-z0-9_]+)\.php$ api.php?__ep=$1 [L,QSA]
+</IfModule>

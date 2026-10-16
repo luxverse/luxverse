@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ============================================================
+         L.U.X. VERSE — PALETTE "ONYX"
+         Grafite profondo + testo color osso + un unico accento oro.
+         Stessa identità del sito (assets/css/site.css).
+         ============================================================ -->
+
+    <!-- SUPERFICI -->
+    <color name="bg">#0A0B0D</color>
+    <color name="bg_dark">#0A0B0D</color>
+    <color name="bg_2">#0F1113</color>
+    <color name="bg_dark_2">#0F1113</color>
+    <color name="bg_3">#15181B</color>
+    <color name="bg_card">#121417</color>
+    <color name="bg_input">#15181B</color>
+
+    <!-- ACCENTO UNICO: ORO -->
+    <color name="blue">#D8A93C</color>
+    <color name="accent">#D8A93C</color>
+    <color name="blue_light">#F0CE86</color>
+    <color name="blue_dark">#A87F22</color>
+    <color name="blue_soft">#2A2214</color>
+    <color name="violet">#D8A93C</color>
+    <color name="accent_2">#D8A93C</color>
+
+    <!-- SECONDARIO: azzurro polvere (solo informativo) -->
+    <color name="electric">#6E9BC4</color>
+    <color name="accent_3">#6E9BC4</color>
+
+    <!-- ORO / ACCENTI -->
+    <color name="gold">#D8A93C</color>
+    <color name="gold_light">#F0CE86</color>
+    <color name="gold_2">#F0CE86</color>
+    <color name="gold_dark">#A87F22</color>
+    <color name="gold_soft">#2A2214</color>
+    <color name="coral">#D96C5B</color>
+    <color name="amber">#D8A93C</color>
+    <color name="emerald">#57B98A</color>
+    <color name="crimson">#D96C5B</color>
+
+    <!-- STATI PROGETTO -->
+    <color name="st_active">#57B98A</color>
+    <color name="st_manutenzione">#D8A93C</color>
+    <color name="st_pausa">#6E9BC4</color>
+    <color name="st_costruzione">#D8A93C</color>
+    <color name="st_verifica">#E0C05A</color>
+    <color name="st_bloccato">#D96C5B</color>
+    <color name="st_archiviato">#706D66</color>
+
+    <!-- BACHECA (per tipo) -->
+    <color name="nt_info">#D8A93C</color>
+    <color name="nt_event">#D8A93C</color>
+    <color name="nt_warning">#E0C05A</color>
+    <color name="nt_success">#57B98A</color>
+    <color name="nt_danger">#D96C5B</color>
+    <color name="nt_update">#6E9BC4</color>
+    <color name="nt_new">#57B98A</color>
+    <color name="nt_maintenance">#D08A4A</color>
+    <color name="nt_tip">#F0CE86</color>
+    <color name="nt_spotlight">#F0CE86</color>
+    <color name="nt_celebrate">#57B98A</color>
+
+    <!-- TESTO (osso caldo) -->
+    <color name="text">#EDE9E0</color>
+    <color name="text_primary">#EDE9E0</color>
+    <color name="text_light">#A5A197</color>
+    <color name="text_secondary">#A5A197</color>
+    <color name="text_muted">#706D66</color>
+
+    <!-- LINEE E SUPERFICI TRASLUCIDE -->
+    <color name="glass">#0BEDE9E0</color>
+    <color name="glass_2">#14EDE9E0</color>
+    <color name="border">#18EDE9E0</color>
+    <color name="border_hover">#6BD8A93C</color>
+
+    <!-- STATUS (legacy) -->
+    <color name="status_online">#57B98A</color>
+    <color name="status_busy">#E0C05A</color>
+    <color name="status_down">#D96C5B</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="ic_launcher_background">#0A0B0D</color>
+</resources>

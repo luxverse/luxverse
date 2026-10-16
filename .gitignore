@@ -1,0 +1,78 @@
+# ============================================================
+# COSA NON DEVE MAI FINIRE NEL REPOSITORY
+# ============================================================
+# Questo file è la rete di sicurezza: se un giorno un file di segreti
+# finisce nella cartella per sbaglio, git lo ignora invece di pubblicarlo.
+# Le regole sono divise per motivo, così si capisce perché ci sono.
+# ============================================================
+
+# ==== 1. SEGRETI DEL SITO (mai, per nessun motivo) ====
+site/deploy.local.php
+site/config.local.php
+site/data/vault.local.php
+site/secrets.php
+site/*.local.php
+*.secret.php
+site/admin_setup.php
+.ftpconfig
+.ftpquota
+
+# ==== 2. CHIAVE DI FIRMA DELL'APP (se esce, chiunque può firmare al posto nostro) ====
+app/keystore.properties
+*.jks
+*.keystore
+
+# ==== 3. DATI SCRITTI DAL SITO E DAGLI UTENTI (non sono codice) ====
+# Visite, registro attività, messaggi, chat, ticket, codici personali,
+# tentativi di accesso: sono dati di persone, non del progetto.
+site/data/logs.json
+site/data/visits.json
+site/data/chats.json
+site/data/chat.json
+site/data/feedback.json
+site/data/ratelimit.json
+site/data/upvotes.json
+site/data/ai_health.json
+site/data/maintenance.json
+site/data/security.json
+site/data/states.json
+site/data/status.json
+site/data/users.json
+site/data/messages.json
+site/data/tickets.json
+site/data/suggestions.json
+site/data/assistance.json
+site/data/spazio.json
+site/data/posts.json
+site/data/leaderboard.json
+site/data/signatures.json
+site/data/usage.json
+site/data/apikeys.json
+site/data/moved.json
+
+# ==== 4. APK COMPILATI ====
+# L'APK si allega alla release, non si versiona: qui resta solo il codice
+# che lo produce.
+release/*.apk
+*.apk
+
+# ==== 5. FILE DI COMPILAZIONE E IMPOSTAZIONI DELLA MACCHINA ====
+app/build/
+app/app/build/
+app/.gradle/
+app/.kotlin/
+app/captures/
+app/.idea/
+*.iml
+app/local.properties
+app/*.log
+
+# ==== 6. SISTEMA OPERATIVO ED EDITOR ====
+.DS_Store
+Thumbs.db
+*.bak
+*.orig
+*.tmp
+*~
+.idea/
+.vscode/

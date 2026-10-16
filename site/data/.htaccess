@@ -1,0 +1,15 @@
+# ============================================
+# WorkMeAI - Protezione cartella data/
+# ============================================
+# Blocca l'accesso diretto via browser a tutti i file
+# sensibili (JSON, log, backup). Il PHP può ancora
+# leggerli/scriverli normalmente dall'interno del server.
+# ============================================
+
+# Blocca accesso a tutti i file (JSON, log, txt, bak, ecc.)
+<FilesMatch ".*">
+    Require all denied
+</FilesMatch>
+
+# Blocca anche se qualcuno prova ad aprire la cartella
+Options -Indexes

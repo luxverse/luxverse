@@ -1,0 +1,258 @@
+# ============================================
+# robots.txt - L.U.X. Verse
+# https://luxverse.c22.eu/robots.txt
+# ============================================
+# POLITICA: tutte le IA e i motori di ricerca sono BENVENUTI.
+# Vengono bloccati solo i bot molesti / scraper aggressivi noti.
+#
+# ATTENZIONE (limite reale di robots.txt):
+# robots.txt e' un protocollo VOLONTARIO. Un bot malevolo VERO lo ignora
+# e non esiste un modo in robots.txt di distinguere bot "verificati" da
+# quelli falsi: si puo' solo lavorare per nome utente. Per un blocco
+# EFFETTIVO serve anche la regola lato server in .htaccess.
+# ============================================
+
+# ============================================
+# 1) IA E MOTORI DI RICERCA — ACCESSO CONSENTITO
+# ============================================
+
+# --- Google (Search + AI/Gemini) ---
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: GoogleOther
+User-agent: Google-CloudVertexBot
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin.php
+Disallow: /admin_setup.php
+Disallow: /workmemanage.php
+Disallow: /gestisci.php
+Disallow: /api/
+Disallow: /data/
+Disallow: /includes/
+Disallow: /tools/
+Disallow: /config.php
+Disallow: /config.local.php
+Disallow: /gen_hash.php
+Disallow: /backup/
+Disallow: /*.json$
+Disallow: /*.bak$
+Disallow: /*.log$
+
+# --- OpenAI / ChatGPT ---
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin.php
+Disallow: /admin_setup.php
+Disallow: /workmemanage.php
+Disallow: /gestisci.php
+Disallow: /api/
+Disallow: /data/
+Disallow: /includes/
+Disallow: /tools/
+Disallow: /config.php
+Disallow: /config.local.php
+Disallow: /gen_hash.php
+Disallow: /backup/
+Disallow: /*.json$
+Disallow: /*.bak$
+Disallow: /*.log$
+
+# --- Anthropic / Claude ---
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin.php
+Disallow: /admin_setup.php
+Disallow: /workmemanage.php
+Disallow: /gestisci.php
+Disallow: /api/
+Disallow: /data/
+Disallow: /includes/
+Disallow: /tools/
+Disallow: /config.php
+Disallow: /config.local.php
+Disallow: /gen_hash.php
+Disallow: /backup/
+Disallow: /*.json$
+Disallow: /*.bak$
+Disallow: /*.log$
+
+# --- Perplexity ---
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin.php
+Disallow: /admin_setup.php
+Disallow: /workmemanage.php
+Disallow: /gestisci.php
+Disallow: /api/
+Disallow: /data/
+Disallow: /includes/
+Disallow: /tools/
+Disallow: /config.php
+Disallow: /config.local.php
+Disallow: /gen_hash.php
+Disallow: /backup/
+Disallow: /*.json$
+Disallow: /*.bak$
+Disallow: /*.log$
+
+# --- Microsoft / Bing / Copilot ---
+User-agent: Bingbot
+User-agent: BingPreview
+Allow: /
+Disallow: /admin.php
+Disallow: /admin_setup.php
+Disallow: /workmemanage.php
+Disallow: /gestisci.php
+Disallow: /api/
+Disallow: /data/
+Disallow: /includes/
+Disallow: /tools/
+Disallow: /config.php
+Disallow: /config.local.php
+Disallow: /gen_hash.php
+Disallow: /backup/
+Disallow: /*.json$
+Disallow: /*.bak$
+Disallow: /*.log$
+
+# --- Apple / Siri ---
+User-agent: Applebot
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin.php
+Disallow: /admin_setup.php
+Disallow: /workmemanage.php
+Disallow: /gestisci.php
+Disallow: /api/
+Disallow: /data/
+Disallow: /includes/
+Disallow: /tools/
+Disallow: /config.php
+Disallow: /config.local.php
+Disallow: /gen_hash.php
+Disallow: /backup/
+Disallow: /*.json$
+Disallow: /*.bak$
+Disallow: /*.log$
+
+# --- Meta / Llama ---
+User-agent: meta-externalagent
+User-agent: FacebookBot
+Allow: /
+Disallow: /admin.php
+Disallow: /admin_setup.php
+Disallow: /workmemanage.php
+Disallow: /gestisci.php
+Disallow: /api/
+Disallow: /data/
+Disallow: /includes/
+Disallow: /tools/
+Disallow: /config.php
+Disallow: /config.local.php
+Disallow: /gen_hash.php
+Disallow: /backup/
+Disallow: /*.json$
+Disallow: /*.bak$
+Disallow: /*.log$
+
+# --- Altri crawler IA, dataset e motori ---
+User-agent: CCBot
+User-agent: Amazonbot
+User-agent: DuckAssistBot
+User-agent: DuckDuckBot
+User-agent: cohere-ai
+User-agent: cohere-training-data-crawler
+User-agent: YouBot
+User-agent: Diffbot
+User-agent: Timpibot
+User-agent: ImagesiftBot
+User-agent: MistralAI-User
+Allow: /
+Disallow: /admin.php
+Disallow: /admin_setup.php
+Disallow: /workmemanage.php
+Disallow: /gestisci.php
+Disallow: /api/
+Disallow: /data/
+Disallow: /includes/
+Disallow: /tools/
+Disallow: /config.php
+Disallow: /config.local.php
+Disallow: /gen_hash.php
+Disallow: /backup/
+Disallow: /*.json$
+Disallow: /*.bak$
+Disallow: /*.log$
+
+# ============================================
+# 2) BOT MOLESTI / NON DESIDERATI — BLOCCATI
+# ============================================
+# Scraper SEO aggressivi, raccoglitori di dati e crawler che
+# consumano banda senza portare visite utili.
+
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: MJ12bot
+User-agent: DotBot
+User-agent: BLEXBot
+User-agent: DataForSeoBot
+User-agent: MauiBot
+User-agent: MegaIndex.ru
+User-agent: serpstatbot
+User-agent: ZoominfoBot
+User-agent: Bytespider
+User-agent: PetalBot
+User-agent: Omgilibot
+User-agent: Omgili
+User-agent: SeznamBot
+User-agent: Screaming Frog SEO Spider
+Disallow: /
+
+# ============================================
+# 3) TUTTI GLI ALTRI — ACCESSO LIBERO (aree private chiuse)
+# ============================================
+# Default permissivo: qualsiasi IA non elencata sopra e' comunque
+# ammessa sul contenuto pubblico. Se vuoi SOLO una lista chiusa di
+# bot autorizzati, sostituisci "Allow: /" con "Disallow: /".
+
+User-agent: *
+Allow: /
+
+# Admin e pannelli di gestione
+Disallow: /admin.php
+Disallow: /admin_setup.php
+Disallow: /workmemanage.php
+Disallow: /gestisci.php
+
+# API interne
+Disallow: /api/
+
+# Dati sensibili (JSON, log, messaggi utenti)
+Disallow: /data/
+Disallow: /*.json$
+
+# Codice interno non pubblico
+Disallow: /includes/
+Disallow: /tools/
+
+# File di configurazione
+Disallow: /config.php
+Disallow: /config.local.php
+Disallow: /gen_hash.php
+
+# Backup / file temporanei
+Disallow: /backup/
+Disallow: /*.bak$
+Disallow: /*.log$
+
+# ============================================
+# SITEMAP
+# ============================================
+Sitemap: https://luxverse.c22.eu/sitemap.xml

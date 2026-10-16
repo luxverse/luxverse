@@ -1,0 +1,55 @@
+{
+  "name": "L.U.X. Verse - Strumenti AI gratuiti",
+  "short_name": "L.U.X. Verse",
+  "description": "Ecosistema di strumenti AI gratuiti: creatività, produttività, educativi e utility. 100% senza registrazione.",
+  "id": "/",
+  "start_url": "/index.php",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0A0B0D",
+  "theme_color": "#0A0B0D",
+  "categories": ["productivity", "education", "utilities", "entertainment"],
+  "lang": "it",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/assets/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/images/logux.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "LUX.Bot",
+      "url": "/workmebot.php"
+    },
+    {
+      "name": "LUX.Voice",
+      "url": "/workmevoice.php"
+    },
+    {
+      "name": "LUX.Resume",
+      "url": "/workmeresume.php"
+    }
+  ]
+}

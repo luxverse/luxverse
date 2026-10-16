@@ -1,0 +1,40 @@
+name: Compila l'app (APK di prova)
+
+# Verifica che il codice dell'app compili, a ogni modifica.
+# Non firma niente e non pubblica niente: quello si fa a mano, con la chiave
+# privata del progetto, che sta fuori dal repository (vedi il README).
+# NOTA: questo flusso è stato scritto e mai eseguito: la prima esecuzione
+# sarà alla prima push sul repository.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scarica il codice
+        uses: actions/checkout@v4
+
+      - name: Installa JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Prepara Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Compila l'APK di prova
+        working-directory: app
+        run: ./gradlew --no-daemon assembleDebug
+
+      - name: Allega l'APK compilato
+        uses: actions/upload-artifact@v4
+        with:
+          name: luxverse-apk-di-prova
+          path: app/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
