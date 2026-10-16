@@ -1,12 +1,12 @@
-name: Controlla il codice (sintassi)
+name: Controlla il codice
 
-# A ogni modifica si controlla che OGNI file PHP del sito sia scritto bene e
-# che i file di dati in JSON si leggano ancora. Non compila e non pubblica
-# niente: serve a non far arrivare al sito un file rotto, e a non scoprirlo
-# aprendo la pagina davanti a chi la sta leggendo.
+# A ogni modifica si controlla che OGNI file PHP del sito sia scritto bene, che i
+# file di dati in JSON si leggano ancora, e che le pagine si aprano davvero senza
+# errori. Non compila e non pubblica niente: serve a non far arrivare al sito un
+# file rotto, e a non scoprirlo aprendo la pagina davanti a chi la sta leggendo.
 #
-# Perche' accade qui e non sul computer di chi scrive: qui c'e' sempre un PHP
-# vero, qualunque sistema operativo usi chi scrive.
+# Perche' accade qui e non sul computer di chi scrive: qui c'e' sempre un PHP vero,
+# qualunque sistema operativo usi chi scrive il codice.
 
 on:
   push:
@@ -15,6 +15,10 @@ on:
   workflow_dispatch:
 
 jobs:
+
+  # ------------------------------------------------------------
+  # 1. Sintassi e dati
+  # ------------------------------------------------------------
   sintassi:
     runs-on: ubuntu-latest
     steps:
@@ -44,3 +48,75 @@ jobs:
           for f in site/data/*.json; do
             php -r '$d = json_decode(file_get_contents($argv[1]), true, 512, JSON_THROW_ON_ERROR); echo basename($argv[1]), ": leggibile\n";' "$f"
           done
+
+  # ------------------------------------------------------------
+  # 2. Le pagine si aprono (il sito acceso in prova, sulla macchina)
+  # ------------------------------------------------------------
+  pagine:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scarica il codice
+        uses: actions/checkout@v4
+
+      - name: Accendi il sito, apri le pagine e controlla cosa c'e' dentro
+        run: |
+          set -e
+          php -S 127.0.0.1:8091 -t site > /tmp/sito.log 2>&1 &
+          SITO=$!
+
+          # Si aspetta che risponda: un avvio non e' una prova di prontezza.
+          pronto=0
+          for i in $(seq 1 30); do
+            if curl -s -o /dev/null --max-time 5 "http://127.0.0.1:8091/index.php"; then pronto=1; break; fi
+            sleep 1
+          done
+          if [ "$pronto" != "1" ]; then
+            echo "::error::Il sito di prova non risponde"
+            cat /tmp/sito.log
+            exit 1
+          fi
+
+          fail=0
+          for p in index.php app.php codice-aperto.php bacheca.php linea-del-tempo.php faq.php privacy.php terms.php; do
+            code=$(curl -s -o /tmp/pagina.html -w '%{http_code}' --max-time 20 "http://127.0.0.1:8091/$p")
+            if [ "$code" != "200" ]; then
+              echo "::error file=site/$p::Risposta HTTP $code"
+              fail=1
+            fi
+            # Un errore PHP dentro la pagina non fa cambiare il codice HTTP:
+            # si guarda dentro il testo, non solo la risposta del server.
+            if grep -qE "Fatal error|Parse error|Uncaught|Warning: |Notice: |Deprecated: " /tmp/pagina.html; then
+              echo "::error file=site/$p::Errore PHP dentro la pagina"
+              grep -oE "(Fatal error|Parse error|Uncaught|Warning: |Notice: |Deprecated: )[^<]{0,140}" /tmp/pagina.html | head -3
+              fail=1
+            fi
+            echo "$p: HTTP $code, $(wc -c < /tmp/pagina.html) byte"
+          done
+
+          # --- La pagina del codice aperto dice quello che deve dire ---
+          curl -s --max-time 20 "http://127.0.0.1:8091/codice-aperto.php" > /tmp/ca.html
+          for atteso in "https://github.com/luxverse/luxverse" "Codice aperto" "MIT" "codice-aperto.php"; do
+            if ! grep -qF "$atteso" /tmp/ca.html; then
+              echo "::error::Nella pagina del codice aperto manca: $atteso"
+              fail=1
+            fi
+          done
+
+          # --- L'avviso in bacheca: c'e', ed e' un link cliccabile ---
+          curl -s --max-time 20 "http://127.0.0.1:8091/bacheca.php" > /tmp/b.html
+          if ! grep -qF "IL CODICE DI L.U.X. VERSE È ORA APERTO" /tmp/b.html; then
+            echo "::error::L'avviso del codice aperto non compare in bacheca"
+            fail=1
+          fi
+          if ! grep -qF 'href="https://github.com/luxverse/luxverse"' /tmp/b.html; then
+            echo "::error::L'indirizzo dentro l'avviso non e' un link cliccabile"
+            fail=1
+          fi
+
+          kill $SITO 2>/dev/null || true
+          if [ "$fail" != "0" ]; then
+            echo "--- registro del sito in prova ---"
+            tail -40 /tmp/sito.log
+            exit 1
+          fi
+          echo "Tutte le pagine si aprono senza errori, con i contenuti attesi."
