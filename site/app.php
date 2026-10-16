@@ -55,9 +55,10 @@ $sezioni = [
 // questo indirizzo: un rapporto che non corrisponde al file offerto sarebbe
 // peggio di nessun rapporto.
 $vtUrl   = 'https://www.virustotal.com/gui/file/dfdfbda322e368210505b4e142c434aa1b5ad43b7f1fcd74f95cdcb8ecaacbab/detection';
-// Il repository: si sostituisce il segnaposto con l'indirizzo vero appena
-// il progetto e' pubblicato su GitHub.
-$repoUrl = 'https://github.com/TUO-UTENTE/luxverse';
+// Il repository pubblico del progetto: da qui si legge il codice e si prende
+// l'APK dalle release. Se un giorno il progetto si sposta, si aggiorna questo
+// indirizzo e basta: tutte le sezioni qui sotto lo usano.
+$repoUrl = 'https://github.com/luxverse/luxverse';
 
 lux_header();
 lux_page_open([
