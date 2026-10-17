@@ -1363,7 +1363,12 @@ $assetV          = LUX_ASSET_V;
         }
 
         function load() {
-            fetch('/api/notifications.php?limit=20&lang=' + encodeURIComponent(LANG), { cache: 'no-store' })
+            // La copia statica non ha il campanello del server: le notifiche
+            // si leggono sul sito, dove c'e' la sessione e c'e' il programma
+            // che le sa leggere. Qui non si chiede niente a nessuno, cosi'
+            // non si vedono richieste che finiscono nel vuoto.
+            if (window.LUX_STATIC_PAGE) return;
+            fetch((window.LUX_API_BASE || '') + '/api/notifications.php?limit=20&lang=' + encodeURIComponent(LANG), { cache: 'no-store' })
                 .then(function (r) { return r.json(); })
                 .then(function (d) {
                     if (d && d.success && Array.isArray(d.notifications)) {

@@ -167,6 +167,18 @@ function lux_copy_tree(string $from, string $to): int
 $copied = lux_copy_tree($siteRoot . '/assets', $outDir . '/assets');
 printf("COPIATI  %-42s %6d file\n", 'assets/', $copied);
 
+// I file che stanno nella radice del sito e che le pagine chiedono davvero:
+// l'avviso sui cookie e il file che descrive il sito quando lo si aggiunge
+// alla schermata iniziale del telefono. Se si dimentica uno di questi, la
+// pagina si apre lo stesso ma con una richiesta persa (e un errore nella
+// console di chi la guarda).
+foreach (['cookie-consent.js', 'manifest.json'] as $extra) {
+    if (is_file($siteRoot . '/' . $extra) && @copy($siteRoot . '/' . $extra, $outDir . '/' . $extra)) {
+        printf("COPIATO  %-42s\n", $extra);
+        $copied++;
+    }
+}
+
 // La cartella statica non e' la home del sito: chi apre il suo indirizzo
 // senza una pagina viene portato al sito vero, invece di trovare un elenco.
 $landing = '<!doctype html><html lang="it"><head><meta charset="utf-8">'
