@@ -31,14 +31,29 @@
     # sessione, nessun calcolo. Il posto della cartella lo scrive
     # tools/deploy.php (__LUXCACHE__), cosi' cambiando versione in config.php
     # si riparte da zero senza toccare niente qui.
+    # Solo letture: un modulo inviato (POST) deve arrivare sempre a PHP.
+    # 1. L'indirizzo dice la lingua: quella vince su tutto.
+    RewriteCond %{REQUEST_METHOD} =GET
     RewriteCond %{DOCUMENT_ROOT}/cache/__LUXCACHE__/en/$1.html -s
     RewriteCond %{QUERY_STRING} (^|&)lang=en(&|$) [NC]
+    RewriteRule ^([a-zA-Z0-9_-]+)\.php$ cache/__LUXCACHE__/en/$1.html? [L]
+
+    # 2. La lingua non e' nell'indirizzo ma il browser la ricorda (cookie):
+    #    si consegna la copia in quella lingua, senza far partire il PHP.
+    #    Senza questa regola, chi ha scelto l'inglese riceverebbe la copia
+    #    italiana, perche' una pagina gia' pronta non puo' accorgersene.
+    RewriteCond %{REQUEST_METHOD} =GET
+    RewriteCond %{HTTP_COOKIE} (^|;\s*)workme_lang=en(;|$)
+    RewriteCond %{DOCUMENT_ROOT}/cache/__LUXCACHE__/en/$1.html -s
     RewriteRule ^([a-zA-Z0-9_-]+)\.php$ cache/__LUXCACHE__/en/$1.html? [L]
 
     # La copia italiana NON si usa quando l'indirizzo chiede l'inglese: senza
     # questa riga, una richiesta ?lang=en senza copia inglese gia' pronta
     # riceveva la pagina italiana, e la copia inglese non veniva mai creata.
+    # 3. La copia italiana: mai per chi ha chiesto o ricorda l'inglese.
+    RewriteCond %{REQUEST_METHOD} =GET
     RewriteCond %{QUERY_STRING} !(^|&)lang=en(&|$) [NC]
+    RewriteCond %{HTTP_COOKIE} !(^|;\s*)workme_lang=en(;|$)
     RewriteCond %{DOCUMENT_ROOT}/cache/__LUXCACHE__/$1.html -s
     RewriteRule ^([a-zA-Z0-9_-]+)\.php$ cache/__LUXCACHE__/$1.html? [L]
 
