@@ -85,6 +85,16 @@ RedirectMatch 403 ^/tools/.*$
 # Blocca accesso a .git se per caso lo inizializzi
 RedirectMatch 403 ^/\.git/.*$
 
+# Le pagine .html sono file gia' pronti, ma cambiano quando cambia il sito:
+# devono essere richieste di nuovo al server a ogni visita (costa un
+# "non e' cambiato", pochi byte) invece di restare per giorni nella copia
+# vecchia del browser. Gli asset veri restano in cache come prima.
+<IfModule mod_headers.c>
+    <FilesMatch "\.html$">
+        Header set Cache-Control "public, max-age=0, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
 # Header di sicurezza
 <IfModule mod_headers.c>
     Header set X-Content-Type-Options "nosniff"

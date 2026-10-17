@@ -116,6 +116,11 @@ body.lux-cookie-open .luxp-stack{bottom:calc(var(--lux-cookie-h, 0px) + 34px + e
 .luxp-tool.on{color:#D8A93C;border-color:#D8A93C}
 .luxp-tool svg{width:15px;height:15px}
 .luxp-tool .n{font-size:10px;margin-left:2px}
+/* La sigla della scorciatoia si vede solo dove c'e' una tastiera: su un
+   telefono "(Ctrl+K)" non vuol dire niente. */
+@media (hover: none), (pointer: coarse) {
+  .luxp-kbd{display:none}
+}
 </style>
 
 <div class="luxp-stack" id="luxpStack">
@@ -123,7 +128,9 @@ body.lux-cookie-open .luxp-stack{bottom:calc(var(--lux-cookie-h, 0px) + 34px + e
          non tutti sanno che esiste una scorciatoia da tastiera. -->
     <button type="button" class="luxp-btn" data-lux-cmdk="1" aria-label="<?= $it ? 'Cerca o comanda' : 'Search or command' ?>">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7.5"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>
-        <span class="luxp-label"><?= $it ? 'Cerca o comanda (Ctrl+K)' : 'Search or command (Ctrl+K)' ?></span>
+        <?php // Su un telefono Ctrl+K non esiste: la sigla si nasconde (vedi
+              // site.css), il pulsante resta e dice solo cosa fa. ?>
+        <span class="luxp-label"><?= $it ? 'Cerca o comanda' : 'Search or command' ?><span class="luxp-kbd"> (Ctrl+K)</span></span>
     </button>
     <button type="button" class="luxp-btn primary" id="luxpGuideBtn" aria-label="L.U.X. GUIDE">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9H4l2-3a9 9 0 1 1 15-6z"></path><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01" stroke-width="2.4"></path></svg>

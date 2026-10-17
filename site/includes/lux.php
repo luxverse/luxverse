@@ -1680,9 +1680,16 @@ function lux_footer(): void
     <?php
     // Interfaccia di piattaforma su OGNI pagina pubblica: L.U.X. GUIDE, profilo
     // locale, preferiti, voto e feedback (vedi includes/platform-ui.php).
+    //
+    // Anche sulle pagine di contenuto (le .html gia' pronte): sono pagine del
+    // sito come le altre, allo stesso indirizzo, e senza questa pila su un
+    // telefono non ci sarebbe NESSUN modo di aprire il comando di ricerca —
+    // li' non esistono i tasti del computer. Le chiamate alle API usano
+    // window.LUX_API_BASE, che vale l'indirizzo del sito quando la pagina e'
+    // aperta sul sito (e resta inerte su una copia pubblicata altrove).
     // Sul pannello di amministrazione NON si mostra: li' c'e' gia' la chat
     // dentro il portale, e il pulsante coprirebbe i comandi.
-    if (!$luxExport && basename((string)($_SERVER['SCRIPT_NAME'] ?? '')) !== 'admin.php') {
+    if (basename((string)($_SERVER['SCRIPT_NAME'] ?? '')) !== 'admin.php') {
         if (!function_exists('lux_platform_ui')) require_once __DIR__ . '/platform-ui.php';
         lux_platform_ui();
     }
