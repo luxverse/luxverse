@@ -76,3 +76,10 @@ Thumbs.db
 *~
 .idea/
 .vscode/
+
+# ==== Parte statica generata (si rigenera con tools/build_static.php) ====
+# Gli HTML delle pagine di contenuto e la copia dei file di lavoro non
+# stanno nel repository: li produce la pubblicazione, ogni volta, dalle
+# pagine PHP vere. Se fossero qui, invecchierebbero senza che nessuno
+# se ne accorga.
+frontend/

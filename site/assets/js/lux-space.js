@@ -38,7 +38,9 @@
         });
     }
     function post(url, data) {
-        return fetch(url, {
+        // Sulla parte statica le API stanno sul server, con un indirizzo a
+        // parte (vedi includes/lux.php): il relativo porterebbe qui.
+        return fetch((window.LUX_API_BASE || '') + url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data || {})

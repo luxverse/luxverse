@@ -518,6 +518,11 @@
     for (var i = 0; i < list.length; i++) {
       var el = list[i];
       if (el.getAttribute('data-i-done')) continue;
+      // Un numero non e' un'icona. In alcune liste (il riquadro di comando,
+      // Ctrl+K) data-i contiene l'indice della riga, non il nome di un'icona:
+      // senza questo controllo il contenuto della riga veniva cancellato e
+      // sostituito da un'immagine, e rimaneva una lista di righe vuote.
+      if (/^\d+$/.test(el.getAttribute('data-i') || '')) continue;
       el.setAttribute('data-i-done', '1');
       var size = parseInt(el.getAttribute('data-s') || '0', 10) || 0;
       el.innerHTML = svg(el.getAttribute('data-i'), size, '', 1.8);

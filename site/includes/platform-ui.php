@@ -23,7 +23,15 @@ if (!function_exists('lux_platform_ui')) {
         ?>
 <style>
 /* ===== L.U.X. PLATFORM UI ===== */
-.luxp-stack{position:fixed;right:20px;bottom:22px;z-index:9000;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.luxp-stack{position:fixed;right:20px;bottom:calc(22px + env(safe-area-inset-bottom));z-index:9000;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+/* L'avviso dei cookie (cookie-consent.js) sta in fondo ed era piu' in alto
+   (9998): copriva questi due pulsanti, e su un telefono il tocco finiva
+   sull'avviso invece che su di loro. Per questo l'avviso e' stato messo
+   sotto (8900) e, quando c'e', la pila si alza della sua altezza (misurata
+   dallo stesso file, variabile --lux-cookie-h): in questo modo i due
+   pulsanti restano sempre raggiungibili e visibili. Ordine da sotto a sopra:
+   avviso cookie 8900, pila 9000, riquadro di comando 9600. */
+body.lux-cookie-open .luxp-stack{bottom:calc(var(--lux-cookie-h, 0px) + 34px + env(safe-area-inset-bottom))}
 .luxp-btn{width:54px;height:54px;border-radius:50%;border:1px solid rgba(216,169,60,.5);
   background:linear-gradient(180deg,#0C0E11,#0C0E11);color:#EDE9E0;cursor:pointer;
   display:flex;align-items:center;justify-content:center;position:relative;
@@ -113,7 +121,7 @@ if (!function_exists('lux_platform_ui')) {
 <div class="luxp-stack" id="luxpStack">
     <!-- 39.1.1: il comando universale (Ctrl+K) si puo' aprire anche da qui:
          non tutti sanno che esiste una scorciatoia da tastiera. -->
-    <button type="button" class="luxp-btn" data-lux-cmdk="1" aria-label="Ctrl+K">
+    <button type="button" class="luxp-btn" data-lux-cmdk="1" aria-label="<?= $it ? 'Cerca o comanda' : 'Search or command' ?>">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7.5"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>
         <span class="luxp-label"><?= $it ? 'Cerca o comanda (Ctrl+K)' : 'Search or command (Ctrl+K)' ?></span>
     </button>
@@ -289,7 +297,7 @@ if (!function_exists('lux_platform_ui')) {
             e.preventDefault(); e.stopPropagation();
             if (up.dataset.sent) return;
             up.dataset.sent = '1';
-            fetch('/api/upvote.php', {
+            fetch((window.LUX_API_BASE || '') + '/api/upvote.php', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ slug: key })
             }).then(function (r) { return r.json(); }).then(function (d) {
@@ -302,7 +310,7 @@ if (!function_exists('lux_platform_ui')) {
 
         card.addEventListener('click', function () {
             try {
-                fetch('/api/usage.php', {
+                fetch((window.LUX_API_BASE || '') + '/api/usage.php', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ slug: key }), keepalive: true
                 }).catch(function () {});
@@ -409,7 +417,7 @@ if (!function_exists('lux_platform_ui')) {
             cache: 'no-store'
         };
         if (ctrl) opt.signal = ctrl.signal;
-        return fetch(url, opt).then(function (r) {
+        return fetch((window.LUX_API_BASE || '') + url, opt).then(function (r) {
             stop();
             return r.json().catch(function () { throw new Error('risposta non valida ' + r.status); });
         }, function (e) {

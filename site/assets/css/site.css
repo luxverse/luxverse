@@ -1658,6 +1658,39 @@ body { overflow-y: scroll; }
 .cmdk-foot{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid var(--line);
   font-size:11px;color:var(--text-muted)}
 .cmdk-foot kbd{font-family:var(--font-mono);font-size:10px;border:1px solid var(--line-2);border-radius:4px;padding:2px 5px;color:var(--text-light)}
+/* Pulsante di chiusura: esiste solo dove il tasto Esc non c'e' (tastiera o
+   touchscreen). Sulla tastiera non si vede, al suo posto resta "Esc". */
+.cmdk-close{display:none;flex-shrink:0;align-items:center;justify-content:center;width:34px;height:34px;
+  border:1px solid var(--line-2);border-radius:50%;background:transparent;color:var(--text-muted);cursor:pointer}
+.cmdk-close svg{width:15px;height:15px}
+.cmdk-close:hover{color:var(--bone)}
+/* Chi usa il tocco non ha frecce, Invio né Esc: i suggerimenti da tastiera
+   non gli dicono niente, quindi spariscono e compare il pulsante ×. */
+@media (hover: none), (pointer: coarse) {
+  .cmdk-esc, .cmdk-foot{display:none}
+  .cmdk-close{display:flex}
+}
+/* Schermo stretto: il riquadro diventa la pagina stessa, a tutto schermo.
+   Non e' un ripiego: un riquadro piccolo in cima, con la tastiera aperta,
+   su un telefono non lascia vedere nulla. Regole scelte apposta:
+   - input a 16px: sotto, iOS ingrandisce la pagina quando si tocca il campo;
+   - descrizioni su piu' righe: con una riga sola, su 390px, restavano tre
+     parole tagliate;
+   - nessun "STRUMENTO" sulla destra: su un telefono occupava un quarto dello
+     schermo per ripetere un'informazione che gia' si intende.
+*/
+@media (max-width: 720px) {
+  .cmdk{padding:0;align-items:stretch}
+  .cmdk-box{width:100%;max-height:none;height:100%;border:0;border-radius:0;box-shadow:none}
+  .cmdk-input{padding:calc(12px + env(safe-area-inset-top)) 12px 12px;gap:9px}
+  .cmdk-input input{font-size:16px}
+  .cmdk-list{padding:6px 8px calc(14px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+  .cmdk-item{padding:12px 11px;min-height:52px}
+  .cmdk-item-main b{font-size:15px}
+  .cmdk-item-main span{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.45}
+  .cmdk-item-kind{display:none}
+  .cmdk-empty{padding:34px 18px}
+}
 
 /* ---------- 3. IL MIO SPAZIO (WS2) ---------- */
 .space-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:18px}

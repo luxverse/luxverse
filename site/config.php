@@ -75,6 +75,38 @@ require_once __DIR__ . '/includes/space.php';
 // Indirizzo pubblico del sito: unico posto in cui e' scritto.
 if (!defined('LUX_SITE_URL')) define('LUX_SITE_URL', 'https://luxverse.c22.eu');
 
+// ---------------------------------------------------------------------------
+// PARTE STATICA DEL SITO (17/10/2026)
+// ---------------------------------------------------------------------------
+// Il sito e' diviso in due. Da una parte le pagine che hanno bisogno di dati,
+// sessioni o calcoli (home, bacheca, strumenti, pannello, API): restano qui,
+// sul server. Dall'altra le pagine di contenuto fisso (privacy, termini, chi
+// siamo, FAQ, percorso del rilascio, linea del tempo, codice aperto,
+// condividi): sono HTML statici, senza PHP e senza database, e vengono
+// serviti da una rete di distribuzione con sedi in piu' parti del mondo.
+//
+// Perche': le pagine di contenuto non cambiano mentre le leggi, quindi non
+// c'e' motivo di farle calcolare ogni volta da un server condiviso che ha
+// limiti di lavoro al minuto. Servite da una rete aprono in un attimo anche
+// quando il server principale e' occupato, e il server resta libero per
+// quello che e' davvero dinamico.
+//
+// Gli indirizzi di queste pagine si costruiscono con lux_url() (includes/
+// lux.php): toccare gli href a mano, pagina per pagina, e' il modo piu'
+// sicuro per far finire un link nel posto sbagliato.
+if (!defined('LUX_STATIC_BASE')) define('LUX_STATIC_BASE', 'https://luxverse.github.io/luxverse');
+
+// Le pagine che stanno nella parte statica. Il nome del file basta: la
+// riscrittura dei link (lux_fix_links) riconosce anche i percorsi assoluti.
+// Se una di queste pagine comincia a usare un modulo o un API, si toglie da
+// qui e torna a essere una pagina normale del server.
+if (!defined('LUX_STATIC_PAGES')) {
+    define('LUX_STATIC_PAGES', [
+        'privacy.php', 'terms.php', 'chi-siamo.php', 'faq.php',
+        'roadmap.php', 'linea-del-tempo.php', 'codice-aperto.php', 'condividi.php',
+    ]);
+}
+
 // Versione della PIATTAFORMA (il sito), cioe' il racconto del rilascio:
 // oggi 39.1.1. NON e' la versione dell'app: quella (LUX_APP_VERSION) si
 // cambia solo quando esce davvero un APK nuovo, altrimenti l'app installata

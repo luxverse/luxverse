@@ -30,16 +30,164 @@
 // a ogni rilascio.
 if (!defined('LUX_ASSET_V')) {
     $luxSeed = defined('LUX_SITE_VERSION') ? (string)LUX_SITE_VERSION : '';
+    // TUTTO quello che il browser tiene da parte, non solo una parte: prima
+    // l'elenco era fatto a mano (site.css, index.css, assets/js/*.js) e
+    // lasciava fuori cookie-consent.js e assets/css/style.css. Il 16/10/2026
+    // si e' visto il risultato: pubblicato l'avviso cookie nuovo, il sito
+    // continuava a servire quello vecchio dalla cache, perche' l'impronta non
+    // era cambiata. Ora si prendono tutti i fogli di stile e tutti gli script
+    // delle cartelle css/ e js/ (anche annidate), piu' i file JS della radice
+    // (cookie-consent.js) e il service worker, che decide cosa tenere in
+    // cache senza rete.
     $luxAssets = array_merge(
-        [__DIR__ . '/../assets/css/site.css', __DIR__ . '/../assets/css/index.css'],
-        (array)glob(__DIR__ . '/../assets/js/*.js')
+        (array)glob(__DIR__ . '/../assets/css/*.css'),
+        (array)glob(__DIR__ . '/../assets/css/*/*.css'),
+        (array)glob(__DIR__ . '/../assets/js/*.js'),
+        (array)glob(__DIR__ . '/../assets/js/*/*.js'),
+        (array)glob(__DIR__ . '/../*.js'),
+        [__DIR__ . '/../assets/css/style.css', __DIR__ . '/../cookie-consent.js', __DIR__ . '/../sw.js']
     );
+    $luxAssets = array_values(array_unique($luxAssets));
+    sort($luxAssets);   // ordine stabile: l'impronta non cambia da sola
     foreach ($luxAssets as $luxAsset) {
         if (is_file($luxAsset)) $luxSeed .= '|' . md5_file($luxAsset);
     }
     define('LUX_ASSET_V', substr(md5($luxSeed), 0, 10));
 }
 unset($luxSeed, $luxAssets, $luxAsset);
+
+// ============================================================
+// URL DELLE PAGINE STATICHE — il sito diviso in due (17/10/2026)
+// ============================================================
+// Vedi la nota lunga in config.php (LUX_STATIC_BASE). In breve: alcune
+// pagine sono HTML statici serviti da una rete di distribuzione, e tutti i
+// link del sito devono puntare al posto giusto senza che ogni pagina lo
+// scriva a mano.
+//
+// Due funzioni e basta:
+//   lux_url('/privacy.php')     → l'indirizzo giusto di quella pagina
+//   lux_fix_links($html)        → riscrive in un colpo tutti gli href e gli
+//                                 src di una pagina intera
+//
+// lux_fix_links viene agganciata a ogni pagina pubblica con ob_start (vedi
+// lux_header): ogni href o src che comincia per / viene mandato al server o
+// alla rete statica, secondo la tabella di config.php. In questo modo non
+// bisogna ricordarsi di aggiornare i link uno a uno quando una pagina cambia
+// posto, e una pagina dimenticata non finisce mai con un link morto.
+if (!function_exists('lux_url')) {
+    /** L'indirizzo completo di una pagina o di un file, al posto giusto. */
+    function lux_url(string $url): string
+    {
+        $static = defined('LUX_STATIC_PAGES') ? (array)LUX_STATIC_PAGES : [];
+        $base   = defined('LUX_STATIC_BASE') ? rtrim((string)LUX_STATIC_BASE, '/') : '';
+        $back   = defined('LUX_SITE_URL') ? rtrim((string)LUX_SITE_URL, '/') : '';
+        $export = defined('LUX_EXPORT') && LUX_EXPORT;
+        $en     = function_exists('currentLang') && currentLang() === 'en';
+
+        // Solo i percorsi relativi alla radice si riscrivono. Un indirizzo
+        // completo resta com'e': e' quello dei canonical e degli hreflang,
+        // che devono indicare il sito vero (luxverse.c22.eu) anche nelle
+        // copie statiche — cosi' il contenuto ufficiale resta uno solo e la
+        // copia veloce non gli fa concorrenza negli indici di ricerca.
+        if ($url === '' || $url[0] !== '/' || strpos($url, '//') === 0) return $url;
+
+        $parts = parse_url($url);
+        $path  = $parts['path'] ?? '/';
+        $file  = basename($path);
+
+        $lang = null;
+        if (!empty($parts['query'])) {
+            $q = [];
+            parse_str((string)$parts['query'], $q);
+            if (isset($q['lang'])) $lang = ($q['lang'] === 'en') ? 'en' : 'it';
+        }
+
+        // Pagina statica: va alla rete. Le copie in inglese stanno in /en/
+        // (le genera tools/build_static.php), quindi il parametro ?lang non
+        // serve piu': senza toglierlo, la stessa pagina due volte.
+        if ($base !== '' && in_array($file, $static, true)) {
+            $l    = $lang ?? ($en ? 'en' : 'it');
+            // Le copie statiche sono file .html, non .php: la rete che le
+            // serve sceglie il tipo di file dall'estensione, e un .php lo
+            // consegnerebbe da scaricare invece che da leggere.
+            $out  = $base . ($l === 'en' ? '/en' : '') . str_replace('.php', '.html', $path);
+            if ($lang !== null) {
+                $q = [];
+                parse_str((string)($parts['query'] ?? ''), $q);
+                unset($q['lang']);
+                $qs = http_build_query($q);
+                if ($qs !== '') $out .= '?' . $qs;
+            }
+            return $out;
+        }
+
+        // Anche i file di lavoro (fogli di stile, script, immagini) stanno
+        // nella parte statica: sono loro il peso, e farli arrivare dalla
+        // rete e' il guadagno di velocita' piu' grande di tutti.
+        // L'APK invece resta qui: e' un solo file pesante, e finisce nella
+        // cartella Download di chi lo scarica, non in una cache condivisa.
+        if ($base !== ''
+            && (strpos($path, '/assets/') === 0
+                || in_array($path, ['/sw.js', '/manifest.json', '/offline.html', '/cookie-consent.js'], true))) {
+            return $base . $path;
+        }
+
+        // Pagina dinamica: in esportazione serve l'indirizzo assoluto (la
+        // copia statica non sa dove vive il server); nelle pagine vere
+        // resta il relativo, che funziona dovunque sia il sito.
+        return ($export && $back !== '') ? $back . $url : $url;
+    }
+
+    /** L'indirizzo della stessa pagina nell'altra lingua. */
+    function lux_lang_url(string $lang): string
+    {
+        $lang = ($lang === 'en') ? 'en' : 'it';
+        $cur  = defined('LUX_EXPORT_PAGE')
+            ? (string)LUX_EXPORT_PAGE
+            : basename((string)($_SERVER['SCRIPT_NAME'] ?? ''));
+
+        $static = defined('LUX_STATIC_PAGES') ? (array)LUX_STATIC_PAGES : [];
+        $base   = defined('LUX_STATIC_BASE') ? rtrim((string)LUX_STATIC_BASE, '/') : '';
+        $back   = defined('LUX_SITE_URL') ? rtrim((string)LUX_SITE_URL, '/') : '';
+        $export = defined('LUX_EXPORT') && LUX_EXPORT;
+
+        // Pagina statica: le due lingue sono due file (privacy.php e
+        // en/privacy.php), quindi il cambio lingua e' un link, non un
+        // parametro da far leggere a un programma che li' non c'e'.
+        if ($base !== '' && $cur !== '' && in_array($cur, $static, true)) {
+            return $base . ($lang === 'en' ? '/en' : '') . '/' . str_replace('.php', '.html', $cur);
+        }
+        return ($export && $back !== '' ? $back : '') . '/' . $cur . '?lang=' . $lang;
+    }
+
+    /**
+     * Riscrive tutti gli href/src/action di una pagina.
+     * Usata come callback di ob_start: vedi lux_header.
+     */
+    function lux_fix_links(string $html): string
+    {
+        if ($html === '') return $html;
+
+        // 1. Il cambio lingua: nel sito e' <a href="?lang=en">, un indirizzo
+        // relativo che non comincia per "/": sulla copia statica porterebbe
+        // a una pagina che non esiste. Qui diventa il link alla copia giusta.
+        if (strpos($html, '?lang=') !== false) {
+            $html = (string)preg_replace_callback(
+                '/\b(href)\s*=\s*(["\'])\?lang=(en|it)\2/',
+                function ($m) { return 'href=' . $m[2] . lux_lang_url($m[3]) . $m[2]; },
+                $html
+            );
+        }
+
+        // 2. Tutti gli indirizzi che partono dalla radice.
+        if (strpos($html, '="/') === false) return $html;
+        return (string)preg_replace_callback(
+            '/\b(href|src|action)\s*=\s*(["\'])(\/[^"\'\s]*)\2/',
+            function ($m) { return $m[1] . '=' . $m[2] . lux_url($m[3]) . $m[2]; },
+            $html
+        );
+    }
+}
 
 // ---------- ICONE SVG ----------
 
@@ -811,6 +959,16 @@ if (!function_exists('lux_deemoji')) {
 // ---------- HEADER ----------
 function lux_header(array $vars = []): void
 {
+    // I link della pagina vengono riscritti alla fine, quando tutto il testo
+    // e' pronto: si fa con un buffer di output agganciato qui (vedi
+    // lux_fix_links). Il pannello di amministrazione e le API non ne hanno
+    // bisogno e non li prendono.
+    if (!defined('LUX_NO_LINK_REWRITE')) {
+        $luxScript = basename((string)($_SERVER['SCRIPT_NAME'] ?? ''));
+        if ($luxScript !== 'admin.php' && $luxScript !== 'api.php') ob_start('lux_fix_links');
+        unset($luxScript);
+    }
+
     // Variabili della pagina: chi chiama puo' passarle (chi le ha in una
     // funzione, come il motore degli strumenti) altrimenti si leggono
     // dallo scope globale (le pagine normali).
@@ -1425,28 +1583,71 @@ function lux_footer(): void
         'linked'         => t('Linked'),
         'notLinked'      => t('Not linked'),
     ];
+
+    // L'avviso su cookie e privacy (cookie-consent.js) e' un file a parte: le
+    // frasi passano da qui, una volta per pagina, cosi' il file resta uno solo
+    // in italiano e in inglese. Prima erano scritte in italiano dentro il file
+    // JS, che apriva un riquadro a tutto schermo bloccando l'accesso: un muro
+    // in italiano anche per chi leggeva il sito in inglese, e per dei cookie
+    // tecnici (lo dice la pagina Privacy) un blocco non serve.
+    $luxConsentT = [
+        'title'  => t('Cookies and privacy'),
+        'text'   => t('This site uses only technical cookies: no tracking, no advertising, no third-party cookies. You can read the {privacy} and the {terms}.', [
+            'privacy' => '<a href="' . lux_url('/privacy.php') . '" style="color:#D8A93C;text-decoration:underline">' . t('Privacy Policy') . '</a>',
+            'terms'   => '<a href="' . lux_url('/terms.php') . '" style="color:#D8A93C;text-decoration:underline">' . t('Terms of Service') . '</a>',
+        ]),
+        'accept' => t('Accept'),
+        'close'  => t('Close'),
+    ];
     ?>
     <script>
+    // Dove vivono le API. Sulla parte statica il percorso relativo
+    // porterebbe alla rete di distribuzione, che le API non ha: quindi li
+    // sta scritto l'indirizzo del server, e sul server stesso e' vuoto
+    // (che significa "stessa pagina", come prima).
+    window.LUX_API_BASE = <?= json_encode((defined('LUX_EXPORT') && LUX_EXPORT) ? LUX_SITE_URL : '') ?>;
+    // Pagina statica: il controllo in tempo reale e le notifiche stanno sul
+    // server e usano la sua sessione, che da un altro indirizzo non arriva.
+    window.LUX_STATIC_PAGE = <?= (defined('LUX_EXPORT') && LUX_EXPORT) ? 'true' : 'false' ?>;
     window.LUX_ICON_PATHS = <?= json_encode($luxIconPaths, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP) ?>;
     window.LUX_CMDK_T  = <?= json_encode($luxCmdkT, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP) ?>;
     window.LUX_SPACE_T = <?= json_encode($luxSpaceT, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP) ?>;
+    window.LUX_CONSENT_T = <?= json_encode($luxConsentT, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP) ?>;
     </script>
-    <script src="/assets/js/lux-space.js?v=<?= LUX_ASSET_V ?>" defer></script>
-    <script src="/assets/js/lux-command.js?v=<?= LUX_ASSET_V ?>" defer></script>
-    <script>
+<?php
+    // Nelle copie statiche (vedi tools/build_static.php) non si caricano le
+    // cose che parlano col server: lo Spazio personale, la chat della guida,
+    // i voti e il service worker. Non e' un taglio di comodo: il server
+    // riconosce le sue richieste dal cookie di sessione, e un cookie non
+    // passa da un indirizzo all'altro (lo vuole la regola SameSite, ed e'
+    // una cosa giusta). Una pagina statica che provasse a chiamare le API
+    // riceverebbe la pagina di verifica dell'hosting invece dei dati.
+    // Le pagine statiche servono a leggere: tutto il resto resta sul server,
+    // dove i conti, le chiavi e le sessioni vivono davvero.
+    $luxExport = defined('LUX_EXPORT') && LUX_EXPORT;
+    if (!$luxExport) { ?>    <script src="/assets/js/lux-space.js?v=<?= LUX_ASSET_V ?>" defer></script>
+<?php } ?>    <script src="/assets/js/lux-command.js?v=<?= LUX_ASSET_V ?>" defer></script>
+<?php if (!$luxExport) { ?>    <script>
         if ('serviceWorker' in navigator && location.protocol === 'https:') {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('sw.js').catch(function () {});
+                // Il service worker riceve l'impronta degli asset: da quella
+                // ricava il nome della sua cache, quindi quando un CSS o un JS
+                // cambia, la cache vecchia si svuota da sola. Prima il nome
+                // era scritto a mano dentro sw.js (v24) e andava ricordato a
+                // ogni rilascio: se ci si dimenticava, chi aveva gia' aperto
+                // il sito restava con i file di prima.
+                navigator.serviceWorker.register('sw.js?v=' + <?= json_encode(LUX_ASSET_V) ?>).catch(function () {});
             });
         }
     </script>
+<?php } ?>
 
     <?php
     // Interfaccia di piattaforma su OGNI pagina pubblica: L.U.X. GUIDE, profilo
     // locale, preferiti, voto e feedback (vedi includes/platform-ui.php).
     // Sul pannello di amministrazione NON si mostra: li' c'e' gia' la chat
     // dentro il portale, e il pulsante coprirebbe i comandi.
-    if (basename((string)($_SERVER['SCRIPT_NAME'] ?? '')) !== 'admin.php') {
+    if (!$luxExport && basename((string)($_SERVER['SCRIPT_NAME'] ?? '')) !== 'admin.php') {
         if (!function_exists('lux_platform_ui')) require_once __DIR__ . '/platform-ui.php';
         lux_platform_ui();
     }

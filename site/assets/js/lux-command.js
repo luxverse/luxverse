@@ -59,9 +59,17 @@
         box.innerHTML =
             '<div class="cmdk-box">' +
               '<div class="cmdk-input">' + icon('search') +
+                // inputmode/enterkeyhint servono a un telefono: aprono la
+                // tastiera con il tasto "cerca" e non con "invio" qualsiasi.
+                // autocapitalize/autocorrect evitano che la ricerca venga
+                // corretta in automatico ("crono" diventerebbe "Crono").
                 '<input type="text" id="luxCmdkInput" autocomplete="off" spellcheck="false" ' +
+                  'inputmode="search" enterkeyhint="search" autocapitalize="off" autocorrect="off" ' +
                   'placeholder="' + esc(t('Search tools, pages, notices or run a command...', 'Cerca fra strumenti, pagine, avvisi o dai un comando...')) + '">' +
                 '<button type="button" class="luxp-tool" id="luxCmdkMic" hidden aria-label="' + esc(t('Dictate', 'Detta a voce')) + '">' + icon('mic') + '</button>' +
+                // Su un telefono non c'e' il tasto Esc: al suo posto questo
+                // pulsante. Sulla tastiera non si vede (vedi site.css).
+                '<button type="button" class="cmdk-close" id="luxCmdkClose" aria-label="' + esc(t('Close', 'Chiudi')) + '">' + icon('close') + '</button>' +
                 '<span class="cmdk-esc">Esc</span>' +
               '</div>' +
               '<div class="cmdk-list" id="luxCmdkList"></div>' +
@@ -80,6 +88,7 @@
         });
         input.addEventListener('keydown', onKey);
         box.querySelector('#luxCmdkMic').addEventListener('click', dictate);
+        box.querySelector('#luxCmdkClose').addEventListener('click', close);
 
         hintEl.innerHTML =
             '<span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> ' + esc(t('to move', 'per muoverti')) + '</span>' +
@@ -172,7 +181,7 @@
         state.loading = true;
         listEl.innerHTML = '<div class="cmdk-empty">' + esc(t('Searching...', 'Sto cercando...')) + '</div>';
 
-        fetch('/api/palette.php?q=' + encodeURIComponent(state.q), { cache: 'no-store' })
+        fetch((window.LUX_API_BASE || '') + '/api/palette.php?q=' + encodeURIComponent(state.q), { cache: 'no-store' })
             .then(function (r) { return r.json(); })
             .then(function (d) {
                 var items = [];
@@ -220,7 +229,11 @@
             var g = it.group || (it.kind === 'a11y' ? t('Settings', 'Impostazioni') : t('Tools', 'Strumenti'));
             if (g !== group) { group = g; html += '<div class="cmdk-group">' + esc(g) + '</div>'; }
             var kind = it.kind === 'page' ? t('Page', 'Pagina') : (it.kind === 'notice' ? t('Notice', 'Avviso') : (it.kind === 'catalog' ? t('Tool', 'Strumento') : (it.kind === 'a11y' ? t('Setting', 'Impostazione') : t('Tool', 'Strumento'))));
-            html += '<a class="cmdk-item' + (i === state.sel ? ' on' : '') + '" data-i="' + i + '" href="' + esc(it.url || '#') + '">' +
+            // L'indice della riga sta in data-lux-i (prima era data-i, che
+            // invece e' il segnaposto delle icone di lux-icons.js: quel file
+            // svuota ogni elemento con data-i per metterci l'SVG, e le righe
+            // restavano senza titolo ne' descrizione).
+            html += '<a class="cmdk-item' + (i === state.sel ? ' on' : '') + '" data-lux-i="' + i + '" href="' + esc(it.url || '#') + '">' +
                         '<span class="cmdk-item-ico">' + icon(it.icon || 'sparkles') + '</span>' +
                         '<span class="cmdk-item-main"><b>' + esc(it.label || '') + '</b>' +
                         (it.hint ? '<span>' + esc(it.hint) + '</span>' : '') + '</span>' +
@@ -230,7 +243,7 @@
         listEl.innerHTML = html;
         listEl.querySelectorAll('.cmdk-item').forEach(function (el) {
             el.addEventListener('click', function (e) {
-                var i = Number(el.dataset.i);
+                var i = Number(el.dataset.luxI);
                 var it = state.items[i];
                 if (it && it.kind === 'a11y') { e.preventDefault(); runLocal(it.id); }
             });
@@ -256,6 +269,37 @@
         }
     }
 
+    // Mentre il riquadro e' aperto la pagina di sotto non si deve muovere:
+    // su un telefono, trascinando la lista si scorriva la pagina intera.
+    var prevBodyOverflow = null;
+    function lockScroll(on) {
+        if (!document.body) return;
+        if (on) {
+            if (prevBodyOverflow === null) prevBodyOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+        } else if (prevBodyOverflow !== null) {
+            document.body.style.overflow = prevBodyOverflow;
+            prevBodyOverflow = null;
+        }
+    }
+
+    // Su un telefono la tastiera NON riduce l'area di layout: resta sopra la
+    // pagina e copre gli ultimi risultati. Si segue invece l'area visibile
+    // reale (visualViewport) e il riquadro si accorcia insieme a quella.
+    var vvHandler = null;
+    function fitViewport() {
+        if (!box || !window.visualViewport || vvHandler) return;
+        vvHandler = function () { box.style.height = window.visualViewport.height + 'px'; };
+        vvHandler();
+        window.visualViewport.addEventListener('resize', vvHandler);
+    }
+    function unfitViewport() {
+        if (!box || !vvHandler) return;
+        window.visualViewport.removeEventListener('resize', vvHandler);
+        vvHandler = null;
+        box.style.height = '';
+    }
+
     function open(q) {
         build();
         box.hidden = false;
@@ -263,7 +307,10 @@
         state.sel = -1;
         input.value = q || '';
         applyA11y();
-        input.focus();
+        lockScroll(true);
+        fitViewport();
+        // preventScroll: mettere a fuoco senza far saltare la pagina.
+        try { input.focus({ preventScroll: true }); } catch (e) { input.focus(); }
         search(input.value);
     }
     function close() {
@@ -272,6 +319,8 @@
         state.open = false;
         state.items = [];
         state.sel = -1;
+        lockScroll(false);
+        unfitViewport();
     }
     function toggle() { state.open ? close() : open(''); }
 

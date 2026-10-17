@@ -1,19 +1,19 @@
 [
     {
-        "title_it": "Nuovo contatto: Altro",
-        "title_en": "New contact: Altro",
-        "message_it": "Anonimo ha inviato un messaggio dal modulo contatti. Codice DB791E71.",
-        "message_en": "Anonimo sent a message from the contact form. Code DB791E71.",
-        "title": "New contact: Altro",
-        "message": "Anonimo sent a message from the contact form. Code DB791E71.",
-        "category": "news",
-        "audience": "admin",
-        "redirect": "\/admin.php#messages",
-        "source": "contact",
-        "auto": true,
-        "id": "N_94f72e7c0d",
-        "date": "2026-10-15 10:30:41",
-        "publish_at": ""
+        "title_it": "L'APP ANDROID È TORNATA — ma va scaricata di nuovo dalla sezione APP",
+        "title_en": "THE ANDROID APP IS BACK — but you must download it again from the App section",
+        "message_it": "L'app è nuova da zero: pacchetto e firma nuovi, quindi Android non la mette al posto di quella vecchia. Apri la sezione APP del sito, scarica di nuovo l'APK e installalo. È gratis, senza registrazione, e se il telefono chiede una verifica di sicurezza lasciala finire: il file è nostro ed è firmato.",
+        "message_en": "The app is new from the ground up: new package and new signature, so Android does not put it in place of the old one. Open the App section of the site, download the APK again and install it. Free, no registration, and if the phone asks for a security check let it finish: the file is ours and it is signed.",
+        "title": "THE ANDROID APP IS BACK — but you must download it again from the App section",
+        "message": "The app is new from the ground up: new package and new signature, so Android does not put it in place of the old one. Open the App section of the site, download the APK again and install it. Free, no registration.",
+        "category": "update",
+        "audience": "public",
+        "redirect": "\/app.php",
+        "source": "manual",
+        "auto": "",
+        "publish_at": "",
+        "id": "N_app_ricostruita_20261017",
+        "date": "2026-10-17 11:40:00"
     },
     {
         "title_it": "AGGIORNAMENTO TECNICO 39.1.1 — L.U.X. Verse lavora per te",
@@ -78,6 +78,22 @@
         "publish_at": "",
         "id": "N_bugfix2026",
         "date": "2026-10-15 05:37:32"
+    },
+    {
+        "title_it": "Nuovo avviso in bacheca",
+        "title_en": "New notice on the board",
+        "message_it": "URGENT MAINTENANCE APP",
+        "message_en": "URGENT MAINTENANCE APP",
+        "title": "URGENT MAINTENANCE APP",
+        "message": "URGENT MAINTENANCE APP",
+        "category": "update",
+        "audience": "public",
+        "redirect": "\/bacheca.php",
+        "source": "notice",
+        "auto": true,
+        "id": "N_4690420991",
+        "date": "2026-10-17 05:02:05",
+        "publish_at": ""
     },
     {
         "id": "N_tecnico3901_20261014",

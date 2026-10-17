@@ -348,10 +348,14 @@ function escapeHtml(str) {
     }
 
     function tick() {
+        // Pagina statica: il controllo in tempo reale usa la sessione del
+        // server, che da un altro indirizzo non arriva. Non si riprogramma
+        // nemmeno un altro giro: qui non c'e' niente da controllare.
+        if (window.LUX_STATIC_PAGE) return;
         if (document.visibilityState !== 'visible') { schedule(); return; }
         if (busy) { schedule(3000); return; }   // una chiamata per volta
         busy = true;
-        var url = '/api/realtime.php?since=' + encodeURIComponent(rev)
+        var url = (window.LUX_API_BASE || '') + '/api/realtime.php?since=' + encodeURIComponent(rev)
                 + (window.LUX_CHAT_ID ? ('&chat=' + encodeURIComponent(window.LUX_CHAT_ID)) : '');
         fetch(url, { cache: 'no-store', credentials: 'same-origin' })
             .then(function (r) { return r.json(); })
