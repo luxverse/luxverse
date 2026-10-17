@@ -1009,6 +1009,15 @@ $assetV          = LUX_ASSET_V;
 <html lang="<?= $htmlLang ?>">
 <head>
     <meta charset="UTF-8">
+    <script>
+    // Dove vivono le API e se questa e' una copia statica. Stanno QUI, in
+    // cima, e non in fondo: il campanello delle notifiche e il resto del
+    // codice dell'intestazione partono prima, e leggono queste due righe.
+    // (Prima erano in fondo: sulla copia statica il campanello le trovava
+    // ancora vuote e chiedeva le notifiche a un indirizzo che non le ha.)
+    window.LUX_API_BASE = <?= json_encode((defined('LUX_EXPORT') && LUX_EXPORT) ? LUX_SITE_URL : '') ?>;
+    window.LUX_STATIC_PAGE = <?= (defined('LUX_EXPORT') && LUX_EXPORT) ? 'true' : 'false' ?>;
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title><?= htmlspecialchars($pageTitle) ?></title>
 
@@ -1606,14 +1615,6 @@ function lux_footer(): void
     ];
     ?>
     <script>
-    // Dove vivono le API. Sulla parte statica il percorso relativo
-    // porterebbe alla rete di distribuzione, che le API non ha: quindi li
-    // sta scritto l'indirizzo del server, e sul server stesso e' vuoto
-    // (che significa "stessa pagina", come prima).
-    window.LUX_API_BASE = <?= json_encode((defined('LUX_EXPORT') && LUX_EXPORT) ? LUX_SITE_URL : '') ?>;
-    // Pagina statica: il controllo in tempo reale e le notifiche stanno sul
-    // server e usano la sua sessione, che da un altro indirizzo non arriva.
-    window.LUX_STATIC_PAGE = <?= (defined('LUX_EXPORT') && LUX_EXPORT) ? 'true' : 'false' ?>;
     window.LUX_ICON_PATHS = <?= json_encode($luxIconPaths, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP) ?>;
     window.LUX_CMDK_T  = <?= json_encode($luxCmdkT, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP) ?>;
     window.LUX_SPACE_T = <?= json_encode($luxSpaceT, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP) ?>;
