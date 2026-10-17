@@ -65,7 +65,10 @@ lux_header();
                         <?= icon('grid', 17) ?>
                         <span data-i18n="exploreProjects"><?= t('Explore Projects') ?></span>
                     </a>
-                    <a href="linea-del-tempo.php" class="btn-secondary">
+                    <?php // Indirizzo assoluto: i link relativi non passano dalla
+                          // riscrittura (lux_fix_links), e questa pagina adesso e'
+                          // un file .html: un relativo finirebbe su un 404. ?>
+                    <a href="/linea-del-tempo.php" class="btn-secondary">
                         <?= icon('time', 17) ?>
                         <span data-i18n="learnMore"><?= t('Learn more') ?></span>
                     </a>
@@ -262,7 +265,7 @@ lux_header();
                     </ul>
                     <div class="doc-actions">
                         <a class="btn-small primary" href="app.php"><?= icon('smartphone', 14) ?> <?= $isIt ? 'Scarica l\'app' : 'Download the app' ?></a>
-                        <a class="btn-small" href="linea-del-tempo.php"><?= $isIt ? 'Linea del tempo' : 'Timeline' ?></a>
+                        <a class="btn-small" href="/linea-del-tempo.php"><?= $isIt ? 'Linea del tempo' : 'Timeline' ?></a>
                     </div>
                 </div>
             </div>

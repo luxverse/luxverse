@@ -188,7 +188,20 @@ if (!function_exists('lux_url')) {
             );
         }
 
-        // 2. Tutti gli indirizzi che partono dalla radice.
+        // 2. Gli indirizzi scritti SENZA la barra iniziale (href="privacy.php",
+        // href="index.php"). Sono link relativi: il browser li risolve
+        // rispetto alla cartella della pagina, e le pagine .html in inglese
+        // stanno in /en/ — li' "index.php" diventerebbe "/en/index.php", che
+        // non esiste. Si portano alla radice, cosi' passano dalla stessa
+        // riscrittura degli altri (e restano giusti sia in italiano sia in
+        // inglese).
+        $html = (string)preg_replace_callback(
+            '/\b(href|src|action)\s*=\s*(["\'])(?!(?:[a-z]+:|\/|#|\?))([a-z0-9_-]+\.php)([?][^"\']*)?\2/i',
+            function ($m) { return $m[1] . '=' . $m[2] . lux_url('/' . $m[3] . ($m[4] ?? '')) . $m[2]; },
+            $html
+        );
+
+        // 3. Tutti gli indirizzi che partono dalla radice.
         if (strpos($html, '="/') === false) return $html;
         return (string)preg_replace_callback(
             '/\b(href|src|action)\s*=\s*(["\'])(\/[^"\'\s]*)\2/',
