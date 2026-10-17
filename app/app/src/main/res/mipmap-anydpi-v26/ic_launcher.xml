@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Da Android 8 l'icona non e' piu' un disegno solo: sono due strati, uno
+  sfondo e un segno, e il telefono li compone nella forma che vuole lui
+  (cerchio, quadrato stondato, goccia...). Cosi' il marchio non viene mai
+  tagliato. Lo sfondo e' il grafite del sito, il segno e' quello ufficiale.
+-->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
     <background android:drawable="@color/ic_launcher_background" />
     <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+    <monochrome android:drawable="@mipmap/ic_launcher_foreground" />
 </adaptive-icon>

@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Tema dell'app. Non c'e' la barra del titolo: la pagina deve avere tutto lo
+  schermo, come in un browser a schermo intero.
+
+  Il tema vero e proprio sta in "Theme.LuxVerse.Base", cosi' la versione per
+  Android 12 e successivi (cartella values-v31) puo' aggiungere soltanto le
+  righe della schermata di avvio, senza riscrivere tutto il resto.
+-->
 <resources>
-    <style name="Theme.LUXVerse" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">@color/accent</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="colorPrimaryContainer">@color/blue_soft</item>
-        <item name="colorSecondary">@color/accent</item>
-        <item name="colorSecondaryContainer">@color/blue_soft</item>
-        <item name="colorOnSecondaryContainer">@color/white</item>
-        <item name="android:colorBackground">@color/bg_dark</item>
-        <item name="android:colorAccent">@color/accent</item>
-        <item name="colorSurface">@color/bg_dark</item>
-        <item name="colorOnSurface">@color/text_primary</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+
+    <style name="Theme.LuxVerse" parent="Theme.LuxVerse.Base" />
+
+    <style name="Theme.LuxVerse.Base" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/lux_background</item>
+        <item name="android:colorBackground">@color/lux_background</item>
+        <item name="android:textColorPrimary">@color/lux_text</item>
+        <item name="android:textColorSecondary">@color/lux_text_muted</item>
+        <item name="android:statusBarColor">@color/lux_background</item>
+        <item name="android:navigationBarColor">@color/lux_background</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar">false</item>
-        <item name="android:windowBackground">@drawable/bg_aurora</item>
-        <item name="fontFamily">@font/inter_regular</item>
-        <item name="android:fontFamily">@font/inter_regular</item>
-
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowEnterTransition">@transition/activity_fade</item>
-        <item name="android:windowExitTransition">@transition/activity_fade</item>
-        <item name="android:windowReenterTransition">@transition/activity_fade</item>
-        <item name="android:windowReturnTransition">@transition/activity_fade</item>
-        <item name="android:windowSharedElementsUseOverlay">false</item>
+        <item name="colorAccent">@color/lux_accent</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
     </style>
 
-    <style name="Theme.LUXVerse.Splash" parent="Theme.LUXVerse">
-        <item name="android:windowActivityTransitions">false</item>
+    <!-- Pulsanti: fondo grafite, testo oro, angoli piccoli. -->
+    <style name="LuxButton" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/lux_accent_light</item>
+        <item name="android:background">@drawable/bg_button</item>
+        <item name="android:paddingLeft">22dp</item>
+        <item name="android:paddingRight">22dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:letterSpacing">0.04</item>
     </style>
 
-    <style name="BottomNavActive" parent="@style/Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/accent</item>
+    <style name="LuxButton.Quiet" parent="LuxButton">
+        <item name="android:textColor">@color/lux_text_muted</item>
     </style>
+
 </resources>

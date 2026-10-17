@@ -1,19 +1,36 @@
-name: Compila l'app (APK di prova)
+name: Compila l'app Android
 
-# Verifica che il codice dell'app compili, a ogni modifica.
-# Non firma niente e non pubblica niente: quello si fa a mano, con la chiave
-# privata del progetto, che sta fuori dal repository (vedi il README).
-# NOTA: questo flusso è stato scritto e mai eseguito: la prima esecuzione
-# sarà alla prima push sul repository.
+# ============================================================
+# A OGNI MODIFICA, L'APP VIENE COMPILATA SU UNA MACCHINA DI GITHUB
+# ============================================================
+# Serve a una cosa sola: accorgersi subito se una modifica al codice rompe la
+# compilazione. La compilazione la fa una macchina di GitHub (che e' di
+# Microsoft), gratis, sui repository pubblici.
+#
+# Qui NON si firma niente e non si pubblica niente:
+#   - la chiave di firma non entra mai in un servizio online. Se ci finisse,
+#     chiunque potrebbe firmare un'app che si spaccia per L.U.X. Verse;
+#   - l'APK di rilascio prodotto qui resta NON firmato: e' esattamente quello
+#     che serve a F-Droid, che lo compila per conto suo e lo firma con la
+#     propria chiave.
+# La firma con la nostra chiave si fa sulla macchina, prima di allegare l'APK
+# alla release (vedi app/README.md e app/COMPILARE-E-FIRMARE.md).
+# ============================================================
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'app/**'
+      - '.github/workflows/build-apk.yml'
   pull_request:
+    paths:
+      - 'app/**'
+      - '.github/workflows/build-apk.yml'
   workflow_dispatch:
 
 jobs:
-  build:
+  compila:
     runs-on: ubuntu-latest
     steps:
       - name: Scarica il codice
@@ -24,17 +41,24 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+          cache: gradle
 
       - name: Prepara Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Compila l'APK di prova
+      - name: Compila l'APK di prova e quello da pubblicare
         working-directory: app
-        run: ./gradlew --no-daemon assembleDebug
+        run: ./gradlew --no-daemon assembleDebug assembleRelease
 
-      - name: Allega l'APK compilato
+      - name: Controlli di Android (lint)
+        working-directory: app
+        run: ./gradlew --no-daemon lintRelease
+
+      - name: Allega i due APK compilati
         uses: actions/upload-artifact@v4
         with:
-          name: luxverse-apk-di-prova
-          path: app/app/build/outputs/apk/debug/*.apk
+          name: luxverse-apk
+          path: |
+            app/app/build/outputs/apk/debug/*.apk
+            app/app/build/outputs/apk/release/*.apk
           if-no-files-found: error

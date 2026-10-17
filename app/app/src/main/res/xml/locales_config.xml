@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Le due lingue dei testi dell'app. Serve ad Android 13 e successivi per
+  mostrare "Impostazioni > App > L.U.X. Verse > Lingua": il sito ha le sue due
+  lingue (si scelgono dal sito), qui si sceglie in che lingua parlano le poche
+  frasi dell'app (attesa, pagina di cortesia, avvisi dei salvataggi).
+-->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="it" />
+    <locale android:name="en" />
+</locale-config>

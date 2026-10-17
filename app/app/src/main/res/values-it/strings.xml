@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Testi dell'app in italiano: si vedono quando il telefono e' in italiano. -->
+<resources>
+    <string name="app_name">L.U.X. Verse</string>
+
+    <string name="loading">Carico il sito…</string>
+
+    <string name="offline_title">Il sito non risponde</string>
+    <string name="offline_text">È un problema dalla nostra parte, non del tuo telefono. Riprova fra qualche secondo: non è andato perso niente di quello che stavi facendo.</string>
+
+    <string name="no_network_title">Nessuna connessione</string>
+    <string name="no_network_text">Questa app è una finestra sul sito: senza connessione non c’è niente da mostrare. Controlla il Wi-Fi o i dati mobili e riprova.</string>
+
+    <string name="retry">Riprova</string>
+    <string name="open_in_browser">Apri nel browser</string>
+    <string name="exit_hint">Premi di nuovo indietro per uscire</string>
+    <string name="no_app_for_link">Nessuna app di questo telefono può aprire questo collegamento</string>
+
+    <string name="download_started">Salvataggio nella cartella Download</string>
+    <string name="download_failed">Non è stato possibile avviare il salvataggio</string>
+    <string name="download_needs_permission">Per salvare il file l’app ha bisogno del permesso di scrivere nella memoria</string>
+    <string name="download_description">Scaricato da %1$s</string>
+    <string name="share_via">Condividi con</string>
+</resources>

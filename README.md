@@ -13,7 +13,7 @@ sé, senza doversi fidare sulla parola.
 - **App**: Kotlin, una `WebView` a schermo intero sul sito live, più la schermata di
   avvio, il controllo degli aggiornamenti e la pagina di riserva quando manca la rete.
 - **Licenza**: MIT (vedi [LICENSE](LICENSE)).
-- **File dell'app**: pubblicato qui fra le [release](../../releases) come `LUXVerse-39.1.3.apk`.
+- **File dell'app**: pubblicato qui fra le [release](../../releases) come `LUXVerse-39.2.0.apk`.
 
 ## Cosa NON c'è in questo repository (e perché)
 
@@ -43,17 +43,19 @@ L'APK dell'app si può controllare in due modi indipendenti:
 1. **Il rapporto pubblico su VirusTotal** — decine di motori antivirus diversi analizzano
    il file e il risultato è visibile a tutti:
    <https://www.virustotal.com/gui/file/dfdfbda322e368210505b4e142c434aa1b5ad43b7f1fcd74f95cdcb8ecaacbab/detection>
+   (rapporto del file 39.1.3: quando viene pubblicato il 39.2.0 se ne carica una copia e
+   qui e in `site/app.php` si mette il nuovo indirizzo — passo 4 del promemoria qui sotto)
 2. **L'impronta del file** — confronta l'SHA-256 che vedi nella pagina dell'app sul sito
    con quella del file che hai scaricato. Devono combaciare, carattere per carattere.
 
-Impronta SHA-256 dell'APK 39.1.3 (build 44) pubblicato in queste release:
+Impronta SHA-256 dell'APK 39.2.0 (build 45), l'ultimo pubblicato:
 
 ```
-9bcecb4a8811ed5275aa5f36c01121e7a34dc2f2c24d7971726c7924637b79fd  LUXVerse-39.1.3.apk
+84c73d68686a5ad2f01c87e4d4a56b7f0536d71e20557578f52aeb1e439fee3b  LUXVerse-39.2.0.apk
 ```
 
-L'APK è firmato con il certificato `CN=WorkMeAI` (SHA-256
-`f969c6b36e2bc3c2b10e27cff012367e38bce5e99b604ae7b597d9dc31027b14`): se un file dichiara
+L'APK è firmato con il certificato `CN=L.U.X. Verse` (SHA-256
+`2767a141d40bbdd0e03764649e866be60a7e257e1fb459c7cecf7f1f52fb3b14`): se un file dichiara
 lo stesso nome ma una firma diversa, non è il nostro.
 
 ## Struttura
@@ -129,8 +131,8 @@ prima di scrivere molto codice, apri una issue e parliamone.
    `site/config.php` (`LUX_APP_VERSION_CODE`, `LUX_APP_VERSION`): le due versioni devono
    restare allineate, altrimenti l'app installata propone un aggiornamento che non esiste;
 2. compila l'APK firmato e caricalo sul sito come `LUXVerse.apk`;
-3. crea qui una release con il tag della versione (per esempio `v39.1.3`) e allega l'APK
-   rinominato `LUXVerse-39.1.3.apk`;
+3. crea qui una release con il tag della versione (per esempio `v39.2.0`) e allega l'APK
+   rinominato `LUXVerse-39.2.0.apk`;
 4. carica lo stesso APK su VirusTotal e aggiorna il link nella pagina dell'app
    (`site/app.php`, variabile `$vtUrl`) e in questo README.
 

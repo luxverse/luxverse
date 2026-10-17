@@ -1,20 +1,26 @@
-# ==== Build ====
+# ==== Compilazione ====
 build/
 app/build/
 .gradle/
 .kotlin/
 captures/
 
-# ==== IDE ====
+# ==== Impostazioni di questa macchina ====
 .idea/
 *.iml
 local.properties
 
-# ==== SEGRETI di firma (chiave privata, MAI versionare) ====
+# ==== SEGRETI DI FIRMA (chiave privata: MAI versionare) ====
+# Se questi file finiscono nel repository, chiunque puo' firmare un'app che
+# si spaccia per L.U.X. Verse e prenderne il posto negli aggiornamenti.
 keystore.properties
 *.jks
 *.keystore
 
-# ==== OS ====
+# ==== Sistema operativo ed editor ====
 .DS_Store
 Thumbs.db
+*.bak
+*.orig
+*.tmp
+*~

@@ -83,7 +83,7 @@ if (!defined('LUX_SITE_VERSION')) define('LUX_SITE_VERSION', '39.1.1');
 
 // Versione dell'ecosistema (mostrata nella schermata di caricamento e
 // nell'app Android). Unico posto in cui e' scritta: si cambia qui.
-if (!defined('LUX_APP_VERSION')) define('LUX_APP_VERSION', '39.1.3');
+if (!defined('LUX_APP_VERSION')) define('LUX_APP_VERSION', '39.2.0');
 // Numero di versione che l'app confronta con il proprio: le due righe qui
 // sopra e qui sotto si cambiano INSIEME quando si pubblica un APK nuovo.
 // 39.0.2 = tastiera che non copre più il campo di scrittura, catalogo intero
@@ -99,7 +99,12 @@ if (!defined('LUX_APP_VERSION')) define('LUX_APP_VERSION', '39.1.3');
 // errori del server si spiegano invece di restare neri, e la versione nuova
 // si chiede alla WebView (la chiamata diretta alle API riceveva la pagina di
 // verifica, non il JSON).
-if (!defined('LUX_APP_VERSION_CODE')) define('LUX_APP_VERSION_CODE', 44);
+// 39.2.0 = l'app e' stata rifatta da zero: un solo pacchetto nuovo
+// (org.luxverse.app) che e' una finestra sulla pagina vera del sito, senzia
+// copie di pagine dentro. Chi ha installato la versione vecchia (pacchetto
+// com.workmeai.app) la tiene dov'e': sono due pacchetti diversi, con due
+// firme diverse, e Android non sostituira' l'una con l'altra.
+if (!defined('LUX_APP_VERSION_CODE')) define('LUX_APP_VERSION_CODE', 45);
 
 // Hash BCRYPT della password admin. Se i segreti non sono stati caricati
 // resta VUOTO: password_verify() con hash vuoto dice sempre "no", quindi

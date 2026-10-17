@@ -48,4 +48,4 @@ esegue uno script e ricarica (`aes.js` e il cookie `__test`, non sono file del p
 Per un browser è invisibile; per un client che non esegue JavaScript (per esempio una
 chiamata API diretta da un'app) significa ricevere quella pagina invece del JSON. È il
 motivo per cui l'app chiede la versione del sito **dentro la WebView** e non con una
-chiamata diretta: vedi `app/app/src/main/java/com/workmeai/app/ui/MainActivity.kt`.
+chiamata diretta: vedi `app/app/src/main/java/org/luxverse/app/ui/MainActivity.kt`.

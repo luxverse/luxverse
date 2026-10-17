@@ -35,7 +35,7 @@ se vuoi ti citiamo nel messaggio del rilascio che chiude il problema.
   piano gratuito e non si "buca": semplicemente il server risponde solo ai client che
   eseguono quello script.
 - **L'APK senza firma di Google Play.** L'app non passa dal Play Store, quindi Android
-  può chiedere una scansione: l'APK è firmato e la firma è verificabile (`CN=WorkMeAI`).
+  può chiedere una scansione: l'APK è firmato e la firma è verificabile (`CN=L.U.X. Verse`).
 - **L'assenza di autenticazione sulle funzioni pubbliche.** Il sito è nato senza account:
   non c'è niente da proteggere se non il pannello di amministrazione e la chiave delle API
   AI, che stanno fuori dal codice pubblico (vedi il README).

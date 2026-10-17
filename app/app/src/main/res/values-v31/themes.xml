@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Da Android 12 il sistema disegna da solo la schermata di avvio: prende
+  l'icona dell'app e la mostra su uno sfondo. Qui si dice soltanto di che
+  colore e' lo sfondo e quale disegno mostrare, cosi' non si vede il lampo
+  bianco prima della pagina. Tutto il resto del tema e' quello di sempre
+  (Theme.LuxVerse.Base).
+-->
+<resources>
+
+    <style name="Theme.LuxVerse" parent="Theme.LuxVerse.Base">
+        <item name="android:windowSplashScreenBackground">@color/lux_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <item name="android:windowSplashScreenAnimationDuration">300</item>
+    </style>
+
+</resources>
