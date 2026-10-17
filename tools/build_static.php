@@ -2,20 +2,22 @@
 // ============================================================
 // LA PARTE STATICA DEL SITO — L.U.X. VERSE (17/10/2026)
 // ============================================================
-// Il sito e' diviso in due (vedi la nota in config.php, LUX_STATIC_BASE):
+// Vedi la nota in config.php (LUX_STATIC_BASE, LUX_STATIC_SELF):
 //
-//   · sul server restano le pagine che hanno bisogno di dati, sessioni o
-//     calcoli: home, bacheca, strumenti, spazio personale, pannello, API;
 //   · qui si generano gli HTML delle pagine di contenuto fisso (privacy,
 //     termini, chi siamo, FAQ, percorso, linea del tempo, codice aperto,
 //     condividi) e si copiano i file di lavoro (CSS, JS, immagini). Il
-//     risultato va nella cartella `frontend/`, che viene pubblicata su una
-//     rete di distribuzione con sedi in piu' parti del mondo.
+//     risultato va nella cartella `frontend/`;
+//   · i file .html vengono caricati sul sito (tools/deploy.php), allo stesso
+//     indirizzo di sempre: sono file, non programmi, e si aprono senza far
+//     calcolare niente al server;
+//   · la stessa cartella viene pubblicata anche su una rete di distribuzione:
+//     da li' arrivano gli asset (il peso vero delle pagine) e resta una
+//     copia di riserva delle pagine.
 //
 // Perche' cosi': una pagina di contenuto non cambia mentre la leggi, quindi
-// non ha senso farla calcolare ogni volta da un server condiviso che ha un
-// limite di lavoro al minuto. Servita da una rete arriva in un attimo anche
-// quando il server e' occupato, e il server resta libero per il resto.
+// non ha senso farla calcolare ogni volta; gli asset serviti da una rete
+// arrivano prima e non consumano il lavoro del server.
 //
 // Le pagine sono renderizzate dal PHP vero (tools/_static_one.php), non
 // riscritte a mano: quello che si vede nella copia statica e' esattamente
@@ -120,18 +122,14 @@ foreach ($langs as $lang => $sub) {
             continue;
         }
 
-        // Le copie statiche non devono competere con il sito negli indici di
-        // ricerca: il contenuto "ufficiale" resta quello sul server, e la
-        // copia veloce e' solo un modo migliore di consegnarlo. Quindi si
-        // sostituisce il robots della pagina (che dice "indicizza") con uno
-        // che dice di no, mantenendo i collegamenti.
-        $html = preg_replace('/<meta\s+name="robots"[^>]*>/i', '<meta name="robots" content="noindex,follow">', $html, 1, $robotsCount);
-        if (!$robotsCount) {
-            $html = preg_replace('/<\/head>/i', '    <meta name="robots" content="noindex,follow">' . "\n</head>", $html, 1);
-        }
+        // Nessun noindex: questi file sono le pagine vere del sito, allo
+        // stesso indirizzo. Il canonical scritto dentro punta a
+        // luxverse.c22.eu, quindi la copia esterna (quella su una rete di
+        // distribuzione) non fa concorrenza a niente: se un motore la trova
+        // sa qual e' l'indirizzo ufficiale.
 
-        // File .html e non .php: la rete statica sceglie il tipo di file
-        // dall'estensione, e un .php lo consegnerebbe da scaricare.
+        // File .html e non .php: un .html lo si consegna cosi' com'e', senza
+        // eseguire niente.
         $file = $target . '/' . str_replace('.php', '.html', $page);
         if (@file_put_contents($file, $html) === false) {
             fwrite(STDERR, "ERRORE  scrittura " . $file . "\n");

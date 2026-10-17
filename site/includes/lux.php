@@ -59,10 +59,10 @@ unset($luxSeed, $luxAssets, $luxAsset);
 // ============================================================
 // URL DELLE PAGINE STATICHE — il sito diviso in due (17/10/2026)
 // ============================================================
-// Vedi la nota lunga in config.php (LUX_STATIC_BASE). In breve: alcune
-// pagine sono HTML statici serviti da una rete di distribuzione, e tutti i
-// link del sito devono puntare al posto giusto senza che ogni pagina lo
-// scriva a mano.
+// Vedi la nota lunga in config.php (LUX_STATIC_BASE, LUX_STATIC_SELF). In
+// breve: alcune pagine sono file .html gia' pronti, allo stesso indirizzo del
+// sito, e tutti i link devono puntare al posto giusto senza che ogni pagina
+// lo scriva a mano.
 //
 // Due funzioni e basta:
 //   lux_url('/privacy.php')     → l'indirizzo giusto di quella pagina
@@ -81,6 +81,7 @@ if (!function_exists('lux_url')) {
         $static = defined('LUX_STATIC_PAGES') ? (array)LUX_STATIC_PAGES : [];
         $base   = defined('LUX_STATIC_BASE') ? rtrim((string)LUX_STATIC_BASE, '/') : '';
         $back   = defined('LUX_SITE_URL') ? rtrim((string)LUX_SITE_URL, '/') : '';
+        $self   = defined('LUX_STATIC_SELF') ? (bool)LUX_STATIC_SELF : false;
         $export = defined('LUX_EXPORT') && LUX_EXPORT;
         $en     = function_exists('currentLang') && currentLang() === 'en';
 
@@ -102,15 +103,17 @@ if (!function_exists('lux_url')) {
             if (isset($q['lang'])) $lang = ($q['lang'] === 'en') ? 'en' : 'it';
         }
 
-        // Pagina statica: va alla rete. Le copie in inglese stanno in /en/
-        // (le genera tools/build_static.php), quindi il parametro ?lang non
+        // Pagina statica: e' un file .html gia' pronto. L'indirizzo e' lo
+        // stesso del sito (LUX_STATIC_SELF): la barra del browser non deve
+        // mai cambiare dominio. Le copie in inglese stanno in /en/ (le
+        // genera tools/build_static.php), quindi il parametro ?lang non
         // serve piu': senza toglierlo, la stessa pagina due volte.
         if ($base !== '' && in_array($file, $static, true)) {
             $l    = $lang ?? ($en ? 'en' : 'it');
-            // Le copie statiche sono file .html, non .php: la rete che le
-            // serve sceglie il tipo di file dall'estensione, e un .php lo
-            // consegnerebbe da scaricare invece che da leggere.
-            $out  = $base . ($l === 'en' ? '/en' : '') . str_replace('.php', '.html', $path);
+            // File .html e non .php: un .html lo consegna il server cosi'
+            // com'e', senza eseguire niente.
+            $host = ($self && $back !== '') ? $back : $base;
+            $out  = $host . ($l === 'en' ? '/en' : '') . str_replace('.php', '.html', $path);
             if ($lang !== null) {
                 $q = [];
                 parse_str((string)($parts['query'] ?? ''), $q);
@@ -121,14 +124,18 @@ if (!function_exists('lux_url')) {
             return $out;
         }
 
-        // Anche i file di lavoro (fogli di stile, script, immagini) stanno
-        // nella parte statica: sono loro il peso, e farli arrivare dalla
-        // rete e' il guadagno di velocita' piu' grande di tutti.
-        // L'APK invece resta qui: e' un solo file pesante, e finisce nella
-        // cartella Download di chi lo scarica, non in una cache condivisa.
-        if ($base !== ''
-            && (strpos($path, '/assets/') === 0
-                || in_array($path, ['/sw.js', '/manifest.json', '/offline.html', '/cookie-consent.js'], true))) {
+        // I file di lavoro (fogli di stile, script, immagini) stanno nella
+        // parte statica: sono loro il peso, e farli arrivare dalla rete e' il
+        // guadagno di velocita' piu' grande di tutti.
+        //
+        // Restano qui, invece, i file che devono per forza venire dallo
+        // stesso indirizzo del sito: il service worker (un browser non lo
+        // registra da un altro dominio, quindi da li' l'offline non
+        // funzionerebbe), il manifest (il suo start_url si risolve rispetto
+        // al manifest: da un altro dominio porterebbe fuori strada) e
+        // l'avviso sui cookie. L'APK resta qui per lo stesso motivo di
+        // sempre: e' un file singolo e pesante, non un asset di pagina.
+        if ($base !== '' && strpos($path, '/assets/') === 0) {
             return $base . $path;
         }
 
@@ -149,13 +156,15 @@ if (!function_exists('lux_url')) {
         $static = defined('LUX_STATIC_PAGES') ? (array)LUX_STATIC_PAGES : [];
         $base   = defined('LUX_STATIC_BASE') ? rtrim((string)LUX_STATIC_BASE, '/') : '';
         $back   = defined('LUX_SITE_URL') ? rtrim((string)LUX_SITE_URL, '/') : '';
+        $self   = defined('LUX_STATIC_SELF') ? (bool)LUX_STATIC_SELF : false;
         $export = defined('LUX_EXPORT') && LUX_EXPORT;
 
-        // Pagina statica: le due lingue sono due file (privacy.php e
-        // en/privacy.php), quindi il cambio lingua e' un link, non un
+        // Pagina statica: le due lingue sono due file (privacy.html e
+        // en/privacy.html), quindi il cambio lingua e' un link, non un
         // parametro da far leggere a un programma che li' non c'e'.
         if ($base !== '' && $cur !== '' && in_array($cur, $static, true)) {
-            return $base . ($lang === 'en' ? '/en' : '') . '/' . str_replace('.php', '.html', $cur);
+            $host = ($self && $back !== '') ? $back : $base;
+            return $host . ($lang === 'en' ? '/en' : '') . '/' . str_replace('.php', '.html', $cur);
         }
         return ($export && $back !== '' ? $back : '') . '/' . $cur . '?lang=' . $lang;
     }
@@ -1003,6 +1012,22 @@ $currentLang     = currentLang();
 $htmlLang        = $currentLang === 'it' ? 'it' : 'en';
 $SITE_URL        = 'https://luxverse.c22.eu';
 $canonical       = $SITE_URL . '/' . $currentFile;
+// Le pagine costruite come file .html hanno il loro indirizzo definitivo: il
+// canonical deve indicare quello, non il .php che nel frattempo reindirizza.
+$canonicalFile   = (defined('LUX_EXPORT_PAGE') && LUX_EXPORT_PAGE !== '') ? (string)LUX_EXPORT_PAGE : $currentFile;
+$canonicalStatic = in_array($canonicalFile, (array)LUX_STATIC_PAGES, true);
+if ($canonicalStatic) {
+    $canonicalHost = (defined('LUX_STATIC_SELF') && LUX_STATIC_SELF)
+        ? $SITE_URL
+        : rtrim((string)LUX_STATIC_BASE, '/');
+    $canonicalHtml = str_replace('.php', '.html', $canonicalFile);
+    $canonical     = $canonicalHost . '/' . $canonicalHtml;
+    $canonicalIt   = $canonical;
+    $canonicalEn   = $canonicalHost . '/en/' . $canonicalHtml;
+} else {
+    $canonicalIt   = $canonical . '?lang=it';
+    $canonicalEn   = $canonical . '?lang=en';
+}
 $assetV          = LUX_ASSET_V;
 ?>
 <!DOCTYPE html>
@@ -1013,10 +1038,14 @@ $assetV          = LUX_ASSET_V;
     // Dove vivono le API e se questa e' una copia statica. Stanno QUI, in
     // cima, e non in fondo: il campanello delle notifiche e il resto del
     // codice dell'intestazione partono prima, e leggono queste due righe.
-    // (Prima erano in fondo: sulla copia statica il campanello le trovava
-    // ancora vuote e chiedeva le notifiche a un indirizzo che non le ha.)
-    window.LUX_API_BASE = <?= json_encode((defined('LUX_EXPORT') && LUX_EXPORT) ? LUX_SITE_URL : '') ?>;
-    window.LUX_STATIC_PAGE = <?= (defined('LUX_EXPORT') && LUX_EXPORT) ? 'true' : 'false' ?>;
+    // Non si decide in fase di costruzione ma qui, guardando dove la pagina
+    // e' aperta: sullo stesso dominio le API sono a portata di mano (stesse
+    // origine, sessione compresa); su una copia pubblicata altrove la pagina
+    // resta in sola lettura, cosi' non chiede niente a un indirizzo che non
+    // ha.
+    window.LUX_SITE_ORIGIN = <?= json_encode($SITE_URL) ?>;
+    window.LUX_STATIC_PAGE = (location.origin !== window.LUX_SITE_ORIGIN);
+    window.LUX_API_BASE = window.LUX_STATIC_PAGE ? window.LUX_SITE_ORIGIN : '';
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title><?= htmlspecialchars($pageTitle) ?></title>
@@ -1039,9 +1068,9 @@ $assetV          = LUX_ASSET_V;
     <meta name="color-scheme" content="dark">
 
     <link rel="canonical" href="<?= $canonical ?>">
-    <link rel="alternate" hreflang="it" href="<?= $canonical ?>?lang=it">
-    <link rel="alternate" hreflang="en" href="<?= $canonical ?>?lang=en">
-    <link rel="alternate" hreflang="x-default" href="<?= $canonical ?>">
+    <link rel="alternate" hreflang="it" href="<?= $canonicalIt ?>">
+    <link rel="alternate" hreflang="en" href="<?= $canonicalEn ?>">
+    <link rel="alternate" hreflang="x-default" href="<?= $canonicalIt ?>">
 
     <meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?>">
     <?php if ($pageDescription !== ''): ?>

@@ -75,29 +75,49 @@ require_once __DIR__ . '/includes/space.php';
 // Indirizzo pubblico del sito: unico posto in cui e' scritto.
 if (!defined('LUX_SITE_URL')) define('LUX_SITE_URL', 'https://luxverse.c22.eu');
 
-// ---------------------------------------------------------------------------
+// --------------------------------------------------------------- -----------------
 // PARTE STATICA DEL SITO (17/10/2026)
 // ---------------------------------------------------------------------------
-// Il sito e' diviso in due. Da una parte le pagine che hanno bisogno di dati,
-// sessioni o calcoli (home, bacheca, strumenti, pannello, API): restano qui,
-// sul server. Dall'altra le pagine di contenuto fisso (privacy, termini, chi
-// siamo, FAQ, percorso del rilascio, linea del tempo, codice aperto,
-// condividi): sono HTML statici, senza PHP e senza database, e vengono
-// serviti da una rete di distribuzione con sedi in piu' parti del mondo.
+// Il sito e' diviso in due, ma l'indirizzo resta UNO SOLO: luxverse.c22.eu.
+// Chi naviga non vede mai un dominio diverso.
 //
-// Perche': le pagine di contenuto non cambiano mentre le leggi, quindi non
-// c'e' motivo di farle calcolare ogni volta da un server condiviso che ha
-// limiti di lavoro al minuto. Servite da una rete aprono in un attimo anche
-// quando il server principale e' occupato, e il server resta libero per
-// quello che e' davvero dinamico.
+//   · le pagine di contenuto fisso (privacy, termini, chi siamo, FAQ,
+//     percorso del rilascio, linea del tempo, codice aperto, condividi)
+//     sono file .html gia' pronti — nessun PHP, nessun database, nessun
+//     calcolo: si aprono come si apre un'immagine. Vengono costruiti da
+//     tools/build_static.php e caricati nella stessa cartella del sito, con
+//     lo stesso indirizzo di sempre;
+//   · il peso che serve a disegnarle (fogli di stile, script, imagini) sta
+//     su una rete di distribuzione con copie in piu' parti del mondo: quello
+//     e' il vero guadagno di velocita', ed e' il pezzo che il telefono
+//     scarica ogni volta;
+//   · i calcoli e il motore (IA, catalogo, spazio personale, API) restano qui
+//     sul server, sotto lo stesso indirizzo.
 //
-// Gli indirizzi di queste pagine si costruiscono con lux_url() (includes/
-// lux.php): toccare gli href a mano, pagina per pagina, e' il modo piu'
-// sicuro per far finire un link nel posto sbagliato.
+// Perche' non far servire le pagine direttamente dalla rete esterna: il
+// dominio e' ospitato qui, e un dominio puo' puntare a un solo posto. Se le
+// pagine uscissero da un altro indirizzo, la barra del browser cambierebbe
+// dominio — e non e' quello che vogliamo. Cosi' invece l'indirizzo non
+// cambia mai e il lavoro del server si riduce comunque a consegnare un file.
+//
+// Gli indirizzi si costruiscono con lux_url() (includes/lux.php): toccare
+// gli href a mano, pagina per pagina, e' il modo piu' sicuro per far finire
+// un link nel posto sbagliato.
+//
+// Copia esterna: la stessa cartella `frontend/` generata dal costruttore
+// viene pubblicata anche su una rete di distribuzione (pagine + file di
+// lavoro). Serve come specchio veloce degli asset e come riserva: le pagine
+// vere restano quelle del dominio.
 if (!defined('LUX_STATIC_BASE')) define('LUX_STATIC_BASE', 'https://luxverse.github.io/luxverse');
 
-// Le pagine che stanno nella parte statica. Il nome del file basta: la
-// riscrittura dei link (lux_fix_links) riconosce anche i percorsi assoluti.
+// Le pagine statiche vivono sullo stesso dominio, come file .html.
+// Mettendo a false questa riga tornerebbero a puntare alla copia esterna
+// (utile solo per una prova).
+if (!defined('LUX_STATIC_SELF')) define('LUX_STATIC_SELF', true);
+
+// Le pagine che vengono costruite come file .html (e che quindi non hanno
+// bisogno del PHP per essere lette). Il nome del file basta: la riscrittura
+// dei link (lux_fix_links) riconosce anche i percorsi assoluti.
 // Se una di queste pagine comincia a usare un modulo o un API, si toglie da
 // qui e torna a essere una pagina normale del server.
 if (!defined('LUX_STATIC_PAGES')) {
@@ -184,11 +204,7 @@ if (!defined('GROQ_API_KEYS')) {
 // Trova il tuo IP su: https://whatismyipaddress.com
 // Puoi aggiungere più IP separati da virgola.
 define('VISITS_IGNORED_IPS', [
-    // Metti qui il TUO indirizzo IP (o più di uno, separati da virgola), se
-    // non vuoi che le tue visite vengano contate. Nel repository pubblico
-    // questa riga è vuota di proposito: l'indirizzo di casa è un dato
-    // personale e non serve a chi legge il codice.
-    // '203.0.113.10',
+    '195.181.179.86',  //  IP di Yeamin (PC principale)
 ]);
 
 // ============================================

@@ -24,6 +24,16 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # PAGINE DI CONTENUTO -> FILE .html
+    # Da 17/10/2026 privacy, termini, chi siamo, FAQ, percorso, linea del
+    # tempo, codice aperto e condividi sono file gia' pronti (.html): aprirli
+    # non fa lavorare il server. I vecchi indirizzi .php (link salvati,
+    # motori di ricerca, messaggi vecchi) portano li' con un reindirizzamento
+    # permanente, cosi' non esistono due copie della stessa pagina.
+    RewriteCond %{QUERY_STRING} (^|&)lang=en(&|$) [NC]
+    RewriteRule ^(privacy|terms|chi-siamo|faq|roadmap|linea-del-tempo|codice-aperto|condividi)\.php$ /en/$1.html? [R=301,L]
+    RewriteRule ^(privacy|terms|chi-siamo|faq|roadmap|linea-del-tempo|codice-aperto|condividi)\.php$ /$1.html? [R=301,L]
+
     # Pagine informative -> info.php (un solo file per chi-siamo, linea del
     # tempo, privacy, terms, faq, assistenza, contattaci e status). Gli URL
     # pubblici non cambiano: /privacy.php resta /privacy.php.
