@@ -1,5 +1,21 @@
 [
     {
+        "title_it": "IL SITO È PIÙ VELOCE — le pagine di contenuto arrivano da più vicino",
+        "title_en": "THE SITE IS FASTER — content pages now come from closer by",
+        "message_it": "Le pagine che si leggono (Chi siamo, FAQ, Privacy, Termini, percorso, linea del tempo, codice aperto, condividi) e i file che le fanno funzionare ora arrivano da una rete di distribuzione con copie in più parti del mondo: si aprono prima, anche quando il server è occupato. Tutto il resto — motore, catalogo, bacheca, spazio personale, pannello — resta sul server. Stesso indirizzo, stessi contenuti, stessa privacy: nessun cookie nuovo, nessun tracciamento, e i tuoi dati non passano da lì.",
+        "message_en": "The pages you read (About, FAQ, Privacy, Terms, roadmap, timeline, open source, share) and the files that make them work are now served by a distribution network with copies in several parts of the world: they open faster, even when the server is busy. Everything else — engine, catalogue, board, personal space, panel — stays on the server. Same address, same content, same privacy: no new cookies, no tracking, and your data does not pass through there.",
+        "title": "THE SITE IS FASTER — content pages now come from closer by",
+        "message": "The content pages and the files that make them work are served by a distribution network with copies in several parts of the world: they open faster, even when the server is busy. Everything that computes stays on the server. Same address, same content, same privacy.",
+        "category": "update",
+        "audience": "public",
+        "redirect": "\/roadmap.php",
+        "source": "manual",
+        "auto": "",
+        "publish_at": "",
+        "id": "N_sito_veloce_20261017",
+        "date": "2026-10-17 13:40:00"
+    },
+    {
         "title_it": "L'APP ANDROID È TORNATA — ma va scaricata di nuovo dalla sezione APP",
         "title_en": "THE ANDROID APP IS BACK — but you must download it again from the App section",
         "message_it": "L'app è nuova da zero: pacchetto e firma nuovi, quindi Android non la mette al posto di quella vecchia. Apri la sezione APP del sito, scarica di nuovo l'APK e installalo. È gratis, senza registrazione, e se il telefono chiede una verifica di sicurezza lasciala finire: il file è nostro ed è firmato.",
