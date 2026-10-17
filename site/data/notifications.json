@@ -1,9 +1,9 @@
 [
     {
-        "title_it": "IL SITO È PIÙ VELOCE — le pagine che si leggono arrivano già pronte",
-        "title_en": "THE SITE IS FASTER — the pages you read arrive ready-made",
-        "message_it": "Le pagine che si leggono (Chi siamo, FAQ, Privacy, Termini, percorso, linea del tempo, codice aperto, condividi) ora sono file già pronti e il loro peso grafico arriva da una rete veloce: si aprono prima, anche quando il server è occupato. Tutto quello che calcola — motore, intelligenza artificiale, catalogo, bacheca, spazio personale, pannello — resta sul server. L'indirizzo è sempre lo stesso: luxverse.c22.eu. Nessun cookie nuovo, nessun tracciamento, e i tuoi dati non passano da lì.",
-        "message_en": "The pages you read (About, FAQ, Privacy, Terms, roadmap, timeline, open source, share) are now ready-made files, and their visual weight comes from a fast network: they open sooner, even when the server is busy. Everything that computes — engine, artificial intelligence, catalogue, board, personal space, panel — stays on the server. The address is always the same: luxverse.c22.eu. No new cookies, no tracking, and your data does not pass through there.",
+        "title_it": "IL SITO È PIÙ VELOCE — ogni pagina diventa un file già pronto",
+        "title_en": "THE SITE IS FASTER — every page becomes a ready file",
+        "message_it": "Le pagine di contenuto sono già file pronti; gli strumenti — tutti, anche i centomila del catalogo — diventano un file la prima volta che qualcuno li apre. Da lì in poi il server consegna quella copia, senza calcolare niente. I calcoli veri — motore, intelligenza artificiale, catalogo, bacheca, spazio personale — restano sul server. Stesso indirizzo, stessa privacy, nessun cookie nuovo.",
+        "message_en": "The content pages are ready files already; the tools — all of them, including the hundred thousand in the catalogue — become a file the first time someone opens them. From then on the server delivers that copy without computing anything. Everything that truly computes — engine, artificial intelligence, catalogue, board, personal space — stays on the server. Same address, same privacy, no new cookies.",
         "title": "THE SITE IS FASTER — content pages now come from closer by",
         "message": "The content pages and the files that make them work are served by a distribution network with copies in several parts of the world: they open faster, even when the server is busy. Everything that computes stays on the server. Same address, same content, same privacy.",
         "category": "update",

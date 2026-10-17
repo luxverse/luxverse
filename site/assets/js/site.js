@@ -9,6 +9,22 @@
     'use strict';
 
     // ---------------------------------------------------------
+    // LA LINGUA RESTA SCELTA ANCHE SULLE PAGINE GIÀ PRONTE
+    // ---------------------------------------------------------
+    // Molte pagine vengono consegnate come file già pronti (nessun PHP): lì
+    // il server non può ricordare la lingua scelta. ?lang=en nell'indirizzo
+    // dice la lingua della pagina che stai leggendo, ma senza questa riga il
+    // cookie resterebbe quello di prima e la pagina dopo tornerebbe in
+    // italiano. Qui si allinea il cookie all'indirizzo, una volta sola.
+    (function () {
+        var m = /[?&]lang=(it|en)(&|$)/.exec(location.search);
+        if (!m) return;
+        var c = /(?:^|; )workme_lang=([^;]*)/.exec(document.cookie || '');
+        if (c && c[1] === m[1]) return;
+        document.cookie = 'workme_lang=' + m[1] + ';path=/;max-age=31536000;samesite=lax';
+    })();
+
+    // ---------------------------------------------------------
     // OGNI PAGINA SI APRE DALL'ALTO
     // ---------------------------------------------------------
     // Il browser a volte conserva la posizione di scorrimento e la pagina

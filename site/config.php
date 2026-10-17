@@ -127,6 +127,25 @@ if (!defined('LUX_STATIC_PAGES')) {
     ]);
 }
 
+// PAGINE MESSE DA PARTE (17/10/2026)
+// ---------------------------------------------------------------------------
+// Centomila strumenti non possono essere costruiti tutti in anticipo: le
+// pagine sarebbero circa 26 GB di file. Si fa un'altra strada, che dal punto
+// di vista di chi visita il sito e' la stessa cosa: la PRIMA volta che una
+// pagina viene aperta, il PHP la costruisce e ne lascia una copia esatta
+// nella cartella qui sotto; dalla seconda volta in poi e' il server a
+// consegnare quel file, senza eseguire niente.
+//
+// Cosi' ogni pagina diventa statica appena qualcuno la apre, e le pagine piu'
+// visitate lo sono subito per tutti. Lo spazio cresce solo per le pagine che
+// esistono davvero: nessun caricamento di 200.000 file.
+//
+// Per svuotare tutto (dopo un aggiornamento importante): basta cambiare il
+// valore qui sotto, anche di un carattere. La cartella vecchia resta li' ma
+// non viene piu' letta, e si puo' cancellare con calma.
+if (!defined('LUX_CACHE_TAG')) define('LUX_CACHE_TAG', '2026-10-17a');
+if (!defined('LUX_CACHE_DIR')) define('LUX_CACHE_DIR', 'cache/' . LUX_CACHE_TAG);
+
 // Versione della PIATTAFORMA (il sito), cioe' il racconto del rilascio:
 // oggi 39.1.1. NON e' la versione dell'app: quella (LUX_APP_VERSION) si
 // cambia solo quando esce davvero un APK nuovo, altrimenti l'app installata

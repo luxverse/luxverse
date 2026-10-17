@@ -49,6 +49,21 @@ $_SERVER['SCRIPT_NAME'] = '/' . $__lux_slug . '.php';
 require_once __DIR__ . '/config.php';
 lux_session_start();   // cookie HttpOnly + SameSite (vedi config.php)
 
+// La lingua nell'indirizzo, non nel cookie.
+//
+// Una pagina che viene messa da parte deve essere UNA per indirizzo: se la
+// lingua arrivasse dal cookie, lo stesso /riassumi.php sarebbe italiano per
+// uno e inglese per un altro, e la copia salvata sarebbe giusta per uno solo
+// dei due. Quindi quando il browser ricorda l'inglese ma l'indirizzo non lo
+// dice, si passa all'indirizzo esplicito: cosi' ogni copia e' quella giusta
+// per tutti, e chi ha scelto l'inglese continua a vedere l'inglese.
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET'
+    && !isset($_GET['lang'])
+    && function_exists('currentLang') && currentLang() === 'en') {
+    header('Location: /' . $__lux_slug . '.php?lang=en', true, 302);
+    exit;
+}
+
 // ---------- 3. CATALOGO DEGLI STRUMENTI ----------
 // Due IIFE: il corpo originale dei cataloghi (un semplice `return [...]`) non
 // viene toccato, quindi resta leggibile e confrontabile con l'originale.
@@ -3399,6 +3414,7 @@ if (!function_exists('lux_tools')) {
         $toolState = ($tool && function_exists('lux_project_state')) ? lux_project_state((string)$key) : 'attivo';
         if ($tool && $toolState !== 'attivo' && !isAdminLoggedIn()) {
             http_response_code(503);
+            $GLOBALS['__lux_no_cache'] = true;   // pagina di stato: non si mette da parte
             $pageTitle       = (string)($tool['name'] ?? 'L.U.X.');
             $pageDescription = '';
             lux_header();
@@ -3422,6 +3438,7 @@ if (!function_exists('lux_tools')) {
 
         if (!$tool) {
             http_response_code(404);
+            $GLOBALS['__lux_no_cache'] = true;   // non esiste: non si mette da parte
             $tool = [
                 'key' => 'nope', 'name' => 'L.U.X.', 'category' => 'utility', 'icon' => 'orb',
                 'desc_it' => t('This tool is not available right now.'),
@@ -22828,6 +22845,7 @@ lux_header();
             }
         }
         http_response_code(404);
+        $GLOBALS['__lux_no_cache'] = true;   // non esiste: non si mette da parte
         $pageTitle       = t('This tool is not available right now.');
         $pageDescription = '';
         lux_header();

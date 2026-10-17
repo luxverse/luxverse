@@ -24,6 +24,24 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # PAGINA GIA' MESSA DA PARTE -> LA SI CONSEGNA COSI' COM'E'
+    # La prima volta che uno strumento viene aperto, tool.php costruisce la
+    # pagina e ne lascia una copia (vedi lux_cache_store). Da quel momento
+    # questa regola la trova e la serve direttamente: nessun PHP, nessuna
+    # sessione, nessun calcolo. Il posto della cartella lo scrive
+    # tools/deploy.php (__LUXCACHE__), cosi' cambiando versione in config.php
+    # si riparte da zero senza toccare niente qui.
+    RewriteCond %{DOCUMENT_ROOT}/cache/__LUXCACHE__/en/$1.html -s
+    RewriteCond %{QUERY_STRING} (^|&)lang=en(&|$) [NC]
+    RewriteRule ^([a-zA-Z0-9_-]+)\.php$ cache/__LUXCACHE__/en/$1.html? [L]
+
+    # La copia italiana NON si usa quando l'indirizzo chiede l'inglese: senza
+    # questa riga, una richiesta ?lang=en senza copia inglese gia' pronta
+    # riceveva la pagina italiana, e la copia inglese non veniva mai creata.
+    RewriteCond %{QUERY_STRING} !(^|&)lang=en(&|$) [NC]
+    RewriteCond %{DOCUMENT_ROOT}/cache/__LUXCACHE__/$1.html -s
+    RewriteRule ^([a-zA-Z0-9_-]+)\.php$ cache/__LUXCACHE__/$1.html? [L]
+
     # PAGINE DI CONTENUTO -> FILE .html
     # Da 17/10/2026 privacy, termini, chi siamo, FAQ, percorso, linea del
     # tempo, codice aperto e condividi sono file gia' pronti (.html): aprirli
@@ -91,7 +109,8 @@ RedirectMatch 403 ^/\.git/.*$
 # vecchia del browser. Gli asset veri restano in cache come prima.
 <IfModule mod_headers.c>
     <FilesMatch "\.html$">
-        Header set Cache-Control "public, max-age=0, must-revalidate"
+        Header set Cache-Control "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800"
+        Header set X-Lux-Static "file"
     </FilesMatch>
 </IfModule>
 

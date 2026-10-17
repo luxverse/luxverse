@@ -124,24 +124,17 @@ if (!function_exists('lux_url')) {
             return $out;
         }
 
-        // I file di lavoro (fogli di stile, script, immagini) stanno nella
-        // parte statica: sono loro il peso, e farli arrivare dalla rete e' il
-        // guadagno di velocita' piu' grande di tutti.
-        //
-        // Restano qui, invece, i file che devono per forza venire dallo
-        // stesso indirizzo del sito: il service worker (un browser non lo
-        // registra da un altro dominio, quindi da li' l'offline non
-        // funzionerebbe), il manifest (il suo start_url si risolve rispetto
-        // al manifest: da un altro dominio porterebbe fuori strada) e
-        // l'avviso sui cookie. L'APK resta qui per lo stesso motivo di
-        // sempre: e' un file singolo e pesante, non un asset di pagina.
-        if ($base !== '' && strpos($path, '/assets/') === 0) {
-            return $base . $path;
-        }
-
-        // Pagina dinamica: in esportazione serve l'indirizzo assoluto (la
-        // copia statica non sa dove vive il server); nelle pagine vere
-        // resta il relativo, che funziona dovunque sia il sito.
+        // I file di lavoro (fogli di stile, script, immagini) restano qui,
+        // sul dominio: nessun altro indirizzo da cui dipendere. Sono file
+        // che non cambiano, quindi chi sta davanti al sito (la rete veloce di
+        // consegna) li mette da parte e li serve dal nodo piu' vicino senza
+        // tornare a chiederceli. Un service worker o un manifest serviti da
+        // un altro dominio, invece, non funzionerebbero affatto: devono
+        // venire dallo stesso indirizzo della pagina.
+        // Pagina dinamica e file di lavoro: in esportazione serve
+        // l'indirizzo assoluto (la copia costruita non sa dove vive il
+        // server); nelle pagine vere resta il relativo, che funziona
+        // dovunque sia il sito.
         return ($export && $back !== '') ? $back . $url : $url;
     }
 
@@ -208,6 +201,62 @@ if (!function_exists('lux_url')) {
             function ($m) { return $m[1] . '=' . $m[2] . lux_url($m[3]) . $m[2]; },
             $html
         );
+    }
+}
+
+// ============================================================
+// PAGINE CHE DIVENTANO STATICHE DA SOLE
+// ============================================================
+// Agganciata al buffer di output (lux_header): prima riscrive i link, poi
+// lascia sul disco una copia esatta della pagina appena costruita. Il server,
+// prima di eseguire tool.php, guarda se quella copia c'e' (vedi .htaccess) e
+// in quel caso la consegna direttamente: nessun PHP, nessuna sessione.
+//
+// Si mettono da parte solo le pagine degli strumenti, che sono tante e
+// sempre uguali a se stesse. Le pagine che cambiano con i dati (bacheca,
+// pannello, spazio personale) non si toccano.
+if (!function_exists('lux_page_output')) {
+    function lux_page_output(string $html): string
+    {
+        $html = lux_fix_links($html);
+        lux_cache_store($html);
+        return $html;
+    }
+}
+
+if (!function_exists('lux_cache_store')) {
+    function lux_cache_store(string $html): void
+    {
+        if (!defined('LUX_CACHE_DIR') || LUX_CACHE_DIR === '') return;
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET') return;
+        // Le pagine di errore e quelle di stato non si mettono da parte: lo
+        // dice tool.php stesso, con un segnale messo prima di disegnare la
+        // pagina (lo stato HTTP qui non si puo' piu' leggere: a questo punto
+        // l'intestazione e' gia' partita).
+        if (!empty($GLOBALS['__lux_no_cache'])) return;
+        // Solo le pagine degli strumenti: sono le uniche che dichiarano uno
+        // slug. (Non si guarda SCRIPT_NAME perche' con il rewrite di
+        // .htaccess contiene l'indirizzo chiesto, non tool.php.)
+        $slug = (string)($GLOBALS['__lux_slug'] ?? '');
+        if ($slug === '' || !preg_match('/^[a-z0-9][a-z0-9-]{0,80}$/', $slug)) return;
+
+        // Solo le due lingue vere: con una lingua arrivata da un cookie la
+        // pagina sarebbe giusta per chi la apre ma sbagliata per tutti gli
+        // altri, e finirebbe in cache sotto l'indirizzo dell'altra.
+        $lang = function_exists('currentLang') ? currentLang() : 'it';
+        if ($lang !== 'it' && $lang !== 'en') return;
+
+        $dir = dirname(__DIR__) . '/' . LUX_CACHE_DIR . ($lang === 'en' ? '/en' : '');
+        if (!is_dir($dir) && !@mkdir($dir, 0775, true) && !is_dir($dir)) return;
+
+        $file = $dir . '/' . $slug . '.html';
+        if (is_file($file)) return;   // gia' pronta: non si riscrive a ogni visita
+
+        // Scrittura atomica: si scrive accanto e si sposta a posto, cosi' il
+        // server non consegna mai un file a meta'.
+        $tmp = $file . '.' . bin2hex(random_bytes(4)) . '.tmp';
+        if (@file_put_contents($tmp, $html, LOCK_EX) === false) { @unlink($tmp); return; }
+        if (!@rename($tmp, $file)) @unlink($tmp);
     }
 }
 
@@ -987,7 +1036,7 @@ function lux_header(array $vars = []): void
     // bisogno e non li prendono.
     if (!defined('LUX_NO_LINK_REWRITE')) {
         $luxScript = basename((string)($_SERVER['SCRIPT_NAME'] ?? ''));
-        if ($luxScript !== 'admin.php' && $luxScript !== 'api.php') ob_start('lux_fix_links');
+        if ($luxScript !== 'admin.php' && $luxScript !== 'api.php') ob_start('lux_page_output');
         unset($luxScript);
     }
 
