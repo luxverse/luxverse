@@ -169,6 +169,9 @@ class MainActivity : AppCompatActivity() {
     /** La verifica dell'hosting e' gia' stata rifatta una volta in questa attesa. */
     private var accessRetried = false
 
+    /** Il controllo degli aggiornamenti si fa una volta sola per apertura. */
+    private var updateChecked = false
+
     /** Il lavoro che prepara il biscotto della verifica (fuori dall'interfaccia). */
     private var accessThread: Thread? = null
 
@@ -242,7 +245,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             startWatches()
             openSite()
-            checkForUpdate()
         }
     }
 
@@ -271,6 +273,13 @@ class MainActivity : AppCompatActivity() {
                     connectTimeout = 5_000
                     readTimeout = 5_000
                     setRequestProperty("Accept", "application/json")
+                    // Il biscotto della verifica dell'hosting va mandato a mano:
+                    // HttpURLConnection non usa la riserva di biscotti della
+                    // WebView, e senza __test il server risponde con la
+                    // paginetta di verifica invece del JSON.
+                    val biscotto = CookieManager.getInstance()
+                        .getCookie(BuildConfig.SITE_URL).orEmpty()
+                    if (biscotto.isNotEmpty()) setRequestProperty("Cookie", biscotto)
                     SiteTls.fabbrica(siteHost)?.let { sslSocketFactory = it }
                 }
                 val testo = connessione.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
@@ -822,6 +831,12 @@ class MainActivity : AppCompatActivity() {
         cancelHideVeil()
         cancelWatches()
         settled = true
+        // Solo adesso il biscotto della verifica e' sicuramente nella riserva:
+        // il controllo degli aggiornamenti parte da qui, non dall'avvio.
+        if (!updateChecked) {
+            updateChecked = true
+            checkForUpdate()
+        }
         // Da qui in poi una nuova richiesta d'emergenza al sito puo' essere
         // riprovata da sola un'altra volta.
         autoRetried = false
