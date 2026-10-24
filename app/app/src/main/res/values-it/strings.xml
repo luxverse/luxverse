@@ -3,10 +3,21 @@
 <resources>
     <string name="app_name">L.U.X. Verse</string>
 
-    <string name="loading">Carico il sito…</string>
+    <string name="mark">L·U·X</string>
+    <string name="mark_sub">VERSE</string>
+
+    <string name="loading_connecting">Connessione…</string>
+    <string name="loading_page">Carico la pagina…</string>
+    <string name="loading_preparing">Preparo il sito…</string>
+    <string name="loading_slow">La rete è lenta</string>
+    <string name="loading_verifying">Completo la verifica dell\'hosting…</string>
 
     <string name="offline_title">Il sito non risponde</string>
     <string name="offline_text">È un problema dalla nostra parte, non del tuo telefono. Riprova fra qualche secondo: non è andato perso niente di quello che stavi facendo.</string>
+
+    <string name="tls_title">Collegamento non sicuro</string>
+    <string name="tls_text">Il telefono non riconosce il certificato del sito, nemmeno dopo aver recuperato i pezzi che mancavano: non può sapere chi sta rispondendo, e l\'app si ferma invece di fidarsi. È un problema dalla nostra parte, nell\'hosting, non del tuo telefono. Nel frattempo puoi aprire il sito nel browser.</string>
+    <string name="tls_checking">Controllo il certificato…</string>
 
     <string name="no_network_title">Nessuna connessione</string>
     <string name="no_network_text">Questa app è una finestra sul sito: senza connessione non c’è niente da mostrare. Controlla il Wi-Fi o i dati mobili e riprova.</string>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ============================================================
+  Da dove l'app puo' parlare in chiaro (19/10/2026)
+  ============================================================
+  Regola generale: NIENTE. Solo https, sempre. Le pagine del sito, le sue
+  API e i download passano tutti da https, e cosi' deve restare.
+
+  L'unica eccezione sono gli indirizzi da cui si scaricano gli anelli
+  mancanti del certificato (il campo "Authority Information Access"). Sono
+  pubblicati in chiaro da Let's Encrypt su i.lencr.org e non e' un problema:
+  quello che si scarica non viene creduto sulla parola, deve comunque
+  superare la verifica crittografica del telefono contro le sue autorita'
+  (vedi SiteTls.kt). Se un certificato falso arrivasse da li', la verifica
+  fallirebbe e l'app si fermerebbe.
+
+  Senza questa eccezione Android bloccherebbe quelle richieste e il
+  certificato resterebbe incompleto, cioe' il difetto che ha tenuto l'app
+  ferma il 18/10/2026.
+  ============================================================
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">lencr.org</domain>
+    </domain-config>
+</network-security-config>

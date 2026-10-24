@@ -46,12 +46,19 @@ android {
         applicationId = "org.luxverse.app"
         minSdk = 24          // Android 7.0 e successivi
         targetSdk = 36
-        versionCode = 45
-        versionName = "39.2.0"
+        versionCode = 52
+        versionName = "39.5.0"
 
         // Indirizzi del sito: si cambiano qui e in nessun altro posto.
+        //
+        // L'app parte da webapp.php?app=1 e non dalla home: e' la pagina che
+        // il sito stesso indica come casa quando si e' dentro l'app, e' meno
+        // pesante della home (48 KB contro 80) e il sito la tiene aperta anche
+        // durante la manutenzione, che invece coprirebbe la home. Il
+        // parametro app=1 segna la visita come "dentro l'app": da li' in poi
+        // tutti i rimandi del sito puntano alla pagina degli strumenti.
         buildConfigField("String", "SITE_URL", "\"https://luxverse.c22.eu\"")
-        buildConfigField("String", "START_URL", "\"https://luxverse.c22.eu/?app=1\"")
+        buildConfigField("String", "START_URL", "\"https://luxverse.c22.eu/webapp.php?app=1\"")
     }
 
     signingConfigs {

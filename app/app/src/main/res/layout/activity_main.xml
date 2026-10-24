@@ -5,8 +5,23 @@
     2. il velo di attesa, che sta sopra finche' la pagina non ha davvero
        qualcosa da leggere (l'hosting consegna prima una pagina vuota);
     3. la pagina di cortesia, che si vede solo se il sito non risponde.
+
+  IL VELO, RIFATTO (17/10/2026)
+  Prima era un logo immagine da 128 dp + rotella che gira + "Loading" fermo:
+  pesante da disegnare, e non diceva niente su cosa stesse succedendo.
+  Adesso e' una cosa sola, leggera e onesta:
+    - il marchio, scritto con il carattere (nessuna immagine da caricare);
+    - una linea da 2 dp che avanza con l'avanzamento VERO della pagina,
+      non con una rotella che gira a vuoto;
+    - una riga di stato che cambia ("Connessione...", "Caricamento...",
+      "Preparazione..."): se il sito tarda, si capisce a che punto e';
+    - una riga sottile in cima allo schermo, visibile anche sopra il sito,
+      che sparisce quando la pagina e' pronta.
+  Niente rotelle, niente ombre, niente animazioni continue: solo un
+  avanzamento vero. Cosi' la schermata non pesa e non sembra mai bloccata.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/lux_background">
@@ -16,56 +31,72 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- Filo in cima: si vede sopra tutto, anche a pagina caricata non
+         c'e' piu'. Non copre niente e non intercetta tocchi. -->
     <ProgressBar
         android:id="@+id/progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="2dp"
         android:layout_gravity="top"
         android:indeterminate="false"
         android:max="100"
         android:progress="0"
-        android:progressBackgroundTint="@color/lux_surface"
+        android:progressBackgroundTint="@android:color/transparent"
         android:progressTint="@color/lux_accent" />
 
     <!-- ===== VELO DI ATTESA ===== -->
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/veil"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/lux_background"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="28dp">
 
-        <LinearLayout
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:letterSpacing="0.22"
+            android:text="@string/mark"
+            android:textColor="@color/lux_text"
+            android:textSize="27sp"
+            android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:contentDescription="@string/app_name"
-                android:src="@mipmap/ic_launcher_foreground" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:letterSpacing="0.55"
+            android:text="@string/mark_sub"
+            android:textColor="@color/lux_text_muted"
+            android:textSize="9sp" />
 
-            <ProgressBar
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginTop="8dp"
-                android:indeterminate="true"
-                android:indeterminateTint="@color/lux_accent" />
+        <ProgressBar
+            android:id="@+id/veilProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="132dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="26dp"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="0"
+            android:progressBackgroundTint="@color/lux_surface"
+            android:progressTint="@color/lux_accent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:text="@string/loading"
-                android:textColor="@color/lux_text_muted"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </FrameLayout>
+        <TextView
+            android:id="@+id/veilStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:letterSpacing="0.16"
+            android:text="@string/loading_connecting"
+            android:textColor="@color/lux_text_muted"
+            android:textSize="11sp" />
+    </LinearLayout>
 
     <!-- ===== PAGINA DI CORTESIA ===== -->
     <LinearLayout
@@ -78,21 +109,24 @@
         android:padding="28dp"
         android:visibility="gone">
 
-        <ImageView
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:contentDescription="@string/app_name"
-            android:src="@mipmap/ic_launcher_foreground" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.22"
+            android:text="@string/mark"
+            android:textColor="@color/lux_text"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/offlineTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="@string/offline_title"
             android:textColor="@color/lux_text"
-            android:textSize="20sp"
+            android:textSize="19sp"
             android:textStyle="bold" />
 
         <TextView
@@ -101,6 +135,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
+            android:lineSpacingExtra="3dp"
             android:text="@string/offline_text"
             android:textColor="@color/lux_text_muted"
             android:textSize="14sp" />

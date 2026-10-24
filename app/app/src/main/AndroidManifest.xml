@@ -10,6 +10,10 @@
   Non ci sono: posizione, fotocamera, microfono, contatti, notifiche,
   telefono, lettura dei file. Se un giorno ne servisse uno, va scritto qui
   e spiegato nella pagina Privacy del sito: i permessi si vedono tutti.
+
+  Rete: tutto in https. L'unica eccezione e' in
+  res/xml/network_security_config.xml (gli indirizzi da cui si scaricano i
+  pezzi mancanti del certificato), e non allarga niente d'altro.
   ============================================================
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
@@ -36,6 +40,7 @@
         android:supportsRtl="true"
         android:enableOnBackInvokedCallback="true"
         android:usesCleartextTraffic="false"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/Theme.LuxVerse">
 
         <activity

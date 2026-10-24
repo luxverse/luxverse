@@ -10,10 +10,21 @@
 <resources>
     <string name="app_name">L.U.X. Verse</string>
 
-    <string name="loading">Loading the site…</string>
+    <string name="mark">L·U·X</string>
+    <string name="mark_sub">VERSE</string>
+
+    <string name="loading_connecting">Connecting…</string>
+    <string name="loading_page">Loading the page…</string>
+    <string name="loading_preparing">Preparing the site…</string>
+    <string name="loading_slow">The network is slow</string>
+    <string name="loading_verifying">Completing the hosting check…</string>
 
     <string name="offline_title">The site is not answering</string>
     <string name="offline_text">It is a problem on our side, not on your phone. Try again in a few seconds: nothing you did was lost.</string>
+
+    <string name="tls_title">Insecure connection</string>
+    <string name="tls_text">This phone does not recognise the site certificate, even after fetching the pieces that were missing: it cannot know who is answering, so the app stops instead of trusting it. That is a problem on our side, in the hosting, not on your phone. Meanwhile you can open the site in the browser.</string>
+    <string name="tls_checking">Checking the certificate…</string>
 
     <string name="no_network_title">No internet connection</string>
     <string name="no_network_text">This app is a window on the site: without a connection there is nothing to show. Check Wi-Fi or mobile data and try again.</string>
