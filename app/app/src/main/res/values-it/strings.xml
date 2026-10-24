@@ -19,6 +19,11 @@
     <string name="tls_text">Il telefono non riconosce il certificato del sito, nemmeno dopo aver recuperato i pezzi che mancavano: non può sapere chi sta rispondendo, e l\'app si ferma invece di fidarsi. È un problema dalla nostra parte, nell\'hosting, non del tuo telefono. Nel frattempo puoi aprire il sito nel browser.</string>
     <string name="tls_checking">Controllo il certificato…</string>
 
+    <string name="update_title">Aggiornamento disponibile</string>
+    <string name="update_text">È disponibile L.U.X. Verse %1$s. Lo trovi nelle release ufficiali su GitHub, con l\'impronta accanto.</string>
+    <string name="update_now">Apri le release</string>
+    <string name="update_later">Dopo</string>
+
     <string name="no_network_title">Nessuna connessione</string>
     <string name="no_network_text">Questa app è una finestra sul sito: senza connessione non c’è niente da mostrare. Controlla il Wi-Fi o i dati mobili e riprova.</string>
 

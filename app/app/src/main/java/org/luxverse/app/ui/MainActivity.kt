@@ -2,6 +2,7 @@ package org.luxverse.app.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.DownloadManager
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -51,6 +52,7 @@ import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import org.luxverse.app.BuildConfig
 import org.luxverse.app.R
+import org.json.JSONObject
 import org.luxverse.app.net.SiteTls
 import java.util.ArrayDeque
 import javax.net.ssl.HttpsURLConnection
@@ -240,7 +242,69 @@ class MainActivity : AppCompatActivity() {
         } else {
             startWatches()
             openSite()
+            checkForUpdate()
         }
+    }
+
+    // ========================================================
+    // AGGIORNAMENTI
+    // ========================================================
+    /**
+     * Chiede al sito qual e' l'ultima versione dell'app.
+     *
+     * La pagina dell'app promette che "l'app stessa avvisa" quando esce una
+     * versione nuova: fino alla 39.3.5 la promessa non era mantenuta, perche'
+     * nessuna riga dell'app chiamava questo indirizzo. Si chiama una volta per
+     * apertura, su un thread separato e con i tempi stretti (5 secondi): se la
+     * rete non risponde, o il JSON non e' quello atteso, non succede niente e
+     * l'app resta quella che e'. Non e' un controllo che blocca l'apertura.
+     *
+     * Si avvisa una volta sola per versione (SharedPreferences): chi sceglie
+     * "dopo" non se lo ritrova davanti a ogni avvio.
+     */
+    private fun checkForUpdate() {
+        val lavoro = Thread {
+            var connessione: HttpsURLConnection? = null
+            try {
+                val indirizzo = BuildConfig.SITE_URL + "/api/latest_version.php"
+                connessione = (URL(indirizzo).openConnection() as HttpsURLConnection).apply {
+                    connectTimeout = 5_000
+                    readTimeout = 5_000
+                    setRequestProperty("Accept", "application/json")
+                    SiteTls.fabbrica(siteHost)?.let { sslSocketFactory = it }
+                }
+                val testo = connessione.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                val json = JSONObject(testo)
+                val codice = json.optInt("version_code", 0)
+                val nome = json.optString("version_name", "")
+                val dove = json.optString("url", "")
+                if (codice <= BuildConfig.VERSION_CODE) return@Thread
+                if (!dove.startsWith("https://")) return@Thread
+
+                val gia = getSharedPreferences("luxverse", MODE_PRIVATE).getInt("update_prompted", 0)
+                if (gia >= codice) return@Thread
+
+                ui.post {
+                    if (isFinishing || isDestroyed) return@post
+                    getSharedPreferences("luxverse", MODE_PRIVATE).edit()
+                        .putInt("update_prompted", codice).apply()
+                    AlertDialog.Builder(this)
+                        .setTitle(R.string.update_title)
+                        .setMessage(getString(R.string.update_text, if (nome.isNotEmpty()) nome else codice.toString()))
+                        .setPositiveButton(R.string.update_now) { _, _ -> openOutside(dove) }
+                        .setNegativeButton(R.string.update_later, null)
+                        .show()
+                }
+            } catch (t: Throwable) {
+                // Nessuna rete, nessun JSON, hosting che risponde altro: si
+                // tace. Un avviso di aggiornamento non deve mai diventare un
+                // errore da mostrare.
+            } finally {
+                connessione?.disconnect()
+            }
+        }
+        lavoro.isDaemon = true
+        lavoro.start()
     }
 
     // ========================================================

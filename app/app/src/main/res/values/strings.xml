@@ -26,6 +26,11 @@
     <string name="tls_text">This phone does not recognise the site certificate, even after fetching the pieces that were missing: it cannot know who is answering, so the app stops instead of trusting it. That is a problem on our side, in the hosting, not on your phone. Meanwhile you can open the site in the browser.</string>
     <string name="tls_checking">Checking the certificate…</string>
 
+    <string name="update_title">Update available</string>
+    <string name="update_text">L.U.X. Verse %1$s is available. You can get it from the official GitHub releases, with its fingerprint beside it.</string>
+    <string name="update_now">Open the releases</string>
+    <string name="update_later">Later</string>
+
     <string name="no_network_title">No internet connection</string>
     <string name="no_network_text">This app is a window on the site: without a connection there is nothing to show. Check Wi-Fi or mobile data and try again.</string>
 
