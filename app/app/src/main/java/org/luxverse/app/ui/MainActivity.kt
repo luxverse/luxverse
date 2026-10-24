@@ -32,6 +32,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
+import android.widget.ImageButton
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.crypto.Cipher
@@ -129,6 +130,7 @@ import javax.net.ssl.HttpsURLConnection
 class MainActivity : AppCompatActivity() {
 
     private lateinit var web: WebView
+    private lateinit var backBtn: ImageButton
     private lateinit var progress: ProgressBar
     private lateinit var veil: View
     private lateinit var veilProgress: ProgressBar
@@ -209,6 +211,7 @@ class MainActivity : AppCompatActivity() {
         setUpWindow()
 
         web = findViewById(R.id.web)
+        backBtn = findViewById(R.id.backBtn)
         progress = findViewById(R.id.progress)
         veil = findViewById(R.id.veil)
         veilProgress = findViewById(R.id.veilProgress)
@@ -221,6 +224,14 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.retry).setOnClickListener { retry() }
         findViewById<Button>(R.id.openInBrowser).setOnClickListener { openOutside(BuildConfig.SITE_URL) }
+
+        // Il bottone indietro (24/10/2026). Fa la stessa cosa del gesto di
+        // sistema, ma si vede: dentro l'app non c'e' la barra del browser, e
+        // senza un comando a schermo l'unico modo per tornare era il gesto.
+        // Compare solo quando c'e' davvero una pagina precedente.
+        backBtn.setOnClickListener {
+            if (web.canGoBack()) web.goBack()
+        }
 
         // Il tasto indietro: prima le pagine visitate, poi l'uscita.
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -463,6 +474,7 @@ class MainActivity : AppCompatActivity() {
                 // velo in quel momento mostrerebbe un lampo vuoto.
                 cancelHideVeil()
                 titleSeen = false
+                backBtn.visibility = View.GONE
                 if (veil.visibility == View.VISIBLE) {
                     veilStatus.setText(R.string.loading_connecting)
                     veilProgress.progress = 0
@@ -477,7 +489,14 @@ class MainActivity : AppCompatActivity() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 progress.visibility = View.GONE
+                syncBackButton()
                 if (!settled) scheduleHideVeil()
+            }
+
+            /** La cronologia e' cambiata (avanti/indietro o nuovo indirizzo). */
+            override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
+                super.doUpdateVisitedHistory(view, url, isReload)
+                syncBackButton()
             }
 
             override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
@@ -842,7 +861,19 @@ class MainActivity : AppCompatActivity() {
         autoRetried = false
         offline.visibility = View.GONE
         progress.visibility = View.GONE
+        syncBackButton()
         hideVeil()
+    }
+
+    /**
+     * Accende il bottone indietro solo quando c'e' una pagina precedente
+     * dentro il sito. Sulla pagina di cortesia resta spento: li' l'unica
+     * cosa utile e' "Riprova", e un indietro che non porta a niente
+     * confonderebbe soltanto.
+     */
+    private fun syncBackButton() {
+        val mostra = web.canGoBack() && offline.visibility != View.VISIBLE
+        backBtn.visibility = if (mostra) View.VISIBLE else View.GONE
     }
 
     /** Il velo si alza come una tendina: una sola trasformazione, 220 ms. */
@@ -861,6 +892,7 @@ class MainActivity : AppCompatActivity() {
         settled = true
         veil.visibility = View.GONE
         offline.visibility = View.VISIBLE
+        backBtn.visibility = View.GONE
         if (hasNetwork()) {
             offlineTitle.setText(R.string.offline_title)
             offlineText.setText(R.string.offline_text)
@@ -877,6 +909,7 @@ class MainActivity : AppCompatActivity() {
         settled = true
         veil.visibility = View.GONE
         offline.visibility = View.VISIBLE
+        backBtn.visibility = View.GONE
         offlineTitle.setText(R.string.tls_title)
         offlineText.setText(R.string.tls_text)
     }

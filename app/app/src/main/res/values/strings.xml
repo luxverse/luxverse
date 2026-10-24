@@ -34,6 +34,7 @@
     <string name="no_network_title">No internet connection</string>
     <string name="no_network_text">This app is a window on the site: without a connection there is nothing to show. Check Wi-Fi or mobile data and try again.</string>
 
+    <string name="back">Back</string>
     <string name="retry">Try again</string>
     <string name="open_in_browser">Open in browser</string>
     <string name="exit_hint">Press back again to exit</string>

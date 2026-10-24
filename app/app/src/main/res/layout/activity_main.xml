@@ -31,6 +31,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- BOTTONE INDIETRO (24/10/2026).
+         Sta in basso a sinistra, sopra la pagina e sotto il velo: si vede
+         solo quando c'e' davvero una pagina precedente dentro il sito
+         (MainActivity lo accende e lo spegne). Non ruba spazio al sito:
+         e' sovrapposto, come i comandi di un browser. -->
+    <ImageButton
+        android:id="@+id/backBtn"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_lux_back"
+        android:contentDescription="@string/back"
+        android:elevation="6dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_lux_back"
+        android:visibility="gone" />
+
     <!-- Filo in cima: si vede sopra tutto, anche a pagina caricata non
          c'e' piu'. Non copre niente e non intercetta tocchi. -->
     <ProgressBar

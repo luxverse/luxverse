@@ -27,6 +27,7 @@
     <string name="no_network_title">Nessuna connessione</string>
     <string name="no_network_text">Questa app è una finestra sul sito: senza connessione non c’è niente da mostrare. Controlla il Wi-Fi o i dati mobili e riprova.</string>
 
+    <string name="back">Indietro</string>
     <string name="retry">Riprova</string>
     <string name="open_in_browser">Apri nel browser</string>
     <string name="exit_hint">Premi di nuovo indietro per uscire</string>
