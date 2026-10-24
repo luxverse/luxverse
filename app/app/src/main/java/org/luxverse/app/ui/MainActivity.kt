@@ -872,8 +872,12 @@ class MainActivity : AppCompatActivity() {
      * confonderebbe soltanto.
      */
     private fun syncBackButton() {
-        val mostra = web.canGoBack() && offline.visibility != View.VISIBLE
-        backBtn.visibility = if (mostra) View.VISIBLE else View.GONE
+        // 24/10/2026: il bottone indietro nativo resta spento. La freccia
+        // adesso la disegna il sito, in alto a destra, e SOLO dentro uno
+        // strumento: tenerne due (uno in basso a sinistra su ogni pagina)
+        // confondeva e non era quello che si voleva. Il tasto/gesto di
+        // sistema continua a funzionare come prima (vedi onBackPressed).
+        backBtn.visibility = View.GONE
     }
 
     /** Il velo si alza come una tendina: una sola trasformazione, 220 ms. */
