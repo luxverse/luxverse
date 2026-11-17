@@ -11,6 +11,7 @@
     <string name="loading_preparing">Preparo il sito…</string>
     <string name="loading_slow">La rete è lenta</string>
     <string name="loading_verifying">Completo la verifica dell\'hosting…</string>
+    <string name="xmas_note">Buon Natale da L.U.X. Verse</string>
 
     <string name="offline_title">Il sito non risponde</string>
     <string name="offline_text">È un problema dalla nostra parte, non del tuo telefono. Riprova fra qualche secondo: non è andato perso niente di quello che stavi facendo.</string>

@@ -18,6 +18,7 @@
     <string name="loading_preparing">Preparing the site…</string>
     <string name="loading_slow">The network is slow</string>
     <string name="loading_verifying">Completing the hosting check…</string>
+    <string name="xmas_note">Merry Christmas from L.U.X. Verse</string>
 
     <string name="offline_title">The site is not answering</string>
     <string name="offline_text">It is a problem on our side, not on your phone. Try again in a few seconds: nothing you did was lost.</string>

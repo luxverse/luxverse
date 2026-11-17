@@ -1,6 +1,7 @@
 package org.luxverse.app.ui
 
 import android.Manifest
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DownloadManager
@@ -8,7 +9,9 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -17,8 +20,10 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.RenderProcessGoneDetail
@@ -35,6 +40,8 @@ import android.widget.Button
 import android.widget.ImageButton
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Calendar
+import java.util.TimeZone
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -133,8 +140,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var backBtn: ImageButton
     private lateinit var progress: ProgressBar
     private lateinit var veil: View
+    private lateinit var veilMark: TextView
     private lateinit var veilProgress: ProgressBar
     private lateinit var veilStatus: TextView
+    private lateinit var veilXmas: TextView
+
+    /** Vero quando il cerchio "indietro" e' a schermo (evita animazioni doppie). */
+    private var backVisible = false
+
+    /** Il respiro del marchio sul velo: si ferma appena il velo sale. */
+    private var markPulse: ObjectAnimator? = null
     private lateinit var offline: View
     private lateinit var offlineTitle: TextView
     private lateinit var offlineText: TextView
@@ -214,13 +229,21 @@ class MainActivity : AppCompatActivity() {
         backBtn = findViewById(R.id.backBtn)
         progress = findViewById(R.id.progress)
         veil = findViewById(R.id.veil)
+        veilMark = findViewById(R.id.veilMark)
         veilProgress = findViewById(R.id.veilProgress)
         veilStatus = findViewById(R.id.veilStatus)
+        veilXmas = findViewById(R.id.veilXmas)
         offline = findViewById(R.id.offline)
         offlineTitle = findViewById(R.id.offlineTitle)
         offlineText = findViewById(R.id.offlineText)
 
         prepareWebView()
+
+        // Tema natalizio delle schermate native (velo di attesa e pagina di
+        // cortesia): bianco e rosso fino al 26 dicembre, poi si torna da soli
+        // al tema scuro. Le pagine del sito hanno gia' il loro tema: qui si
+        // allinea solo cio' che disegna l'app.
+        applySeasonTheme()
 
         findViewById<Button>(R.id.retry).setOnClickListener { retry() }
         findViewById<Button>(R.id.openInBrowser).setOnClickListener { openOutside(BuildConfig.SITE_URL) }
@@ -230,6 +253,7 @@ class MainActivity : AppCompatActivity() {
         // senza un comando a schermo l'unico modo per tornare era il gesto.
         // Compare solo quando c'e' davvero una pagina precedente.
         backBtn.setOnClickListener {
+            backBtn.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
             if (web.canGoBack()) web.goBack()
         }
 
@@ -255,6 +279,11 @@ class MainActivity : AppCompatActivity() {
             web.restoreState(savedInstanceState)
         } else {
             startWatches()
+            markPulse = ObjectAnimator.ofFloat(veilMark, View.ALPHA, 1f, 0.42f, 1f).apply {
+                duration = 1900
+                repeatCount = ObjectAnimator.INFINITE
+                start()
+            }
             openSite()
         }
     }
@@ -348,6 +377,71 @@ class MainActivity : AppCompatActivity() {
     //
     // 3. La fascia in alto vale l'altezza della barra di stato: il sito non
     //    finisce sotto l'orologio, esattamente come prima.
+    /**
+     * E' la finestra natalizia? Si conta a Roma, non nel fuso del telefono:
+     * un italiano in vacanza a New York deve vedere lo stesso Natale che
+     * vede a casa, e il 27 dicembre il tema deve sparire a mezzanotte.
+     */
+    private fun isChristmasSeason(): Boolean {
+        val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"))
+        val y = cal.get(Calendar.YEAR)
+        val m = cal.get(Calendar.MONTH) + 1
+        val d = cal.get(Calendar.DAY_OF_MONTH)
+        if (y != 2026) return false
+        return (m == 11 && d >= 17) || (m == 12 && d <= 26)
+    }
+
+    /**
+     * Porta velo, pagina di cortesia, barre di sistema e bottoni sul tema
+     * bianco/rosso. Fuori dalle date non fa niente: i colori restano quelli
+     * del tema scuro scritti nelle risorse.
+     */
+    private fun applySeasonTheme() {
+        if (!isChristmasSeason()) return
+
+        val bg = ContextCompat.getColor(this, R.color.lux_xmas_background)
+        val text = ContextCompat.getColor(this, R.color.lux_xmas_text)
+        val muted = ContextCompat.getColor(this, R.color.lux_xmas_text_muted)
+        val accent = ContextCompat.getColor(this, R.color.lux_xmas_accent)
+        val line = ContextCompat.getColor(this, R.color.lux_xmas_line)
+
+        findViewById<View>(R.id.root).setBackgroundColor(bg)
+
+        veil.setBackgroundColor(bg)
+        veilMark.setTextColor(text)
+        veilStatus.setTextColor(muted)
+        veilProgress.progressTintList = ColorStateList.valueOf(accent)
+        veilProgress.progressBackgroundTintList = ColorStateList.valueOf(line)
+        veilXmas.visibility = View.VISIBLE
+
+        progress.progressTintList = ColorStateList.valueOf(accent)
+
+        offline.setBackgroundColor(bg)
+        offlineTitle.setTextColor(text)
+        offlineText.setTextColor(muted)
+
+        web.setBackgroundColor(bg)
+
+        findViewById<Button>(R.id.retry).apply {
+            backgroundTintList = ColorStateList.valueOf(accent)
+            setTextColor(Color.WHITE)
+        }
+        findViewById<Button>(R.id.openInBrowser).apply {
+            backgroundTintList = ColorStateList.valueOf(line)
+            setTextColor(accent)
+        }
+        backBtn.backgroundTintList = ColorStateList.valueOf(bg)
+        backBtn.setColorFilter(accent)
+
+        // Barre di sistema chiare, con le icone scure (altrimenti su bianco
+        // l'ora e la batteria sparirebbero).
+        window.statusBarColor = bg
+        window.navigationBarColor = bg
+        val controller = WindowInsetsControllerCompat(window, window.decorView)
+        controller.isAppearanceLightStatusBars = true
+        controller.isAppearanceLightNavigationBars = true
+    }
+
     private fun setUpWindow() {
         hideNavigationBar()
 
@@ -391,7 +485,12 @@ class MainActivity : AppCompatActivity() {
     // Impostazioni della WebView
     // ========================================================
     private fun prepareWebView() {
-        web.setBackgroundColor(ContextCompat.getColor(this, R.color.lux_background))
+        web.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                if (isChristmasSeason()) R.color.lux_xmas_background else R.color.lux_background
+            )
+        )
 
         val s = web.settings
         s.javaScriptEnabled = true            // il sito e' fatto di JavaScript
@@ -444,16 +543,24 @@ class MainActivity : AppCompatActivity() {
                 // velo, che avanza con il caricamento vero. Niente rotelle che
                 // girano a vuoto: se la linea e' ferma, la rete e' ferma.
                 if (newProgress >= 100) {
-                    progress.visibility = View.GONE
+                    progress.animate().alpha(0f).setDuration(180).withEndAction {
+                        progress.visibility = View.GONE
+                        progress.alpha = 1f
+                    }.start()
                 } else {
-                    progress.visibility = View.VISIBLE
-                    progress.progress = newProgress
+                    if (progress.visibility != View.VISIBLE) {
+                        progress.alpha = 1f
+                        progress.visibility = View.VISIBLE
+                    }
+                    // true = il sistema anima il passaggio fra due valori:
+                    // il filo scorre invece di saltare a scatti.
+                    progress.setProgress(newProgress, true)
                 }
                 // La riga di stato non si tocca da qui: ha la sua logica
                 // ("connessione", poi "rete lenta" dopo 8 s). Prima veniva
                 // riscritta a ogni avanzamento e cancellava l'avviso.
                 if (veil.visibility == View.VISIBLE) {
-                    veilProgress.progress = newProgress
+                    veilProgress.setProgress(newProgress, true)
                 }
             }
         }
@@ -474,7 +581,7 @@ class MainActivity : AppCompatActivity() {
                 // velo in quel momento mostrerebbe un lampo vuoto.
                 cancelHideVeil()
                 titleSeen = false
-                backBtn.visibility = View.GONE
+                hideBackNow()
                 if (veil.visibility == View.VISIBLE) {
                     veilStatus.setText(R.string.loading_connecting)
                     veilProgress.progress = 0
@@ -872,21 +979,75 @@ class MainActivity : AppCompatActivity() {
      * confonderebbe soltanto.
      */
     private fun syncBackButton() {
-        // 24/10/2026: il bottone indietro nativo resta spento. La freccia
-        // adesso la disegna il sito, in alto a destra, e SOLO dentro uno
-        // strumento: tenerne due (uno in basso a sinistra su ogni pagina)
-        // confondeva e non era quello che si voleva. Il tasto/gesto di
-        // sistema continua a funzionare come prima (vedi onBackPressed).
-        backBtn.visibility = View.GONE
+        // v8 (15/11/2026): il cerchio indietro torna a farsi vedere.
+        // Compare SOLO quando dentro l'app c'e' davvero una pagina a cui
+        // tornare, e sale con una piccola animazione invece di apparire di
+        // colpo. Resta sopra il dock del sito (che adesso occupa il fondo
+        // dello schermo), quindi non copre la navigazione.
+        val show = settled && web.canGoBack() &&
+            veil.visibility != View.VISIBLE && offline.visibility != View.VISIBLE
+        if (show == backVisible) return
+        backVisible = show
+
+        if (show) {
+            backBtn.alpha = 0f
+            backBtn.scaleX = 0.86f
+            backBtn.scaleY = 0.86f
+            backBtn.translationY = dp(14f)
+            backBtn.visibility = View.VISIBLE
+            backBtn.animate()
+                .alpha(1f).scaleX(1f).scaleY(1f).translationY(0f)
+                .setDuration(260)
+                .setInterpolator(DecelerateInterpolator())
+                .start()
+        } else {
+            backBtn.animate()
+                .alpha(0f).scaleX(0.86f).scaleY(0.86f).translationY(dp(14f))
+                .setDuration(150)
+                .withEndAction {
+                    if (!backVisible) {
+                        backBtn.visibility = View.GONE
+                        backBtn.alpha = 1f
+                        backBtn.scaleX = 1f
+                        backBtn.scaleY = 1f
+                        backBtn.translationY = 0f
+                    }
+                }
+                .start()
+        }
     }
 
-    /** Il velo si alza come una tendina: una sola trasformazione, 220 ms. */
+    /** Sparisce subito, senza animazione: serve quando la pagina sta cambiando. */
+    private fun hideBackNow() {
+        backVisible = false
+        backBtn.animate().cancel()
+        backBtn.visibility = View.GONE
+        backBtn.alpha = 1f
+        backBtn.scaleX = 1f
+        backBtn.scaleY = 1f
+        backBtn.translationY = 0f
+    }
+
+    private fun dp(value: Float): Float = value * resources.displayMetrics.density
+
+    /** Il velo si alza come una tendina, e la pagina sotto si accende. */
     private fun hideVeil() {
         if (veil.visibility != View.VISIBLE) return
+        markPulse?.cancel()
+        markPulse = null
+        web.alpha = 0.55f
+        web.animate().alpha(1f).setDuration(320).start()
         veil.animate()
             .translationY(-veil.height.toFloat())
-            .setDuration(220)
-            .withEndAction { veil.visibility = View.GONE }
+            .alpha(0.15f)
+            .setDuration(260)
+            .setInterpolator(DecelerateInterpolator())
+            .withEndAction {
+                veil.visibility = View.GONE
+                veil.alpha = 1f
+                veil.translationY = 0f
+                veilProgress.progress = 0
+            }
             .start()
     }
 
@@ -896,7 +1057,7 @@ class MainActivity : AppCompatActivity() {
         settled = true
         veil.visibility = View.GONE
         offline.visibility = View.VISIBLE
-        backBtn.visibility = View.GONE
+        hideBackNow()
         if (hasNetwork()) {
             offlineTitle.setText(R.string.offline_title)
             offlineText.setText(R.string.offline_text)
@@ -913,7 +1074,7 @@ class MainActivity : AppCompatActivity() {
         settled = true
         veil.visibility = View.GONE
         offline.visibility = View.VISIBLE
-        backBtn.visibility = View.GONE
+        hideBackNow()
         offlineTitle.setText(R.string.tls_title)
         offlineText.setText(R.string.tls_text)
     }

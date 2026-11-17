@@ -16,4 +16,14 @@
     <color name="lux_accent">#D8A93C</color>       <!-- oro, l'unico accento (token gold) -->
     <color name="lux_accent_light">#F0CE86</color> <!-- oro chiaro (gold light) -->
     <color name="ic_launcher_background">#0A0B0D</color>
+
+    <!-- TEMA NATALIZIO (17/11 - 26/12/2026) — stessi colori del sito:
+         fondo bianco/crema, testo prugna scuro, accento rosso. Si usano solo
+         dentro la finestra di date (vedi MainActivity.applySeasonTheme). -->
+    <color name="lux_xmas_background">#FFFCFA</color>
+    <color name="lux_xmas_surface">#FFF3EF</color>
+    <color name="lux_xmas_text">#2B1216</color>
+    <color name="lux_xmas_text_muted">#5C3B40</color>
+    <color name="lux_xmas_accent">#C8102E</color>
+    <color name="lux_xmas_line">#F7D7DC</color>
 </resources>
