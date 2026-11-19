@@ -20,10 +20,27 @@
     <string name="tls_text">Il telefono non riconosce il certificato del sito, nemmeno dopo aver recuperato i pezzi che mancavano: non può sapere chi sta rispondendo, e l\'app si ferma invece di fidarsi. È un problema dalla nostra parte, nell\'hosting, non del tuo telefono. Nel frattempo puoi aprire il sito nel browser.</string>
     <string name="tls_checking">Controllo il certificato…</string>
 
-    <string name="update_title">Aggiornamento disponibile</string>
-    <string name="update_text">È disponibile L.U.X. Verse %1$s. Lo trovi nelle release ufficiali su GitHub, con l\'impronta accanto.</string>
-    <string name="update_now">Apri le release</string>
-    <string name="update_later">Dopo</string>
+    <!-- ===== AGGIORNAMENTO (bloccante, 40.1.0) ===== -->
+    <string name="up_badge">Aggiornamento obbligatorio</string>
+    <string name="update_title">È uscita la nuova L.U.X. Verse</string>
+    <string name="update_text">Scarica il nuovo APK dalle release ufficiali su GitHub e installalo. L\'app resta bloccata finché non lo fai.</string>
+    <string name="up_download">Scarica l\'APK da GitHub</string>
+    <string name="up_page">Apri la pagina della release</string>
+    <string name="up_locked">Questa schermata non si chiude: con la versione vecchia le sezioni mostrerebbero dati che stiamo sistemando. Sul telefono non viene toccato niente.</string>
+    <string name="up_started">Download avviato. Apri la notifica e installa l\'APK appena è pronto.</string>
+    <string name="up_failed">Non è stato possibile avviare il download: usa la pagina della release qui sotto.</string>
+    <string name="up_version">Versione %1$s</string>
+
+    <!-- ===== MANUTENZIONE (bloccante, bilingue) ===== -->
+    <string name="mt_badge">Manutenzione in corso</string>
+    <string name="mt_title">Siamo al lavoro.\nQuesta pausa è voluta.</string>
+    <string name="mt_msg">Il sito è chiuso per manutenzione. L\'app si sblocca da sola appena riapriamo: non è andato perso niente di quello che hai salvato.</string>
+    <string name="mt_title_en">Maintenance in progress</string>
+    <string name="mt_msg_en">We will be back online shortly.</string>
+    <string name="mt_retry">Controlla adesso</string>
+    <string name="mt_note">Questa schermata controlla da sola ogni 20 secondi e riapre il sito appena il lavoro è finito.</string>
+    <string name="mt_locked_hint">Il sito è chiuso per manutenzione. Puoi solo uscire dall\'app.</string>
+    <string name="mt_offline">Nessuna connessione: adesso l\'app non può controllare il sito.</string>
 
     <string name="no_network_title">Nessuna connessione</string>
     <string name="no_network_text">Questa app è una finestra sul sito: senza connessione non c’è niente da mostrare. Controlla il Wi-Fi o i dati mobili e riprova.</string>

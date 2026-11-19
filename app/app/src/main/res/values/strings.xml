@@ -27,10 +27,27 @@
     <string name="tls_text">This phone does not recognise the site certificate, even after fetching the pieces that were missing: it cannot know who is answering, so the app stops instead of trusting it. That is a problem on our side, in the hosting, not on your phone. Meanwhile you can open the site in the browser.</string>
     <string name="tls_checking">Checking the certificate…</string>
 
-    <string name="update_title">Update available</string>
-    <string name="update_text">L.U.X. Verse %1$s is available. You can get it from the official GitHub releases, with its fingerprint beside it.</string>
-    <string name="update_now">Open the releases</string>
-    <string name="update_later">Later</string>
+    <!-- ===== AGGIORNAMENTO (bloccante, 40.1.0) ===== -->
+    <string name="up_badge">Required update</string>
+    <string name="update_title">A new L.U.X. Verse is out</string>
+    <string name="update_text">Download the new APK from the official GitHub releases and install it. The app stays locked until you do.</string>
+    <string name="up_download">Download the APK from GitHub</string>
+    <string name="up_page">Open the release page instead</string>
+    <string name="up_locked">This screen cannot be closed: every section would show an old app, and that is exactly what we are fixing. Nothing on your phone is touched.</string>
+    <string name="up_started">Download started. Open the notification and install the APK when it is ready.</string>
+    <string name="up_failed">The download could not start: use the release page below.</string>
+    <string name="up_version">Version %1$s</string>
+
+    <!-- ===== MANUTENZIONE (bloccante, bilingue) ===== -->
+    <string name="mt_badge">Maintenance in progress</string>
+    <string name="mt_title">We are working on it.\nThis pause is on purpose.</string>
+    <string name="mt_msg">The site is closed for maintenance. The app unlocks by itself as soon as we reopen: nothing you saved was lost.</string>
+    <string name="mt_title_en">Maintenance in progress</string>
+    <string name="mt_msg_en">We will be back online shortly.</string>
+    <string name="mt_retry">Check now</string>
+    <string name="mt_note">This screen checks by itself every 20 seconds and reopens the site as soon as the work is done.</string>
+    <string name="mt_locked_hint">The site is closed for maintenance. You can only exit the app.</string>
+    <string name="mt_offline">No connection: the app cannot check the site right now.</string>
 
     <string name="no_network_title">No internet connection</string>
     <string name="no_network_text">This app is a window on the site: without a connection there is nothing to show. Check Wi-Fi or mobile data and try again.</string>

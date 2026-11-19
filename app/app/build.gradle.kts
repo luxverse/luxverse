@@ -46,8 +46,8 @@ android {
         applicationId = "org.luxverse.app"
         minSdk = 24          // Android 7.0 e successivi
         targetSdk = 36
-        versionCode = 56
-        versionName = "39.9.0"
+        versionCode = 61
+        versionName = "40.1.0"
 
         // Indirizzi del sito: si cambiano qui e in nessun altro posto.
         //

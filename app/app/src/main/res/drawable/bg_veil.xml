@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Sfondo del velo di attesa, tema scuro: grafite con un alone d'oro in alto.
+  Si disegna, non si carica: nessuna immagine da scaricare.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/lux_background" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.26"
+                android:gradientRadius="300dp"
+                android:startColor="#2AD8A93C"
+                android:endColor="#000A0B0D" />
+        </shape>
+    </item>
+</layer-list>

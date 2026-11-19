@@ -24,6 +24,7 @@ import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
+import android.view.animation.OvershootInterpolator
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.RenderProcessGoneDetail
@@ -38,9 +39,11 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Calendar
+import java.util.Locale
 import java.util.TimeZone
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
@@ -144,6 +147,44 @@ class MainActivity : AppCompatActivity() {
     private lateinit var veilProgress: ProgressBar
     private lateinit var veilStatus: TextView
     private lateinit var veilXmas: TextView
+    // --- guscio nuovo (19/11/2026, 40.1.0) ---
+    private lateinit var veilLogo: ImageView
+    private lateinit var veilSub: TextView
+    private lateinit var veilSkeleton: LuxSkeletonView
+    private lateinit var veilVersion: TextView
+    private lateinit var snow: LuxSnowView
+    private lateinit var maintenance: View
+    private lateinit var mtSnow: LuxSnowView
+    private lateinit var mtBadge: TextView
+    private lateinit var mtCount: TextView
+    private lateinit var mtTitleIt: TextView
+    private lateinit var mtMsgIt: TextView
+    private lateinit var mtPointsIt: TextView
+    private lateinit var mtTitleEn: TextView
+    private lateinit var mtMsgEn: TextView
+    private lateinit var mtPointsEn: TextView
+    private lateinit var mtNote: TextView
+    private lateinit var updateGate: View
+    private lateinit var upLogo: ImageView
+    private lateinit var upVersion: TextView
+    private lateinit var upNotes: TextView
+    private lateinit var upStatus: TextView
+    private lateinit var upProgress: ProgressBar
+    private lateinit var upHint: TextView
+
+    /** Il sito e' chiuso per manutenzione: da qui non si esce, solo dall'app. */
+    private var maintenanceLocked = false
+    /** C'e' una versione nuova: l'app resta bloccata finche' non si aggiorna. */
+    private var updateLocked = false
+    /** Il sito e' stato chiesto almeno una volta (non si ricarica da solo). */
+    private var siteRequested = false
+    /** Indirizzo dell'APK e pagina della release, come li dichiara il sito. */
+    private var apkUrl: String = ""
+    private var apkPage: String = "https://github.com/luxverse/luxverse/releases/latest"
+    /** Sveglia del controllo periodico (manutenzione) e del conto alla rovescia. */
+    private var statusWatch: Runnable? = null
+    private var countWatch: Runnable? = null
+    private var mtEndsTs: Long = 0L
 
     /** Vero quando il cerchio "indietro" e' a schermo (evita animazioni doppie). */
     private var backVisible = false
@@ -185,9 +226,6 @@ class MainActivity : AppCompatActivity() {
 
     /** La verifica dell'hosting e' gia' stata rifatta una volta in questa attesa. */
     private var accessRetried = false
-
-    /** Il controllo degli aggiornamenti si fa una volta sola per apertura. */
-    private var updateChecked = false
 
     /** Il lavoro che prepara il biscotto della verifica (fuori dall'interfaccia). */
     private var accessThread: Thread? = null
@@ -236,6 +274,32 @@ class MainActivity : AppCompatActivity() {
         offline = findViewById(R.id.offline)
         offlineTitle = findViewById(R.id.offlineTitle)
         offlineText = findViewById(R.id.offlineText)
+        // guscio nuovo
+        veilLogo = findViewById(R.id.veilLogo)
+        veilSub = findViewById(R.id.veilSub)
+        veilSkeleton = findViewById(R.id.veilSkeleton)
+        veilVersion = findViewById(R.id.veilVersion)
+        snow = findViewById(R.id.snow)
+        maintenance = findViewById(R.id.maintenance)
+        mtSnow = findViewById(R.id.mtSnow)
+        mtBadge = findViewById(R.id.mtBadge)
+        mtCount = findViewById(R.id.mtCount)
+        mtTitleIt = findViewById(R.id.mtTitleIt)
+        mtMsgIt = findViewById(R.id.mtMsgIt)
+        mtPointsIt = findViewById(R.id.mtPointsIt)
+        mtTitleEn = findViewById(R.id.mtTitleEn)
+        mtMsgEn = findViewById(R.id.mtMsgEn)
+        mtPointsEn = findViewById(R.id.mtPointsEn)
+        mtNote = findViewById(R.id.mtNote)
+        updateGate = findViewById(R.id.updateGate)
+        upLogo = findViewById(R.id.upLogo)
+        upVersion = findViewById(R.id.upVersion)
+        upNotes = findViewById(R.id.upNotes)
+        upStatus = findViewById(R.id.upStatus)
+        upProgress = findViewById(R.id.upProgress)
+        upHint = findViewById(R.id.upHint)
+
+        veilVersion.text = "v" + BuildConfig.VERSION_NAME
 
         prepareWebView()
 
@@ -247,6 +311,21 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.retry).setOnClickListener { retry() }
         findViewById<Button>(R.id.openInBrowser).setOnClickListener { openOutside(BuildConfig.SITE_URL) }
+
+        // Manutenzione: l'unico comando e' "controlla adesso". Non c'e' modo
+        // di andare altrove, perche' non c'e' nessun altrove da mostrare.
+        findViewById<Button>(R.id.mtRetry).setOnClickListener {
+            mtNote.setText(R.string.mt_note)
+            checkAppState(openIfClear = false)
+        }
+
+        // Aggiornamento: si scarica l'APK da GitHub. La seconda strada apre
+        // la pagina della release, per chi preferisce vedere impronta e note.
+        findViewById<Button>(R.id.upDownload).setOnClickListener {
+            val url = apkUrl
+            if (url.endsWith(".apk", true)) startApkDownload(url) else openOutside(apkPage)
+        }
+        findViewById<Button>(R.id.upPage).setOnClickListener { openOutside(apkPage) }
 
         // Il bottone indietro (24/10/2026). Fa la stessa cosa del gesto di
         // sistema, ma si vede: dentro l'app non c'e' la barra del browser, e
@@ -260,6 +339,23 @@ class MainActivity : AppCompatActivity() {
         // Il tasto indietro: prima le pagine visitate, poi l'uscita.
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                // CON L'APP BLOCCATA NON SI TORNA INDIETRO (19/11/2026).
+                // Prima, con la manutenzione accesa, il tasto indietro
+                // riportava alla home: cioe' alla pagina che il sito aveva
+                // appena chiuso. Adesso indietro puo' solo uscire dall'app.
+                if (updateLocked) {
+                    Toast.makeText(this@MainActivity, R.string.up_locked, Toast.LENGTH_SHORT).show()
+                    return
+                }
+                if (maintenanceLocked) {
+                    if (System.currentTimeMillis() - lastBackPress < 2000) {
+                        finish()
+                    } else {
+                        lastBackPress = System.currentTimeMillis()
+                        Toast.makeText(this@MainActivity, R.string.mt_locked_hint, Toast.LENGTH_SHORT).show()
+                    }
+                    return
+                }
                 if (web.canGoBack()) {
                     web.goBack()
                 } else if (System.currentTimeMillis() - lastBackPress < 2000) {
@@ -273,87 +369,405 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState != null) {
             // Ritorno dopo che Android ha ricreato la schermata: si riprende
-            // da dove si era, senza ricaricare tutto.
+            // da dove si era, senza ricaricare tutto. Il controllo dello
+            // stato gira lo stesso: se nel frattempo il sito si e' chiuso,
+            // la manutenzione copre subito tutto.
             settled = true
+            siteRequested = true
             hideVeil()
             web.restoreState(savedInstanceState)
         } else {
+            startVeilIntro()
             startWatches()
-            markPulse = ObjectAnimator.ofFloat(veilMark, View.ALPHA, 1f, 0.42f, 1f).apply {
-                duration = 1900
-                repeatCount = ObjectAnimator.INFINITE
-                start()
-            }
-            openSite()
         }
+
+        // Prima di aprire il sito si chiede al server come sta: manutenzione
+        // accesa? versione nuova dell'app? Solo dopo si carica qualcosa.
+        checkAppState(openIfClear = savedInstanceState == null)
     }
 
     // ========================================================
-    // AGGIORNAMENTI
+    // STATO DEL SERVIZIO: MANUTENZIONE E AGGIORNAMENTO
+    // (19/11/2026, 40.1.0)
+    // --------------------------------------------------------
+    // Una sola domanda al sito, prima di aprire qualunque pagina:
+    //   /api/latest_version.php
+    // Risponde due cose che nessuna pagina puo' dire:
+    //   1. se il sito e' chiuso per manutenzione -> l'app si blocca e non
+    //      mostra nient'altro (nemmeno tornando indietro);
+    //   2. se e' uscita una versione nuova dell'app -> avviso bloccante con
+    //      il pulsante per scaricare l'APK da GitHub.
+    // L'indirizzo resta raggiungibile anche a sito chiuso: e' l'unico modo
+    // per l'app di sapere che la pausa e' finita e di tornare da sola.
     // ========================================================
+
+    /** Evita due domande di stato sovrapposte. */
+    private var statusBusy = false
+
     /**
-     * Chiede al sito qual e' l'ultima versione dell'app.
-     *
-     * La pagina dell'app promette che "l'app stessa avvisa" quando esce una
-     * versione nuova: fino alla 39.3.5 la promessa non era mantenuta, perche'
-     * nessuna riga dell'app chiamava questo indirizzo. Si chiama una volta per
-     * apertura, su un thread separato e con i tempi stretti (5 secondi): se la
-     * rete non risponde, o il JSON non e' quello atteso, non succede niente e
-     * l'app resta quella che e'. Non e' un controllo che blocca l'apertura.
-     *
-     * Si avvisa una volta sola per versione (SharedPreferences): chi sceglie
-     * "dopo" non se lo ritrova davanti a ogni avvio.
+     * Chiede lo stato. Gira su un thread a parte e non blocca mai
+     * l'interfaccia: se la rete non risponde si apre il sito come prima.
      */
-    private fun checkForUpdate() {
+    private fun fetchAppState(): JSONObject? {
+        var c: HttpsURLConnection? = null
+        return try {
+            val indirizzo = BuildConfig.SITE_URL + "/api/latest_version.php"
+            val connessione = (URL(indirizzo).openConnection() as HttpsURLConnection).apply {
+                connectTimeout = 6_000
+                readTimeout = 6_000
+                setRequestProperty("Accept", "application/json")
+                // Il biscotto della verifica dell'hosting viaggia a mano:
+                // HttpURLConnection non usa la riserva della WebView.
+                val biscotto = CookieManager.getInstance().getCookie(BuildConfig.SITE_URL).orEmpty()
+                if (biscotto.isNotEmpty()) setRequestProperty("Cookie", biscotto)
+                SiteTls.fabbrica(siteHost)?.let { sslSocketFactory = it }
+            }
+            c = connessione
+            // Se il server risponde 503 (manutenzione accesa mentre il
+            // controllo era gia' partito), il corpo utile e' nel flusso
+            // d'errore: anche quello e' JSON, e dice che il sito e' chiuso.
+            val testo = try {
+                connessione.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            } catch (e: Exception) {
+                connessione.errorStream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() } ?: ""
+            }
+            if (testo.trim().isEmpty()) null else JSONObject(testo)
+        } catch (t: Throwable) {
+            null
+        } finally {
+            c?.disconnect()
+        }
+    }
+
+    /**
+     * Il controllo completo: manutenzione, versione, e apertura del sito.
+     *
+     * openIfClear = true solo all'avvio: mentre si naviga (o quando si e'
+     * gia' dentro) il controllo non deve ricaricare la pagina sotto le dita.
+     */
+    private fun checkAppState(openIfClear: Boolean) {
+        if (statusBusy) return
+        statusBusy = true
         val lavoro = Thread {
-            var connessione: HttpsURLConnection? = null
-            try {
-                val indirizzo = BuildConfig.SITE_URL + "/api/latest_version.php"
-                connessione = (URL(indirizzo).openConnection() as HttpsURLConnection).apply {
-                    connectTimeout = 5_000
-                    readTimeout = 5_000
-                    setRequestProperty("Accept", "application/json")
-                    // Il biscotto della verifica dell'hosting va mandato a mano:
-                    // HttpURLConnection non usa la riserva di biscotti della
-                    // WebView, e senza __test il server risponde con la
-                    // paginetta di verifica invece del JSON.
-                    val biscotto = CookieManager.getInstance()
-                        .getCookie(BuildConfig.SITE_URL).orEmpty()
-                    if (biscotto.isNotEmpty()) setRequestProperty("Cookie", biscotto)
-                    SiteTls.fabbrica(siteHost)?.let { sslSocketFactory = it }
+            val json = fetchAppState()
+            ui.post {
+                statusBusy = false
+                if (isFinishing || isDestroyed) return@post
+
+                if (json == null) {
+                    // Nessuna risposta: si apre il sito se non e' ancora
+                    // stato chiesto. Un controllo di stato non deve mai
+                    // impedire di usare l'app quando il sito funziona.
+                    if (openIfClear && !siteRequested) {
+                        siteRequested = true
+                        openSite()
+                    }
+                    if (maintenanceLocked) {
+                        mtNote.setText(R.string.mt_offline)
+                        scheduleStatusCheck(STATUS_POLL)
+                    }
+                    return@post
                 }
-                val testo = connessione.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
-                val json = JSONObject(testo)
+
+                // 1. Manutenzione: o dentro la risposta di stato, o come
+                //    risposta 503 dell'API (che ha solo i campi d'errore).
+                val mt = json.optJSONObject("maintenance")
+                if (mt != null && mt.optBoolean("on")) {
+                    showMaintenance(mt)
+                    return@post
+                }
+                if (json.optBoolean("maintenance")) {
+                    val chiuso = JSONObject()
+                    chiuso.put("on", true)
+                    chiuso.put("message_it", json.optString("error", ""))
+                    chiuso.put("message_en", json.optString("error_en", ""))
+                    showMaintenance(chiuso)
+                    return@post
+                }
+
+                // 2. Il sito e' tornato: si esce dal blocco e si riapre.
+                if (maintenanceLocked) {
+                    unlockFromMaintenance()
+                    return@post
+                }
+
+                // 3. Versione nuova: avviso bloccante, si scarica da GitHub.
                 val codice = json.optInt("version_code", 0)
-                val nome = json.optString("version_name", "")
-                val dove = json.optString("url", "")
-                if (codice <= BuildConfig.VERSION_CODE) return@Thread
-                if (!dove.startsWith("https://")) return@Thread
-
-                val gia = getSharedPreferences("luxverse", MODE_PRIVATE).getInt("update_prompted", 0)
-                if (gia >= codice) return@Thread
-
-                ui.post {
-                    if (isFinishing || isDestroyed) return@post
-                    getSharedPreferences("luxverse", MODE_PRIVATE).edit()
-                        .putInt("update_prompted", codice).apply()
-                    AlertDialog.Builder(this)
-                        .setTitle(R.string.update_title)
-                        .setMessage(getString(R.string.update_text, if (nome.isNotEmpty()) nome else codice.toString()))
-                        .setPositiveButton(R.string.update_now) { _, _ -> openOutside(dove) }
-                        .setNegativeButton(R.string.update_later, null)
-                        .show()
+                if (codice > BuildConfig.VERSION_CODE) {
+                    showUpdateGate(json)
+                    return@post
                 }
-            } catch (t: Throwable) {
-                // Nessuna rete, nessun JSON, hosting che risponde altro: si
-                // tace. Un avviso di aggiornamento non deve mai diventare un
-                // errore da mostrare.
-            } finally {
-                connessione?.disconnect()
+                if (updateLocked) return@post
+
+                if (openIfClear && !siteRequested) {
+                    siteRequested = true
+                    openSite()
+                }
+                scheduleStatusCheck(STATUS_POLL)
             }
         }
         lavoro.isDaemon = true
         lavoro.start()
+    }
+
+    /** Si rifa' il controllo fra tot millisecondi (se la schermata e' viva). */
+    private fun scheduleStatusCheck(delay: Long) {
+        cancelStatusCheck()
+        val task = Runnable {
+            if (isFinishing || isDestroyed) return@Runnable
+            checkAppState(openIfClear = false)
+        }
+        statusWatch = task
+        ui.postDelayed(task, delay)
+    }
+
+    private fun cancelStatusCheck() {
+        statusWatch?.let { ui.removeCallbacks(it) }
+        statusWatch = null
+    }
+
+    /** Quanto tempo manca alla riapertura, scritto sotto il titolo. */
+    private fun startCountdown() {
+        stopCountdown()
+        if (mtEndsTs <= 0L) {
+            mtCount.visibility = View.GONE
+            return
+        }
+        mtCount.visibility = View.VISIBLE
+        val tick = object : Runnable {
+            override fun run() {
+                if (isFinishing || isDestroyed || !maintenanceLocked) return
+                val manca = mtEndsTs * 1000L - System.currentTimeMillis()
+                if (manca <= 0L) {
+                    mtCount.text = "00:00:00"
+                    return
+                }
+                val h = manca / 3_600_000L
+                val m = (manca % 3_600_000L) / 60_000L
+                val s = (manca % 60_000L) / 1000L
+                mtCount.text = String.format(Locale.ITALY, "%02d:%02d:%02d", h, m, s)
+                ui.postDelayed(this, 1000)
+            }
+        }
+        countWatch = tick
+        ui.post(tick)
+    }
+
+    private fun stopCountdown() {
+        countWatch?.let { ui.removeCallbacks(it) }
+        countWatch = null
+    }
+
+    /** Toglie gli asterischi di enfasi usati nei testi del pannello. */
+    private fun plain(text: String): String = text.replace("*", "").trim()
+
+    /** Somma i punti di una lista in un blocco solo, con il pallino. */
+    private fun bullets(array: org.json.JSONArray?): String {
+        if (array == null || array.length() == 0) return ""
+        val righe = ArrayList<String>()
+        for (i in 0 until array.length()) {
+            val riga = plain(array.optString(i, ""))
+            if (riga.isNotEmpty()) righe.add("•  " + riga)
+        }
+        return righe.joinToString("\n")
+    }
+
+    /**
+     * IL BLOCCO DELLA MANUTENZIONE.
+     *
+     * Quando si accende sparisce tutto: sito, cerchio indietro, filo di
+     * caricamento, pagina di cortesia. Resta questa schermata sola, con i
+     * testi che il pannello ha scritto (italiano e inglese), il conto alla
+     * rovescia e il pulsante per controllare subito.
+     */
+    private fun showMaintenance(mt: JSONObject) {
+        if (isFinishing || isDestroyed) return
+        val appena = !maintenanceLocked
+
+        maintenanceLocked = true
+        updateLocked = false
+        updateGate.visibility = View.GONE
+        cancelHideVeil()
+        cancelWatches()
+        cancelStatusCheck()
+
+        settled = true
+        veil.visibility = View.GONE
+        veilSkeleton.stop()
+        snow.stop()
+        offline.visibility = View.GONE
+        progress.visibility = View.GONE
+        hideBackNow()
+        // La home non resta sotto la schermata di manutenzione: nasconderla
+        // davvero e' l'unico modo per essere sicuri che non si veda nemmeno
+        // in trasparenza o durante una transizione.
+        web.visibility = View.INVISIBLE
+
+        val badgeIt = plain(mt.optString("badge_it", getString(R.string.mt_badge)))
+        val badgeEn = plain(mt.optString("badge_en", ""))
+        mtBadge.text = if (badgeEn.isNotEmpty() && badgeEn != badgeIt) "$badgeIt · $badgeEn" else badgeIt
+
+        val titoloIt = plain(mt.optString("title_it", getString(R.string.mt_title)))
+        val titoloEn = plain(mt.optString("title_en", getString(R.string.mt_title_en)))
+        val messIt = plain(mt.optString("message_it", getString(R.string.mt_msg)))
+        val messEn = plain(mt.optString("message_en", getString(R.string.mt_msg_en)))
+
+        mtTitleIt.text = titoloIt.ifEmpty { getString(R.string.mt_title) }
+        mtMsgIt.text = messIt.ifEmpty { getString(R.string.mt_msg) }
+        mtTitleEn.text = titoloEn.ifEmpty { getString(R.string.mt_title_en) }
+        mtMsgEn.text = messEn.ifEmpty { getString(R.string.mt_msg_en) }
+
+        val puntiIt = bullets(mt.optJSONArray("points_it"))
+        val puntiEn = bullets(mt.optJSONArray("points_en"))
+        mtPointsIt.text = puntiIt
+        mtPointsIt.visibility = if (puntiIt.isNotEmpty()) View.VISIBLE else View.GONE
+        mtPointsEn.text = puntiEn
+        mtPointsEn.visibility = if (puntiEn.isNotEmpty()) View.VISIBLE else View.GONE
+
+        mtNote.setText(R.string.mt_note)
+        mtEndsTs = mt.optLong("ends_ts", 0L)
+        startCountdown()
+
+        if (appena) {
+            maintenance.alpha = 0f
+            maintenance.translationY = dp(16f)
+            maintenance.visibility = View.VISIBLE
+            maintenance.animate().alpha(1f).translationY(0f).setDuration(280).start()
+        } else {
+            maintenance.visibility = View.VISIBLE
+        }
+
+        // Ogni venti secondi si guarda se il sito e' tornato: quando lo e',
+        // l'app si sblocca da sola, senza che nessuno tocchi niente.
+        scheduleStatusCheck(STATUS_POLL)
+    }
+
+    /** La manutenzione e' finita: si torna al sito, con l'attesa animata. */
+    private fun unlockFromMaintenance() {
+        maintenanceLocked = false
+        maintenance.visibility = View.GONE
+        web.visibility = View.VISIBLE
+        stopCountdown()
+        cancelStatusCheck()
+        settled = false
+        siteRequested = false
+        retry()
+    }
+
+    /**
+     * LA PORTA DELL'AGGIORNAMENTO.
+     *
+     * Blocca l'app finche' non si scarica l'APK nuovo da GitHub. Non ha una
+     * X e non ha un "dopo": la versione vecchia mostrerebbe sezioni che nel
+     * frattempo sono cambiate, ed e' esattamente il problema che stiamo
+     * chiudendo. Sul telefono non tocca niente: nessun dato viene letto.
+     */
+    private fun showUpdateGate(json: JSONObject) {
+        if (isFinishing || isDestroyed || updateLocked) return
+        updateLocked = true
+        maintenanceLocked = false
+        maintenance.visibility = View.GONE
+        cancelHideVeil()
+        cancelWatches()
+        cancelStatusCheck()
+        stopCountdown()
+
+        veil.visibility = View.GONE
+        veilSkeleton.stop()
+        snow.stop()
+        offline.visibility = View.GONE
+        progress.visibility = View.GONE
+        hideBackNow()
+        web.visibility = View.INVISIBLE
+
+        apkUrl = json.optString("apk_url", "")
+        apkPage = json.optString("apk_page", "")
+        if (!apkPage.startsWith("https://")) {
+            apkPage = "https://github.com/luxverse/luxverse/releases/latest"
+        }
+
+        val nome = json.optString("version_name", "")
+        upVersion.text = getString(R.string.up_version, nome.ifEmpty { "—" })
+
+        val messaggi = json.optJSONObject("message")
+        val italiano = Locale.getDefault().language == "it"
+        val nota = messaggi?.optString(if (italiano) "it" else "en", "").orEmpty()
+        upNotes.text = nota.ifEmpty { getString(R.string.update_text) }
+
+        val fallback = getString(R.string.update_text)
+        upHint.setText(R.string.up_locked)
+        if (upNotes.text.isNullOrEmpty()) upNotes.text = fallback
+
+        upStatus.visibility = View.GONE
+        upProgress.visibility = View.GONE
+
+        updateGate.alpha = 0f
+        updateGate.visibility = View.VISIBLE
+        updateGate.animate().alpha(1f).setDuration(260).start()
+        upLogo.alpha = 0f
+        upLogo.scaleX = 0.86f
+        upLogo.scaleY = 0.86f
+        upLogo.animate().alpha(1f).scaleX(1f).scaleY(1f)
+            .setDuration(560).setInterpolator(OvershootInterpolator(0.9f)).start()
+    }
+
+    /** Scarica l'APK nuovo da GitHub, con il salvataggio di sistema. */
+    private fun startApkDownload(url: String) {
+        try {
+            val nome = URLUtil.guessFileName(url, null, "application/vnd.android.package-archive")
+            val richiesta = DownloadManager.Request(Uri.parse(url))
+                .setTitle("L.U.X. Verse")
+                .setDescription(getString(R.string.update_title))
+                .setMimeType("application/vnd.android.package-archive")
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, nome)
+            (getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager).enqueue(richiesta)
+            upStatus.setText(R.string.up_started)
+            upStatus.visibility = View.VISIBLE
+            upProgress.visibility = View.VISIBLE
+        } catch (e: Exception) {
+            upStatus.setText(R.string.up_failed)
+            upStatus.visibility = View.VISIBLE
+        }
+    }
+
+    /**
+     * L'ENTRATA DEL VELO (19/11/2026).
+     *
+     * Il marchio sale e si accende, il nome entra dopo, lo scheletro si
+     * accende per ultimo: tre tempi brevi invece di un blocco fermo. Poi il
+     * marchio comincia a respirare finche' la pagina non e' pronta.
+     */
+    private fun startVeilIntro() {
+        veilLogo.alpha = 0f
+        veilLogo.scaleX = 0.8f
+        veilLogo.scaleY = 0.8f
+        veilLogo.animate().alpha(1f).scaleX(1f).scaleY(1f)
+            .setDuration(640).setInterpolator(OvershootInterpolator(0.9f)).start()
+
+        veilMark.alpha = 0f
+        veilMark.translationY = dp(12f)
+        veilMark.animate().alpha(1f).translationY(0f).setDuration(520).setStartDelay(120).start()
+
+        veilSub.alpha = 0f
+        veilSub.animate().alpha(1f).setDuration(520).setStartDelay(210).start()
+
+        veilSkeleton.alpha = 0f
+        veilSkeleton.animate().alpha(1f).setDuration(420).setStartDelay(300).start()
+
+        veilStatus.alpha = 0f
+        veilStatus.animate().alpha(1f).setDuration(420).setStartDelay(380).start()
+
+        veilSkeleton.start()
+
+        ui.postDelayed({
+            if (isFinishing || isDestroyed || veil.visibility != View.VISIBLE) return@postDelayed
+            markPulse = ObjectAnimator.ofFloat(veilLogo, View.ALPHA, 1f, 0.74f, 1f).apply {
+                duration = 2400
+                repeatCount = ObjectAnimator.INFINITE
+                start()
+            }
+        }, 760)
     }
 
     // ========================================================
@@ -397,7 +811,12 @@ class MainActivity : AppCompatActivity() {
      * del tema scuro scritti nelle risorse.
      */
     private fun applySeasonTheme() {
-        if (!isChristmasSeason()) return
+        // La neve c'e' solo nella finestra di Natale: fuori da quelle date
+        // le due viste non vengono nemmeno disegnate.
+        val xmas = isChristmasSeason()
+        snow.visibility = if (xmas) View.VISIBLE else View.GONE
+        mtSnow.visibility = if (xmas) View.VISIBLE else View.GONE
+        if (!xmas) return
 
         val bg = ContextCompat.getColor(this, R.color.lux_xmas_background)
         val text = ContextCompat.getColor(this, R.color.lux_xmas_text)
@@ -407,16 +826,45 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.root).setBackgroundColor(bg)
 
-        veil.setBackgroundColor(bg)
+        veil.setBackgroundResource(R.drawable.bg_veil_natale)
+        maintenance.setBackgroundResource(R.drawable.bg_veil_natale)
+        updateGate.setBackgroundResource(R.drawable.bg_veil_natale)
+        offline.setBackgroundResource(R.drawable.bg_veil_natale)
+
+        veilLogo.setBackgroundResource(R.drawable.bg_marchio_natale)
+        findViewById<ImageView>(R.id.mtLogo).setBackgroundResource(R.drawable.bg_marchio_natale)
+        upLogo.setBackgroundResource(R.drawable.bg_marchio_natale)
+        findViewById<ImageView>(R.id.offLogo).setBackgroundResource(R.drawable.bg_marchio_natale)
+
         veilMark.setTextColor(text)
+        veilSub.setTextColor(muted)
         veilStatus.setTextColor(muted)
+        veilVersion.setTextColor(muted)
         veilProgress.progressTintList = ColorStateList.valueOf(accent)
         veilProgress.progressBackgroundTintList = ColorStateList.valueOf(line)
         veilXmas.visibility = View.VISIBLE
+        veilSkeleton.barColor = 0x1AC8102E
+        veilSkeleton.shineColor = 0x55C8102E
+
+        // Manutenzione e aggiornamento: testi scuri su crema.
+        mtBadge.setTextColor(accent)
+        mtCount.setTextColor(text)
+        mtTitleIt.setTextColor(text)
+        mtMsgIt.setTextColor(muted)
+        mtPointsIt.setTextColor(text)
+        mtTitleEn.setTextColor(text)
+        mtMsgEn.setTextColor(muted)
+        mtPointsEn.setTextColor(text)
+        mtNote.setTextColor(muted)
+        findViewById<View>(R.id.mtRule).setBackgroundColor(line)
+        upVersion.setTextColor(accent)
+        upNotes.setTextColor(muted)
+        upStatus.setTextColor(accent)
+        upHint.setTextColor(muted)
+        upProgress.indeterminateTintList = ColorStateList.valueOf(accent)
 
         progress.progressTintList = ColorStateList.valueOf(accent)
 
-        offline.setBackgroundColor(bg)
         offlineTitle.setTextColor(text)
         offlineText.setTextColor(muted)
 
@@ -582,6 +1030,14 @@ class MainActivity : AppCompatActivity() {
                 cancelHideVeil()
                 titleSeen = false
                 hideBackNow()
+                // La pagina che esce sbiadisce appena: quando arriva quella
+                // nuova si riaccende (onPageCommitVisible). E' il "cambio
+                // pagina" dell'app, quello che mancava e la faceva sembrare
+                // ferma a ogni tocco.
+                if (settled) {
+                    web.animate().cancel()
+                    web.animate().alpha(0.55f).setDuration(130).start()
+                }
                 if (veil.visibility == View.VISIBLE) {
                     veilStatus.setText(R.string.loading_connecting)
                     veilProgress.progress = 0
@@ -590,6 +1046,10 @@ class MainActivity : AppCompatActivity() {
 
             /** La pagina ha disegnato il primo pezzo: se ha anche un titolo, si puo' alzare il velo. */
             override fun onPageCommitVisible(view: WebView?, url: String?) {
+                if (settled) {
+                    web.animate().cancel()
+                    web.animate().alpha(1f).setDuration(220).start()
+                }
                 scheduleHideVeil()
             }
 
@@ -621,6 +1081,15 @@ class MainActivity : AppCompatActivity() {
                 // volta si riprova da soli, come fa "aggiorna" nel browser; se
                 // non basta si mostra la pagina di cortesia.
                 if (!request.isForMainFrame) return
+
+                // 503 = il sito e' chiuso per manutenzione (19/11/2026).
+                // Non e' un errore da nascondere e non si riprova: l'app
+                // chiede lo stato vero e mostra la sua schermata bloccante.
+                if (response.statusCode == 503) {
+                    if (!maintenanceLocked) checkAppState(openIfClear = false)
+                    return
+                }
+
                 if (response.statusCode < 400) return
                 if (!autoRetried) {
                     autoRetried = true
@@ -957,12 +1426,9 @@ class MainActivity : AppCompatActivity() {
         cancelHideVeil()
         cancelWatches()
         settled = true
-        // Solo adesso il biscotto della verifica e' sicuramente nella riserva:
-        // il controllo degli aggiornamenti parte da qui, non dall'avvio.
-        if (!updateChecked) {
-            updateChecked = true
-            checkForUpdate()
-        }
+        // Il velo ha finito il suo lavoro: lo scheletro si ferma (la neve si
+        // spegne da sola quando la vista diventa invisibile).
+        veilSkeleton.stop()
         // Da qui in poi una nuova richiesta d'emergenza al sito puo' essere
         // riprovata da sola un'altra volta.
         autoRetried = false
@@ -1030,32 +1496,53 @@ class MainActivity : AppCompatActivity() {
 
     private fun dp(value: Float): Float = value * resources.displayMetrics.density
 
-    /** Il velo si alza come una tendina, e la pagina sotto si accende. */
+    /**
+     * Il velo si apre (19/11/2026).
+     *
+     * Prima saliva come una tendina; adesso il marchio si allarga e si
+     * spegne mentre il velo si dissolve, e la pagina sotto entra da 0,96
+     * a piena: due movimenti brevi e sovrapposti, che danno l'idea di una
+     * cosa che si apre invece di una schermata che sparisce di colpo.
+     */
     private fun hideVeil() {
         if (veil.visibility != View.VISIBLE) return
         markPulse?.cancel()
         markPulse = null
-        web.alpha = 0.55f
-        web.animate().alpha(1f).setDuration(320).start()
+        veilSkeleton.stop()
+
+        veilLogo.animate().scaleX(1.08f).scaleY(1.08f).alpha(0f).setDuration(300).start()
+
+        web.alpha = 0.45f
+        web.scaleX = 0.985f
+        web.scaleY = 0.985f
+        web.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(380).start()
+
         veil.animate()
-            .translationY(-veil.height.toFloat())
-            .alpha(0.15f)
-            .setDuration(260)
+            .alpha(0f)
+            .translationY(-dp(18f))
+            .setDuration(300)
             .setInterpolator(DecelerateInterpolator())
             .withEndAction {
                 veil.visibility = View.GONE
                 veil.alpha = 1f
                 veil.translationY = 0f
                 veilProgress.progress = 0
+                veilLogo.scaleX = 1f
+                veilLogo.scaleY = 1f
+                veilLogo.alpha = 1f
             }
             .start()
     }
 
     private fun showOffline() {
+        // Con un blocco acceso la pagina di cortesia non ha senso: la
+        // manutenzione e l'aggiornamento hanno gia' la loro schermata.
+        if (maintenanceLocked || updateLocked) return
         cancelHideVeil()
         cancelWatches()
         settled = true
         veil.visibility = View.GONE
+        veilSkeleton.stop()
         offline.visibility = View.VISIBLE
         hideBackNow()
         if (hasNetwork()) {
@@ -1069,10 +1556,12 @@ class MainActivity : AppCompatActivity() {
 
     /** La pagina di cortesia quando il problema e' il certificato del sito. */
     private fun showTls() {
+        if (maintenanceLocked || updateLocked) return
         cancelHideVeil()
         cancelWatches()
         settled = true
         veil.visibility = View.GONE
+        veilSkeleton.stop()
         offline.visibility = View.VISIBLE
         hideBackNow()
         offlineTitle.setText(R.string.tls_title)
@@ -1137,12 +1626,22 @@ class MainActivity : AppCompatActivity() {
         autoRetried = false
         accessRetried = false
         titleSeen = false
+        siteRequested = true
         offline.visibility = View.GONE
         progress.visibility = View.VISIBLE
+        web.visibility = View.VISIBLE
         veil.visibility = View.VISIBLE
+        veil.alpha = 1f
         veil.translationY = 0f
         veilProgress.progress = 0
         veilStatus.setText(R.string.loading_connecting)
+        // Il marchio torna visibile con la sua entrata breve: dopo un blocco
+        // il velo non deve ricomparire come un rettangolo vuoto.
+        veilLogo.alpha = 1f
+        veilLogo.scaleX = 1f
+        veilLogo.scaleY = 1f
+        veilSkeleton.start()
+        startVeilIntro()
         startWatches()
         // Non basta ricaricare: se il motivo era la verifica dell'hosting, va
         // rifatta prima. openSite() la rifà e poi ricarica la pagina aperta.
@@ -1200,11 +1699,16 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         web.onPause()          // ferma i lavori della pagina: non consuma batteria in sottofondo
+        // Anche il controllo della manutenzione si ferma: riprende al ritorno.
+        cancelStatusCheck()
     }
 
     override fun onResume() {
         super.onResume()
         web.onResume()
+        // Tornando sull'app si riguarda subito lo stato: se nel frattempo il
+        // sito e' stato chiuso, la manutenzione e' gia' a schermo.
+        if (settled && !updateLocked) scheduleStatusCheck(1_200L)
     }
 
     override fun onDestroy() {
@@ -1273,5 +1777,9 @@ class MainActivity : AppCompatActivity() {
         // non verificato e l'app si ferma.
         const val TLS_WAIT_MS = 20_000L
         const val REQUEST_WRITE = 4711
+        // Ogni quanto si riguarda lo stato del sito mentre l'app e' aperta.
+        // Venti secondi: abbastanza spesso perche' una manutenzione appena
+        // accesa si veda, abbastanza di rado per non pesare sulla batteria.
+        const val STATUS_POLL = 20_000L
     }
 }

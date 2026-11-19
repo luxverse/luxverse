@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Velo e schermate native nel tema di Natale: crema, con un alone rosso. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/lux_xmas_background" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.24"
+                android:gradientRadius="320dp"
+                android:startColor="#33C8102E"
+                android:endColor="#00FFFCFA" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:centerX="0.9"
+                android:centerY="1.05"
+                android:gradientRadius="240dp"
+                android:startColor="#26C9A227"
+                android:endColor="#00FFFCFA" />
+        </shape>
+    </item>
+</layer-list>

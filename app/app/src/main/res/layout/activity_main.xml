@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Una sola schermata, tre strati sovrapposti:
-    1. la WebView (le pagine del sito);
-    2. il velo di attesa, che sta sopra finche' la pagina non ha davvero
-       qualcosa da leggere (l'hosting consegna prima una pagina vuota);
-    3. la pagina di cortesia, che si vede solo se il sito non risponde.
+  ============================================================
+  GUSCIO DELL'APP — RIFATTO DA CAPO (19/11/2026, 40.1.0)
+  ============================================================
+  L'app resta una finestra sul sito, ma non deve sembrarlo:
+  quello che l'app disegna (attesa, manutenzione, aggiornamento) e'
+  fatto come il sito, non come un riquadro grigio di sistema.
 
-  IL VELO, RIFATTO (17/10/2026)
-  Prima era un logo immagine da 128 dp + rotella che gira + "Loading" fermo:
-  pesante da disegnare, e non diceva niente su cosa stesse succedendo.
-  Adesso e' una cosa sola, leggera e onesta:
-    - il marchio, scritto con il carattere (nessuna immagine da caricare);
-    - una linea da 2 dp che avanza con l'avanzamento VERO della pagina,
-      non con una rotella che gira a vuoto;
-    - una riga di stato che cambia ("Connessione...", "Caricamento...",
-      "Preparazione..."): se il sito tarda, si capisce a che punto e';
-    - una riga sottile in cima allo schermo, visibile anche sopra il sito,
-      che sparisce quando la pagina e' pronta.
-  Niente rotelle, niente ombre, niente animazioni continue: solo un
-  avanzamento vero. Cosi' la schermata non pesa e non sembra mai bloccata.
+  Cinque strati, dal fondo alla cima:
+    1. la WebView, a tutto schermo;
+    2. il filo di caricamento, in cima;
+    3. il numero indietro, che compare solo quando serve davvero;
+    4. il velo di attesa animato (marchio, scheletro che scorre, neve);
+    5. la porta della manutenzione e quella dell'aggiornamento, che
+       quando sono accese coprono tutto e non si chiudono.
+
+  La neve e lo scheletro sono disegnati da due View scritte per l'app
+  (LuxSnowView, LuxSkeletonView): nessuna immagine da caricare, e si
+  fermano quando non si vedono.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
@@ -31,16 +30,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- BOTTONE INDIETRO (v8, 15/11/2026).
-         Sta in basso a sinistra, SOPRA il dock del sito (che occupa gli
-         ultimi 82dp): cosi' non si sovrappongono. Compare con una piccola
-         salita solo quando c'e' davvero una pagina precedente dentro il
-         sito, e sparisce quando non serve piu'. Non ruba spazio: e'
-         sovrapposto, come i comandi di un browser. -->
+    <!-- Filo di caricamento: sottile, in cima, sopra ogni cosa. -->
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_gravity="top"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="0"
+        android:progressBackgroundTint="@android:color/transparent"
+        android:progressTint="@color/lux_accent" />
+
+    <!-- Il numero indietro: sale solo quando dentro il sito c'e' una
+         pagina precedente, e non copre il dock (che sta negli ultimi 82dp). -->
     <ImageButton
         android:id="@+id/backBtn"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
         android:layout_gravity="bottom|start"
         android:layout_marginStart="14dp"
         android:layout_marginBottom="96dp"
@@ -51,112 +59,444 @@
         android:src="@drawable/ic_lux_back"
         android:visibility="gone" />
 
-    <!-- Filo in cima: si vede sopra tutto, anche a pagina caricata non
-         c'e' piu'. Non copre niente e non intercetta tocchi. -->
-    <ProgressBar
-        android:id="@+id/progress"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_gravity="top"
-        android:indeterminate="false"
-        android:max="100"
-        android:progress="0"
-        android:progressBackgroundTint="@android:color/transparent"
-        android:progressTint="@color/lux_accent" />
-
-    <!-- ===== VELO DI ATTESA ===== -->
-    <LinearLayout
+    <!-- ======================================================
+         4. VELO DI ATTESA
+         ====================================================== -->
+    <FrameLayout
         android:id="@+id/veil"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/lux_background"
+        android:background="@drawable/bg_veil"
+        android:clickable="true"
+        android:focusable="true">
+
+        <org.luxverse.app.ui.LuxSnowView
+            android:id="@+id/snow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="34dp"
+            android:paddingEnd="34dp">
+
+            <ImageView
+                android:id="@+id/veilLogo"
+                android:layout_width="112dp"
+                android:layout_height="112dp"
+                android:background="@drawable/bg_marchio"
+                android:contentDescription="@string/app_name"
+                android:padding="3dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/lux_natale" />
+
+            <TextView
+                android:id="@+id/veilMark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:letterSpacing="0.34"
+                android:text="@string/mark"
+                android:textColor="@color/lux_text"
+                android:textSize="23sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/veilSub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:letterSpacing="0.62"
+                android:text="@string/mark_sub"
+                android:textColor="@color/lux_text_muted"
+                android:textSize="9sp" />
+
+            <org.luxverse.app.ui.LuxSkeletonView
+                android:id="@+id/veilSkeleton"
+                android:layout_width="196dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="30dp" />
+
+            <ProgressBar
+                android:id="@+id/veilProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="196dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="18dp"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="0"
+                android:progressBackgroundTint="@color/lux_surface"
+                android:progressTint="@color/lux_accent" />
+
+            <TextView
+                android:id="@+id/veilStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:letterSpacing="0.14"
+                android:text="@string/loading_connecting"
+                android:textColor="@color/lux_text_muted"
+                android:textSize="11.5sp" />
+
+            <TextView
+                android:id="@+id/veilXmas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:letterSpacing="0.06"
+                android:text="@string/xmas_note"
+                android:textColor="@color/lux_xmas_accent"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/veilVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="30dp"
+            android:letterSpacing="0.18"
+            android:textColor="@color/lux_text_muted"
+            android:textSize="10sp" />
+    </FrameLayout>
+
+    <!-- ======================================================
+         5a. PORTA DELLA MANUTENZIONE
+         Quando il sito e' chiuso, l'app non mostra nient'altro: nessuna
+         home, nessuna sezione, nessun ritorno indietro. Solo questa.
+         ====================================================== -->
+    <FrameLayout
+        android:id="@+id/maintenance"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_veil"
         android:clickable="true"
         android:focusable="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="28dp">
+        android:visibility="gone">
 
-        <TextView
-            android:id="@+id/veilMark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:letterSpacing="0.22"
-            android:text="@string/mark"
-            android:textColor="@color/lux_text"
-            android:textSize="27sp"
-            android:textStyle="bold" />
+        <org.luxverse.app.ui.LuxSnowView
+            android:id="@+id/mtSnow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:letterSpacing="0.55"
-            android:text="@string/mark_sub"
-            android:textColor="@color/lux_text_muted"
-            android:textSize="9sp" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none">
 
-        <ProgressBar
-            android:id="@+id/veilProgress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="156dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="28dp"
-            android:indeterminate="false"
-            android:max="100"
-            android:progress="0"
-            android:progressBackgroundTint="@color/lux_surface"
-            android:progressTint="@color/lux_accent" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingStart="26dp"
+                android:paddingTop="34dp"
+                android:paddingEnd="26dp"
+                android:paddingBottom="34dp">
 
-        <TextView
-            android:id="@+id/veilStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:letterSpacing="0.16"
-            android:text="@string/loading_connecting"
-            android:textColor="@color/lux_text_muted"
-            android:textSize="11sp" />
+                <ImageView
+                    android:id="@+id/mtLogo"
+                    android:layout_width="86dp"
+                    android:layout_height="86dp"
+                    android:background="@drawable/bg_marchio"
+                    android:contentDescription="@string/app_name"
+                    android:padding="3dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/lux_natale" />
 
-        <!-- AUGURI (17/11 - 26/12/2026). Si vede solo nella finestra natalizia:
-             fuori da quelle date resta gone e non occupa spazio. -->
-        <TextView
-            android:id="@+id/veilXmas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:letterSpacing="0.08"
-            android:text="@string/xmas_note"
-            android:textColor="@color/lux_xmas_accent"
-            android:textSize="12sp"
-            android:visibility="gone" />
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/mtBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_pill"
+                    android:letterSpacing="0.16"
+                    android:paddingStart="14dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/mt_badge"
+                    android:textColor="@color/lux_xmas_accent"
+                    android:textSize="10.5sp"
+                    android:textStyle="bold" />
 
-    <!-- ===== PAGINA DI CORTESIA ===== -->
+                <TextView
+                    android:id="@+id/mtCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/lux_text"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/mtTitleIt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@string/mt_title"
+                    android:textColor="@color/lux_text"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/mtMsgIt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="3dp"
+                    android:text="@string/mt_msg"
+                    android:textColor="@color/lux_text_muted"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/mtPointsIt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:lineSpacingExtra="5dp"
+                    android:textColor="@color/lux_text"
+                    android:textSize="13.5sp"
+                    android:visibility="gone" />
+
+                <View
+                    android:id="@+id/mtRule"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/lux_xmas_line" />
+
+                <TextView
+                    android:id="@+id/mtTitleEn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:lineSpacingExtra="3dp"
+                    android:text="@string/mt_title_en"
+                    android:textColor="@color/lux_text"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/mtMsgEn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="3dp"
+                    android:text="@string/mt_msg_en"
+                    android:textColor="@color/lux_text_muted"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/mtPointsEn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:lineSpacingExtra="5dp"
+                    android:textColor="@color/lux_text"
+                    android:textSize="12.5sp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/mtRetry"
+                    style="@style/LuxButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="26dp"
+                    android:text="@string/mt_retry" />
+
+                <TextView
+                    android:id="@+id/mtNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:text="@string/mt_note"
+                    android:textColor="@color/lux_text_muted"
+                    android:textSize="11.5sp" />
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+
+    <!-- ======================================================
+         5b. PORTA DELL'AGGIORNAMENTO
+         Blocca tutto quando il sito dichiara una versione nuova.
+         Non si chiude: l'unica strada e' scaricare l'APK da GitHub.
+         ====================================================== -->
+    <FrameLayout
+        android:id="@+id/updateGate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_veil"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingStart="26dp"
+                android:paddingTop="38dp"
+                android:paddingEnd="26dp"
+                android:paddingBottom="34dp">
+
+                <ImageView
+                    android:id="@+id/upLogo"
+                    android:layout_width="92dp"
+                    android:layout_height="92dp"
+                    android:background="@drawable/bg_marchio"
+                    android:contentDescription="@string/app_name"
+                    android:padding="3dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/lux_natale" />
+
+                <TextView
+                    android:id="@+id/upBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:background="@drawable/bg_pill"
+                    android:letterSpacing="0.16"
+                    android:paddingStart="14dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/up_badge"
+                    android:textColor="@color/lux_xmas_accent"
+                    android:textSize="10.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/upTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="3dp"
+                    android:text="@string/update_title"
+                    android:textColor="@color/lux_text"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/upVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:letterSpacing="0.1"
+                    android:textColor="@color/lux_accent"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/upNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@string/update_text"
+                    android:textColor="@color/lux_text_muted"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/upDownload"
+                    style="@style/LuxButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="28dp"
+                    android:text="@string/up_download" />
+
+                <TextView
+                    android:id="@+id/upStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:textColor="@color/lux_accent"
+                    android:textSize="12.5sp"
+                    android:visibility="gone" />
+
+                <ProgressBar
+                    android:id="@+id/upProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="14dp"
+                    android:indeterminate="true"
+                    android:indeterminateTint="@color/lux_accent"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/upPage"
+                    style="@style/LuxButton.Quiet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/up_page" />
+
+                <TextView
+                    android:id="@+id/upHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:gravity="center"
+                    android:text="@string/up_locked"
+                    android:textColor="@color/lux_text_muted"
+                    android:textSize="11.5sp" />
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+
+    <!-- ======================================================
+         PAGINA DI CORTESIA (rete assente o sito che non risponde)
+         ====================================================== -->
     <LinearLayout
         android:id="@+id/offline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/lux_background"
+        android:background="@drawable/bg_veil"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="28dp"
         android:visibility="gone">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:letterSpacing="0.22"
-            android:text="@string/mark"
-            android:textColor="@color/lux_text"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/offLogo"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:background="@drawable/bg_marchio"
+            android:contentDescription="@string/app_name"
+            android:padding="3dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/lux_natale" />
 
         <TextView
             android:id="@+id/offlineTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="22dp"
             android:gravity="center"
             android:text="@string/offline_title"
             android:textColor="@color/lux_text"
