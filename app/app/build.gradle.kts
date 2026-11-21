@@ -46,8 +46,8 @@ android {
         applicationId = "org.luxverse.app"
         minSdk = 24          // Android 7.0 e successivi
         targetSdk = 36
-        versionCode = 63
-        versionName = "40.1.3"
+        versionCode = 64
+        versionName = "41.2.0"
 
         // Indirizzi del sito: si cambiano qui e in nessun altro posto.
         //
@@ -61,7 +61,7 @@ android {
         // La versione viaggia nell'indirizzo: il sito la usa per sapere se
         // questa build e' vecchia e mostrare il blocco aggiornamento anche
         // nelle pagine interne, dove l'app non farebbe in tempo a chiedere.
-        buildConfigField("String", "START_URL", "\"https://luxverse.c22.eu/webapp.php?app=1&v=40.1.3\"")
+        buildConfigField("String", "START_URL", "\"https://luxverse.c22.eu/webapp.php?app=1&v=41.2.0\"")
     }
 
     signingConfigs {
