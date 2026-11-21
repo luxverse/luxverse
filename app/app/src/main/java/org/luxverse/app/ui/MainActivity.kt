@@ -448,7 +448,23 @@ class MainActivity : AppCompatActivity() {
     private fun checkAppState(openIfClear: Boolean) {
         if (statusBusy) return
         statusBusy = true
+        // Il nome con cui si presenta la WebView si legge sul thread
+        // dell'interfaccia: serve qui sotto per preparare il biscotto della
+        // verifica dell'hosting, che altrimenti trasforma la risposta JSON in
+        // una pagina JavaScript e l'app non vede ne' aggiornamenti ne'
+        // manutenzione (era il motivo per cui il blocco non compariva).
+        val ua = try { web.settings.userAgentString ?: "" } catch (t: Throwable) { "" }
         val lavoro = Thread {
+            // Prima di chiedere lo stato: se il biscotto non c'e' ancora, si
+            // supera la verifica come si fa per aprire il sito.
+            try {
+                if (CookieManager.getInstance().getCookie(BuildConfig.SITE_URL).isNullOrEmpty()) {
+                    ensureAccess(ua)
+                }
+            } catch (t: Throwable) {
+                // Se non si riesce, si prova lo stesso: il controllo non deve
+                // mai bloccare l'apertura dell'app.
+            }
             val json = fetchAppState()
             ui.post {
                 statusBusy = false
