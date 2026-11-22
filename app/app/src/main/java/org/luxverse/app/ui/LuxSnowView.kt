@@ -138,6 +138,8 @@ class LuxSnowView @JvmOverloads constructor(
     }
 
     companion object {
-        private const val FLAKES = 38
+        // 22/11/2026: da 38 a 22. Meno fiocchi, stesso effetto, meta'
+        // dei disegni al secondo su un telefono modesto.
+        private const val FLAKES = 22
     }
 }

@@ -886,14 +886,16 @@ class MainActivity : AppCompatActivity() {
 
         web.setBackgroundColor(bg)
 
-        findViewById<Button>(R.id.retry).apply {
-            backgroundTintList = ColorStateList.valueOf(accent)
-            setTextColor(Color.WHITE)
-        }
-        findViewById<Button>(R.id.openInBrowser).apply {
-            backgroundTintList = ColorStateList.valueOf(line)
-            setTextColor(accent)
-        }
+        // Ultimo passaggio: si gira tutto l'albero delle quattro schermate
+        // native. Elencare gli id uno per uno non basta — il 22/11/2026 il
+        // titolo della porta dell'aggiornamento (upTitle) era rimasto osso
+        // su crema, cioe' invisibile, perche' nessuno se n'era ricordato.
+        // Cosi' invece ogni vista aggiunta in futuro si sistema da sola.
+        recolorForXmas(veil, text, muted, accent, bg)
+        recolorForXmas(maintenance, text, muted, accent, bg)
+        recolorForXmas(updateGate, text, muted, accent, bg)
+        recolorForXmas(offline, text, muted, accent, bg)
+
         backBtn.backgroundTintList = ColorStateList.valueOf(bg)
         backBtn.setColorFilter(accent)
 
@@ -904,6 +906,47 @@ class MainActivity : AppCompatActivity() {
         val controller = WindowInsetsControllerCompat(window, window.decorView)
         controller.isAppearanceLightStatusBars = true
         controller.isAppearanceLightNavigationBars = true
+    }
+
+    /** I quattro colori del tema scuro, letti una volta sola. */
+    private val darkTokens by lazy {
+        intArrayOf(
+            ContextCompat.getColor(this, R.color.lux_text),
+            ContextCompat.getColor(this, R.color.lux_text_muted),
+            ContextCompat.getColor(this, R.color.lux_accent),
+            ContextCompat.getColor(this, R.color.lux_accent_light)
+        )
+    }
+
+    /**
+     * Ricolora per il tema chiaro una schermata nativa e tutto cio' che
+     * contiene: i testi del tema scuro diventano scuri, i pulsanti rossi con
+     * testo bianco (tranne i due "quiet", che restano trasparenti col testo
+     * rosso). Nessun colore scritto a mano: si confrontano i token del tema
+     * scuro con quello che la vista ha davvero addosso.
+     */
+    private fun recolorForXmas(v: View, text: Int, muted: Int, accent: Int, bg: Int) {
+        val d = darkTokens
+        when (v) {
+            is Button -> {
+                if (v.id == R.id.openInBrowser || v.id == R.id.upPage) {
+                    v.backgroundTintList = ColorStateList.valueOf(bg)
+                    v.setTextColor(accent)
+                } else {
+                    v.backgroundTintList = ColorStateList.valueOf(accent)
+                    v.setTextColor(Color.WHITE)
+                }
+            }
+            is TextView -> when (v.currentTextColor) {
+                d[0] -> v.setTextColor(text)
+                d[1] -> v.setTextColor(muted)
+                d[2], d[3] -> v.setTextColor(accent)
+            }
+            is ProgressBar -> v.indeterminateTintList = ColorStateList.valueOf(accent)
+        }
+        if (v is ViewGroup) {
+            for (i in 0 until v.childCount) recolorForXmas(v.getChildAt(i), text, muted, accent, bg)
+        }
     }
 
     private fun setUpWindow() {
@@ -980,8 +1023,14 @@ class MainActivity : AppCompatActivity() {
         if (WebViewFeature.isFeatureSupported(WebViewFeature.SAFE_BROWSING_ENABLE)) {
             WebSettingsCompat.setSafeBrowsingEnabled(s, true)
         }
+        // 22/11/2026: qui l'adattamento automatico era ACCESO e faceva un
+        // disastro. Il tema dell'app e' scuro, quindi Android decideva di
+        // "scurire" anche il sito: sulle pagine chiare del Natale il testo
+        // diventava chiaro su fondo chiaro e non si leggeva piu' niente.
+        // Ora e' spento: la pagina si vede esattamente come e' stata
+        // disegnata, qualunque sia il tema del telefono.
         if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
-            WebSettingsCompat.setAlgorithmicDarkeningAllowed(s, true)
+            WebSettingsCompat.setAlgorithmicDarkeningAllowed(s, false)
         }
 
         web.webChromeClient = object : WebChromeClient() {

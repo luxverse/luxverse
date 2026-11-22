@@ -18,8 +18,10 @@
     <color name="ic_launcher_background">#082A1E</color>
 
     <!-- TEMA NATALIZIO (17/11 - 26/12/2026) — stessi colori del sito:
-         fondo bianco/crema, testo prugna scuro, accento rosso. Si usano solo
-         dentro la finestra di date (vedi MainActivity.applySeasonTheme). -->
+         fondo bianco/crema, testo prugna scuro, accento rosso. Il rosso
+         pieno come fondo e' stato provato il 22/11/2026 e tolto subito:
+         il testo non si leggeva. Si usano solo dentro la finestra di date
+         (vedi MainActivity.applySeasonTheme). -->
     <color name="lux_xmas_background">#FFFCFA</color>
     <color name="lux_xmas_surface">#FFF3EF</color>
     <color name="lux_xmas_text">#2B1216</color>
