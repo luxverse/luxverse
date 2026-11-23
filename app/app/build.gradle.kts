@@ -38,6 +38,19 @@ val keystoreProps = Properties().apply {
     if (hasKeystore) FileInputStream(keystorePropsFile).use { load(it) }
 }
 
+// ------------------------------------------------------------
+// VERSIONE DELL'APP — UNA SOLA VOLTA
+// ------------------------------------------------------------
+// 23/11/2026 (42.1.0): prima il numero era scritto due volte, e la seconda
+// volta era sbagliata. L'indirizzo d'apertura portava "v=41.2.0" scritto a
+// mano: l'app 42.0.0 si presentava al sito come 41.2.0, il sito la credeva
+// vecchia e mostrava il blocco aggiornamento a ogni pagina. Chi installava
+// l'APK nuovo restava bloccato lo stesso, perche' il numero nell'indirizzo
+// non cambiava mai. Adesso il numero e' qui e basta: se lo cambia uno, lo
+// cambia per tutte e due le cose insieme.
+val appVersionCode = 69
+val appVersionName = "42.1.2"
+
 android {
     namespace = "org.luxverse.app"
     compileSdk = 36
@@ -46,8 +59,8 @@ android {
         applicationId = "org.luxverse.app"
         minSdk = 24          // Android 7.0 e successivi
         targetSdk = 36
-        versionCode = 67
-        versionName = "42.0.0"
+        versionCode = appVersionCode
+        versionName = appVersionName
 
         // Indirizzi del sito: si cambiano qui e in nessun altro posto.
         //
@@ -61,7 +74,7 @@ android {
         // La versione viaggia nell'indirizzo: il sito la usa per sapere se
         // questa build e' vecchia e mostrare il blocco aggiornamento anche
         // nelle pagine interne, dove l'app non farebbe in tempo a chiedere.
-        buildConfigField("String", "START_URL", "\"https://luxverse.c22.eu/webapp.php?app=1&v=41.2.0\"")
+        buildConfigField("String", "START_URL", "\"https://luxverse.c22.eu/webapp.php?app=1&v=" + appVersionName + "\"")
     }
 
     signingConfigs {

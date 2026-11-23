@@ -810,15 +810,23 @@ class MainActivity : AppCompatActivity() {
     /**
      * E' la finestra natalizia? Si conta a Roma, non nel fuso del telefono:
      * un italiano in vacanza a New York deve vedere lo stesso Natale che
-     * vede a casa, e il 27 dicembre il tema deve sparire a mezzanotte.
+     * vede a casa.
+     *
+     * 23/11/2026 (42.1.2): prima partiva il 17 novembre e arrivava fino al
+     * 26, cioe' cinque settimane di tema addosso a chi apre l'app per
+     * lavorare. Ora e' il giorno che conta: dalle 01:00 del 25 dicembre
+     * alla mezzanotte del 26, ora italiana. Fuori da li' l'app e' quella
+     * normale, con il marchio ufficiale.
      */
     private fun isChristmasSeason(): Boolean {
         val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"))
         val y = cal.get(Calendar.YEAR)
         val m = cal.get(Calendar.MONTH) + 1
         val d = cal.get(Calendar.DAY_OF_MONTH)
+        val h = cal.get(Calendar.HOUR_OF_DAY)
         if (y != 2026) return false
-        return (m == 11 && d >= 17) || (m == 12 && d <= 26)
+        // 25 dicembre, dalle 01:00 in poi. Alle 00:00 del 26 si e' gia' fuori.
+        return m == 12 && d == 25 && h >= 1
     }
 
     /**
@@ -832,7 +840,37 @@ class MainActivity : AppCompatActivity() {
         val xmas = isChristmasSeason()
         snow.visibility = if (xmas) View.VISIBLE else View.GONE
         mtSnow.visibility = if (xmas) View.VISIBLE else View.GONE
-        if (!xmas) return
+
+        // IL MARCHIO (23/11/2026, 42.1.2). Prima le quattro schermate native
+        // avevano il disegno di Natale scritto nel layout: fuori dalla
+        // finestra restava li', e l'app sembrava vestita a festa a novembre.
+        // Adesso nel layout c'e' il marchio ufficiale e il Natale lo mette
+        // qui, solo quando tocca.
+        val mark = if (xmas) R.drawable.lux_natale else R.drawable.lux_official
+        veilLogo.setImageResource(mark)
+        findViewById<ImageView>(R.id.mtLogo).setImageResource(mark)
+        upLogo.setImageResource(mark)
+        findViewById<ImageView>(R.id.offLogo).setImageResource(mark)
+        veilXmas.visibility = if (xmas) View.VISIBLE else View.GONE
+
+        if (!xmas) {
+            // Fuori dalla finestra: i colori del layout sono gia' quelli
+            // normali (grafite e oro). Si rimette solo quello che il tema
+            // chiaro puo' aver lasciato addosso, e si esce.
+            veil.setBackgroundResource(R.drawable.bg_veil)
+            maintenance.setBackgroundResource(R.drawable.bg_veil)
+            updateGate.setBackgroundResource(R.drawable.bg_veil)
+            offline.setBackgroundResource(R.drawable.bg_veil)
+            veilLogo.setBackgroundResource(R.drawable.bg_marchio)
+            findViewById<ImageView>(R.id.mtLogo).setBackgroundResource(R.drawable.bg_marchio)
+            upLogo.setBackgroundResource(R.drawable.bg_marchio)
+            findViewById<ImageView>(R.id.offLogo).setBackgroundResource(R.drawable.bg_marchio)
+            findViewById<View>(R.id.root).setBackgroundColor(
+                ContextCompat.getColor(this, R.color.lux_background)
+            )
+            web.setBackgroundColor(ContextCompat.getColor(this, R.color.lux_background))
+            return
+        }
 
         val bg = ContextCompat.getColor(this, R.color.lux_xmas_background)
         val text = ContextCompat.getColor(this, R.color.lux_xmas_text)

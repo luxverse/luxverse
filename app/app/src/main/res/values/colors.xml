@@ -15,9 +15,11 @@
     <color name="lux_text_muted">#A5A197</color>   <!-- testo secondario (text light) -->
     <color name="lux_accent">#D8A93C</color>       <!-- oro, l'unico accento (token gold) -->
     <color name="lux_accent_light">#F0CE86</color> <!-- oro chiaro (gold light) -->
-    <color name="ic_launcher_background">#082A1E</color>
+    <color name="ic_launcher_background">#0A0B0D</color>
 
-    <!-- TEMA NATALIZIO (17/11 - 26/12/2026) — stessi colori del sito:
+    <!-- TEMA NATALIZIO (25/12/2026 ore 01:00 - 26/12/2026 ore 00:00, ora
+         italiana; prima era 17/11 - 26/12, cambiato il 23/11/2026) — stessi
+         colori del sito:
          fondo bianco/crema, testo prugna scuro, accento rosso. Il rosso
          pieno come fondo e' stato provato il 22/11/2026 e tolto subito:
          il testo non si leggeva. Si usano solo dentro la finestra di date

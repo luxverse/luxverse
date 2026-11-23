@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  IL SEGNO DELL'ICONA (23/11/2026, 42.1.2)
+
+  Prima qui c'era un PNG per densita' con il disegno di Natale: l'icona
+  dell'app era una ghirlanda con il cappello di Babbo Natale, e restava
+  cosi' tutto l'anno perche' un'icona non si puo' cambiare mentre l'app
+  gira.
+
+  Adesso c'e' il marchio ufficiale (il cerchio d'oro con LV), dentro un
+  margine del 16%: lo strato dell'icona adattiva e' 108dp ma il telefono
+  ne mostra solo i 72dp interni, quindi il disegno va tenuto al centro o
+  le forme tonde lo tagliano.
+-->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/lux_official"
+    android:inset="16%" />
