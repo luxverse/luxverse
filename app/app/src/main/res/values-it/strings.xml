@@ -38,6 +38,8 @@
     <string name="mt_title_en">Maintenance in progress</string>
     <string name="mt_msg_en">We will be back online shortly.</string>
     <string name="mt_retry">Controlla adesso</string>
+    <string name="mt_ai">IA locale (funziona offline)</string>
+    <string name="mt_ai_failed">Non riesco ad aprire la schermata dell\'IA locale</string>
     <string name="mt_note">Questa schermata controlla da sola ogni 20 secondi e riapre il sito appena il lavoro è finito.</string>
     <string name="mt_locked_hint">Il sito è chiuso per manutenzione. Puoi solo uscire dall\'app.</string>
     <string name="mt_offline">Nessuna connessione: adesso l\'app non può controllare il sito.</string>

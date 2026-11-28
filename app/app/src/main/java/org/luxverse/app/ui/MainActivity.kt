@@ -64,6 +64,7 @@ import androidx.webkit.WebViewFeature
 import org.luxverse.app.BuildConfig
 import org.luxverse.app.R
 import org.json.JSONObject
+import org.luxverse.app.ai.LocalAiActivity
 import org.luxverse.app.net.SiteTls
 import java.util.ArrayDeque
 import javax.net.ssl.HttpsURLConnection
@@ -299,7 +300,15 @@ class MainActivity : AppCompatActivity() {
         upProgress = findViewById(R.id.upProgress)
         upHint = findViewById(R.id.upHint)
 
-        veilVersion.text = "v" + BuildConfig.VERSION_NAME
+        veilVersion.text = "v" + BuildConfig.VERSION_NAME + " · nuova edizione"
+
+        // 1.0.0: il caricamento e' nuovo. Via la neve, via le righe grigie
+        // finte (lo scheletro) e via il testo di Natale: resta il marchio,
+        // il nome, una barra sottile e lo stato reale della connessione.
+        findViewById<View>(R.id.veilSkeleton).visibility = View.GONE
+        findViewById<View>(R.id.veilXmas).visibility = View.GONE
+        findViewById<View>(R.id.snow).visibility = View.GONE
+        findViewById<View>(R.id.mtSnow).visibility = View.GONE
 
         prepareWebView()
 
@@ -314,6 +323,9 @@ class MainActivity : AppCompatActivity() {
 
         // Manutenzione: l'unico comando e' "controlla adesso". Non c'e' modo
         // di andare altrove, perche' non c'e' nessun altrove da mostrare.
+        findViewById<Button>(R.id.mtAi).setOnClickListener {
+            openLocalAi()
+        }
         findViewById<Button>(R.id.mtRetry).setOnClickListener {
             mtNote.setText(R.string.mt_note)
             checkAppState(openIfClear = false)
@@ -819,14 +831,11 @@ class MainActivity : AppCompatActivity() {
      * normale, con il marchio ufficiale.
      */
     private fun isChristmasSeason(): Boolean {
-        val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"))
-        val y = cal.get(Calendar.YEAR)
-        val m = cal.get(Calendar.MONTH) + 1
-        val d = cal.get(Calendar.DAY_OF_MONTH)
-        val h = cal.get(Calendar.HOUR_OF_DAY)
-        if (y != 2026) return false
-        // 25 dicembre, dalle 01:00 in poi. Alle 00:00 del 26 si e' gia' fuori.
-        return m == 12 && d == 25 && h >= 1
+        // 1.0.0 (28/11/2026): l'app non cambia piu' veste con il calendario.
+        // La neve, il marchio di Natale e il testo rosso appartenevano alla
+        // versione vecchia e sono spenti per sempre: un'app che si traveste
+        // da sola non e' una cosa che un progetto serio fa.
+        return false
     }
 
     /**
@@ -1432,9 +1441,11 @@ class MainActivity : AppCompatActivity() {
         val uri = Uri.parse(raw)
         val scheme = uri.scheme?.lowercase() ?: return true
 
-        // Indirizzi speciali della pagina di cortesia (bottone "Riprova").
+        // Indirizzi speciali dell'app:
+        //   luxverse://ai   → apre la schermata nativa dell'IA locale
+        //   qualsiasi altro → bottone "Riprova" della pagina di cortesia
         if (scheme == "luxverse") {
-            retry()
+            if (uri.host?.lowercase() == "ai") openLocalAi() else retry()
             return true
         }
         // Posta, telefono, mappe, negozi: si aprono con l'app giusta del telefono.
@@ -1447,6 +1458,22 @@ class MainActivity : AppCompatActivity() {
         val isOurs = host == siteHost || host.endsWith(".$siteHost")
         if (!isOurs) openOutside(raw)
         return !isOurs
+    }
+
+    /**
+     * LA SCREENNATA DELL'IA LOCALE.
+     *
+     * Si apre in tre modi: dal pulsante nella schermata di manutenzione, dal
+     * collegamento luxverse://ai dentro il sito, oppure dalla pagina /ai-locale
+     * che chiama LuxVerse.openLocalAi(). Non passa dalla rete: il modello sta
+     * sul telefono.
+     */
+    private fun openLocalAi() {
+        try {
+            startActivity(Intent(this, LocalAiActivity::class.java))
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(this, R.string.mt_ai_failed, Toast.LENGTH_SHORT).show()
+        }
     }
 
     /** Apre un indirizzo fuori dall'app: browser, posta, telefono, negozio. */
@@ -1553,8 +1580,10 @@ class MainActivity : AppCompatActivity() {
         // tornare, e sale con una piccola animazione invece di apparire di
         // colpo. Resta sopra il dock del sito (che adesso occupa il fondo
         // dello schermo), quindi non copre la navigazione.
-        val show = settled && web.canGoBack() &&
-            veil.visibility != View.VISIBLE && offline.visibility != View.VISIBLE
+        // 1.0.0: la freccetta indietro e' stata tolta. L'app non e' piu' un
+        // browser dentro una finestra e non deve mostrare i suoi comandi:
+        // si torna indietro con il gesto di sistema, come in ogni app.
+        val show = false
         if (show == backVisible) return
         backVisible = show
 
@@ -1854,6 +1883,16 @@ class MainActivity : AppCompatActivity() {
         fun openExternal(url: String) {
             if (!url.startsWith("http://") && !url.startsWith("https://")) return
             runOnUiThread { openOutside(url) }
+        }
+
+        /** L'app ha il motore locale? La pagina lo chiede prima di mostrare il pulsante. */
+        @JavascriptInterface
+        fun hasLocalAi(): Boolean = true
+
+        /** Apre la schermata nativa dell'IA locale (modello GGUF sul telefono). */
+        @JavascriptInterface
+        fun openLocalAi() {
+            runOnUiThread { this@MainActivity.openLocalAi() }
         }
 
         /** Apre il pannello "condividi" di Android con testo e collegamento. */

@@ -48,8 +48,10 @@ val keystoreProps = Properties().apply {
 // l'APK nuovo restava bloccato lo stesso, perche' il numero nell'indirizzo
 // non cambiava mai. Adesso il numero e' qui e basta: se lo cambia uno, lo
 // cambia per tutte e due le cose insieme.
-val appVersionCode = 69
-val appVersionName = "42.1.2"
+// 28/11/2026 — 1.0.0: si riparte da capo. La numerazione vecchia (43.x) si
+// ferma qui: questa e' la prima versione della nuova app.
+val appVersionCode = 71
+val appVersionName = "1.0.0"
 
 android {
     namespace = "org.luxverse.app"
@@ -75,6 +77,22 @@ android {
         // questa build e' vecchia e mostrare il blocco aggiornamento anche
         // nelle pagine interne, dove l'app non farebbe in tempo a chiedere.
         buildConfigField("String", "START_URL", "\"https://luxverse.c22.eu/webapp.php?app=1&v=" + appVersionName + "\"")
+
+        // Motore locale llama.cpp: solo arm64 (tutti i telefoni Android 7+ recenti).
+        ndk { abiFilters += listOf("arm64-v8a") }
+        externalNativeBuild {
+            cmake {
+                cppFlags += "-std=c++17"
+                arguments += "-DANDROID_STL=c++_shared"
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
     }
 
     signingConfigs {

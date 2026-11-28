@@ -54,6 +54,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--
+          IA locale: si apre dall'app (pulsante nella manutenzione, ponte
+          LuxVerse.openLocalAi, collegamento luxverse://ai). Non e' una porta
+          pubblica: nessun'altra app puo' lanciarla.
+        -->
+        <activity
+            android:name=".ai.LocalAiActivity"
+            android:exported="false"
+            android:label="IA locale"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode|density|fontScale" />
     </application>
 
 </manifest>

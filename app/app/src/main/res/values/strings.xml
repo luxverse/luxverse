@@ -48,6 +48,8 @@
     <string name="mt_note">This screen checks by itself every 20 seconds and reopens the site as soon as the work is done.</string>
     <string name="mt_locked_hint">The site is closed for maintenance. You can only exit the app.</string>
     <string name="mt_offline">No connection: the app cannot check the site right now.</string>
+    <string name="mt_ai">Local AI (works offline)</string>
+    <string name="mt_ai_failed">The local AI screen could not be opened</string>
 
     <string name="no_network_title">No internet connection</string>
     <string name="no_network_text">This app is a window on the site: without a connection there is nothing to show. Check Wi-Fi or mobile data and try again.</string>

@@ -83,3 +83,9 @@ Thumbs.db
 # pagine PHP vere. Se fossero qui, invecchierebbero senza che nessuno
 # se ne accorga.
 frontend/
+
+# 1.0.0 (28/11/2026): sorgenti del motore (239 MB, si scaricano a parte),
+# build locale e pesi del modello non entrano nel repository.
+app/app/.cxx/
+models/
+app/app/src/main/cpp/llama.cpp/

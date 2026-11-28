@@ -318,6 +318,18 @@
                     android:layout_marginTop="26dp"
                     android:text="@string/mt_retry" />
 
+                <!-- Con il sito chiuso l'app resta lo stesso utile: il modello
+                     locale gira sul telefono e non ha bisogno del sito. -->
+                <Button
+                    android:id="@+id/mtAi"
+                    style="@style/LuxButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="#00000000"
+                    android:text="@string/mt_ai"
+                    android:textColor="@color/lux_accent" />
+
                 <TextView
                     android:id="@+id/mtNote"
                     android:layout_width="match_parent"
